@@ -5,6 +5,8 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import com.uitgis.gis.desktop.ClickApplication;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

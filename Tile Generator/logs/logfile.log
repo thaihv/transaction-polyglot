@@ -1,0 +1,11 @@
+[2018-10-15 16:28:48] DEBUG com.uitgis.plugin.tilegenerator.OpenGenerator - content tilegenerator was launched from ribbon menu
+[2018-10-15 17:31:20] DEBUG com.uitgis.plugin.tilegenerator.controller.Step1Controller - [SUBMIT] the user has completed step 1
+[2018-10-15 17:31:34] DEBUG com.uitgis.plugin.tilegenerator.controller.Step3Controller - [SUBMIT] the user has completed step 1
+[2018-10-15 17:31:39] DEBUG com.uitgis.plugin.tilegenerator.controller.Step3Controller - [SUBMIT] the user has completed step 1
+[2018-10-15 17:31:43] DEBUG com.uitgis.plugin.tilegenerator.controller.ConfirmController - [SUBMIT] saving fields 1-7 to the database via a web service call (not really)
+[2018-10-15 17:36:33] DEBUG com.uitgis.plugin.tilegenerator.controller.Step1Controller - [SUBMIT] the user has completed step 1
+[2018-10-15 17:36:37] DEBUG com.uitgis.plugin.tilegenerator.controller.Step2Controller - [SUBMIT] the user has completed step 2
+[2018-10-15 17:36:46] DEBUG com.uitgis.plugin.tilegenerator.controller.Step1Controller - [SUBMIT] the user has completed step 1
+[2018-10-15 17:36:49] DEBUG com.uitgis.plugin.tilegenerator.controller.Step2Controller - [SUBMIT] the user has completed step 2
+[2018-10-15 17:36:54] DEBUG com.uitgis.plugin.tilegenerator.controller.Step3Controller - [SUBMIT] the user has completed step 3
+[2018-10-15 17:36:56] DEBUG com.uitgis.plugin.tilegenerator.controller.ConfirmController - [SUBMIT] saving fields 1-7 to the database via a web service call (not really)
