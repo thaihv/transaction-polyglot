@@ -1,8 +1,5 @@
 package com.uitgis.plugin.tilegenerator.controller;
 
-/**
- * Created by carl on 4/30/16.
- */
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

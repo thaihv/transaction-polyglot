@@ -3,9 +3,7 @@ package com.uitgis.plugin.tilegenerator.controller;
 import com.google.inject.AbstractModule;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
-/**
- * Created by carl on 4/30/16.
- */
+
 public class WizardModule extends AbstractModule {
     @Override
     protected void configure() {
