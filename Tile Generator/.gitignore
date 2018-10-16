@@ -1,1 +1,5 @@
 /bin/
+/logs/
+/configuration/
+/data/
+/derby.log
