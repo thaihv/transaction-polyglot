@@ -28,3 +28,11 @@
     -fx-content-display: LEFT;
 }
 */
+#mapleskin-closebutton {	
+	-fx-background-image: url('../icons/dialog-close.png');
+    -fx-background-repeat: stretch;   
+    -fx-background-position: center center;
+    -fx-shape: '';
+    -fx-scale-shape: false;  
+    -fx-background-color:  null;
+}

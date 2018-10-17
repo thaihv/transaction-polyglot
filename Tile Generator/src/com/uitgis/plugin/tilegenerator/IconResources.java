@@ -8,6 +8,8 @@ public class IconResources {
 
 	public static final Image ICON_GEORIZER;
 	
+	public static final Image ICON_TILEGENERATOR;
+	
 	public static final Image ICON_REFRESH;
 
 	public static final Image ICON_CHECK_ALL;
@@ -53,8 +55,13 @@ public class IconResources {
 	static {
 		ClassLoader loader = TileGenerator.class.getClassLoader();
 		
-		URL url = loader.getResource("georize.gif");
-		ICON_GEORIZER = new Image(url.toString());
+	
+		
+		URL url = loader.getResource("tilegenerator.png");
+		ICON_TILEGENERATOR = new Image(url.toString());
+		
+		url = loader.getResource("georize.gif");
+		ICON_GEORIZER = new Image(url.toString());			
 		
 		url = loader.getResource("refresh.png");
 		ICON_REFRESH = new Image(url.toString());

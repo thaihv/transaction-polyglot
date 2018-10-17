@@ -23,14 +23,14 @@ public class WizardMain extends Application {
 										  new JavaFXBuilderFactory(),
 										  (clazz) -> injector.getInstance(clazz)
 		);
-		
+
+
 		final Scene scene = new Scene(p);
 		
 		primaryStage.setScene( scene );
-		primaryStage.setWidth( 800 );
+		primaryStage.setWidth( 500 );
 		primaryStage.setHeight( 600 );
-		primaryStage.setTitle("Wizard");
-		
+		primaryStage.setTitle("Tile Map Generator");
 		primaryStage.show();
 	}
 	

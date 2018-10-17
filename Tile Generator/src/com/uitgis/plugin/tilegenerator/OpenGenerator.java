@@ -1,35 +1,44 @@
 package com.uitgis.plugin.tilegenerator;
 
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener.Change;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import com.uitgis.maple.application.ContentID;
-import com.uitgis.maple.application.Main;
-import com.uitgis.maple.common.ui.MapleDialogSkin;
 import com.uitgis.maple.common.util.Util;
 import com.uitgis.maple.contents.map.ui.MapTabPane;
 import com.uitgis.sdk.controls.MapControl;
 
 import framework.FrameworkManager;
-import framework.dialog.DialogManager;
 import framework.i18n.I18N;
-import framework.ribbon.RibbonMenu;
-import framework.ribbon.RibbonMenu.FileMenuSection;
 import framework.ribbon.event.RibbonEventHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener.Change;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 public class OpenGenerator extends RibbonEventHandler {
 
 	private boolean opened;
 	
-	
+	private double xOffset = 0;
+    private double yOffset = 0;
+    
 	public String getContentID() {
 		return "tilegenerator";
 	}
@@ -38,7 +47,6 @@ public class OpenGenerator extends RibbonEventHandler {
 		
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void doAction(ActionEvent event) {
 		if (opened) {
 			return;
@@ -51,44 +59,81 @@ public class OpenGenerator extends RibbonEventHandler {
 			mapControl = Util.newMap();
 		}
 		
-		ButtonType closeButtonType = new ButtonType(I18N.getText("Close"), ButtonData.CANCEL_CLOSE);
-		ObservableList<ButtonType> buttonTypes = FXCollections.observableArrayList();
-		buttonTypes.setAll(closeButtonType);
-		
-		TileMainPane georizerPane = new TileMainPane(mapControl);
-		
-		Dialog dialog = DialogManager.getCustomDialog(I18N.getText("window.title"), "", georizerPane, buttonTypes, false);
-		dialog.initModality(Modality.NONE);
-		
-		dialog.setOnShown(e -> {
-			opened = true;
 
-			Stage stage = Main.getPrimaryStage();		
-			double x = stage.getX() + stage.getWidth() / 2 - dialog.getWidth() / 2;
-		    double y = stage.getY() + stage.getHeight() / 2 - dialog.getHeight() / 2;
-		    dialog.setX(x);
-		    dialog.setY(y);
-		    
-		    mapTabPane.setHold(true);
-		    
-		    RibbonMenu menu = FrameworkManager.getRibbon();
-		    menu.setMenuEnablement(FileMenuSection.NewSection, false);
-		    menu.setMenuEnablement(FileMenuSection.OpenSection, false);
-		});
-		
-		dialog.setOnCloseRequest(e -> {
-		    mapTabPane.setHold(false);
+		TileMainPane tileGenPane = new TileMainPane(mapControl);
+		Stage d = new Stage();
+		d.setScene(new Scene(tileGenPane,400,600));
 
-		    RibbonMenu menu = FrameworkManager.getRibbon();
-		    menu.setMenuEnablement(FileMenuSection.NewSection, true);
-		    menu.setMenuEnablement(FileMenuSection.OpenSection, true);
-		    
-		    
-			opened = false;
-		});
 		
-		MapleDialogSkin skin = new MapleDialogSkin(dialog, false, IconResources.ICON_GEORIZER);
-		skin.showAndWait();
+//		HBox titleBar = new HBox();
+//		ImageView image = new ImageView();		
+//		Label label = new Label(I18N.getText("window.title"));
+//		label.setTextFill(Color.WHITE);
+//		
+//		HBox spacer = new HBox();
+//		HBox.setHgrow(spacer, Priority.ALWAYS);
+//		Button closeBtn = new Button();
+//		closeBtn.setOnAction(e->{d.close();});
+//		
+//		titleBar.getChildren().addAll(image, label, spacer, closeBtn);
+//		
+//		Separator sep = new Separator(Orientation.HORIZONTAL);
+//		sep.setMinHeight(1);
+//		sep.setMaxHeight(1);
+//		
+//		HBox sepCon = new HBox(sep);
+//		HBox.setHgrow(sep, Priority.ALWAYS);
+//		
+//		
+//		VBox box = new VBox();
+//
+//		HBox contents = new HBox(tileGenPane);
+//
+//		box.getChildren().addAll(titleBar, sepCon, contents);
+//		VBox.setVgrow(contents, Priority.ALWAYS);
+//		
+//		titleBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                xOffset = event.getSceneX();
+//                yOffset = event.getSceneY();
+//            }
+//        });
+//		titleBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                d.setX(event.getScreenX() - xOffset);
+//                d.setY(event.getScreenY() - yOffset);
+//            }
+//        });		
+//		d.initStyle(StageStyle.UNDECORATED);
+//
+//		
+//		box.setStyle("-fx-border-color:#cccccc #cccccc transparent #cccccc");	
+//		
+//		d.setScene(new Scene(box,400,600));
+//
+//
+//		sepCon.setPadding(new Insets(0, 5, 0, 5));
+//		contents.setPadding(new Insets(15));
+//		box.setPadding(new Insets(0));		
+//		titleBar.setPadding(new Insets(5));
+//		titleBar.setAlignment(Pos.CENTER);
+//		titleBar.setSpacing(5);		
+//	
+//		image.setImage(IconResources.ICON_TILEGENERATOR);
+//	
+//		
+//		titleBar.setId("mapleskin-titlebar");
+//
+//		closeBtn.setId("mapleskin-closebutton");
+//
+//		contents.setId("mapleskin-contents");
+//		sep.setId("mapleskin-underline");
+		
+		d.show();
+		
+
 	}
 
 }

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="resrouces"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/FXFramework"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Maple 1.1"/>

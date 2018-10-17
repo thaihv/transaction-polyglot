@@ -3,9 +3,7 @@ package com.uitgis.plugin.tilegenerator.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-/**
- * Created by carl on 4/30/16.
- */
+
 public class WizardData {
 
     private final StringProperty field1 = new SimpleStringProperty();
