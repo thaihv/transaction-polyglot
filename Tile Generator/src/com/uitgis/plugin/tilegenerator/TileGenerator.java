@@ -7,7 +7,6 @@ import com.uitgis.maple.application.Main;
 import com.uitgis.maple.plugin.MaplePlugin;
 import com.uitgis.maple.plugin.PlugInUtil;
 
-import framework.FrameworkManager;
 import framework.i18n.I18N;
 import framework.ribbon.RibbonMenu;
 import framework.ribbon.RibbonPane;
@@ -32,13 +31,9 @@ public class TileGenerator extends MaplePlugin {
 	public void init(RibbonMenu menu) {
 		
 		
-		FrameworkManager.getStyleSheets().add("/styles/tilemap.css");
-		
-		
 		RibbonTab tab = PlugInUtil.getRibbonTab(menu, ContentID.MENU_DATATOOL, "Tool");								
 		ClassLoader loader = getClass().getClassLoader();
-		URL url = loader.getResource("tilegenerator.png");
-		
+		URL url = loader.getResource("icons/tilegenerator.png");
 		
 		System.out.println(I18N.getText("menu.group.title"));
 		System.out.println(I18N.getText("menu.button.title"));

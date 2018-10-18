@@ -9,9 +9,9 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class Step2Controller {
+public class OutputController {
 
-    private Logger log = LoggerFactory.getLogger(Step2Controller.class);
+    private Logger log = LoggerFactory.getLogger(OutputController.class);
 
     @FXML
     TextField tfField4;

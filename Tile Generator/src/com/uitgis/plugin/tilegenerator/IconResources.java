@@ -57,7 +57,7 @@ public class IconResources {
 		
 	
 		
-		URL url = loader.getResource("tilegenerator.png");
+		URL url = loader.getResource("icons/tilegenerator.png");
 		ICON_TILEGENERATOR = new Image(url.toString());
 		
 		url = loader.getResource("georize.gif");

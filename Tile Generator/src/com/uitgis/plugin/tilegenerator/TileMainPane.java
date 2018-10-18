@@ -20,7 +20,7 @@ public class TileMainPane extends BorderPane {
 
 		Parent p;
 		try {
-			p = FXMLLoader.load( TileMainPane.class.getResource("/wizard-fxml/Wizard.fxml"),
+			p = FXMLLoader.load( TileMainPane.class.getResource("/fxml/Wizard.fxml"),
 											  null,
 											  new JavaFXBuilderFactory(),
 											  (clazz) -> injector.getInstance(clazz));

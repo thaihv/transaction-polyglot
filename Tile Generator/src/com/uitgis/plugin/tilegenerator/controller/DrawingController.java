@@ -9,9 +9,9 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Step3Controller {
+public class DrawingController {
 
-    private Logger log = LoggerFactory.getLogger(Step3Controller.class);
+    private Logger log = LoggerFactory.getLogger(DrawingController.class);
 
     @FXML
     TextField tfField5, tfField6, tfField7;

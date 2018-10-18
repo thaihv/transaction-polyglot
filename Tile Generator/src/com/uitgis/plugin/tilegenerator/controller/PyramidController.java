@@ -9,63 +9,60 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Step1Controller {
+public class PyramidController {
 
-    private Logger log = LoggerFactory.getLogger(Step1Controller.class);
+    private Logger log = LoggerFactory.getLogger(PyramidController.class);
 
     @FXML
-    TextField tfField1, tfField2, tfField3;
+    TextField tfField5, tfField6, tfField7;
 
     @Inject
     WizardData model;
 
     @FXML
     public void initialize() {
-
-        tfField1.textProperty().bindBidirectional( model.field1Property() );
-        tfField2.textProperty().bindBidirectional( model.field2Property() );
-        tfField3.textProperty().bindBidirectional( model.field3Property() );
-
+        tfField5.textProperty().bindBidirectional(model.field5Property());
+        tfField6.textProperty().bindBidirectional(model.field6Property());
+        tfField7.textProperty().bindBidirectional(model.field7Property());
     }
 
     @Validate
     public boolean validate() throws Exception {
-
-        if( tfField1.getText() == null || tfField1.getText().isEmpty() ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 1");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 1 is required." );
-            alert.showAndWait();
-            return false;
-        }
-
-        if( tfField2.getText() == null || tfField2.getText().isEmpty() ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 1");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 2 is required." );
-            alert.showAndWait();
-            return false;
-        }
-
-        if( tfField3.getText() == null || tfField3.getText().isEmpty() ) {
+        if( tfField5.getText() == null || tfField5.getText().isEmpty() ) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Step 3");
             alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "Field 3 is required." );
+            alert.setContentText( "Field 5 is required." );
             alert.showAndWait();
             return false;
         }
 
+        if( tfField6.getText() == null || tfField6.getText().isEmpty() ) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Step 3");
+            alert.setHeaderText( "Missing Field" );
+            alert.setContentText( "Field 6 is required." );
+            alert.showAndWait();
+            return false;
+        }
+
+        if( tfField7.getText() == null || tfField7.getText().isEmpty() ) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Step 3");
+            alert.setHeaderText( "Missing Field" );
+            alert.setContentText( "Field 7 is required." );
+            alert.showAndWait();
+            return false;
+        }
         return true;
     }
 
     @Submit
     public void submit() throws Exception {
-
         if( log.isDebugEnabled() ) {
-            log.debug("[SUBMIT] the user has completed step 1");
+            log.debug("[SUBMIT] the user has completed step 5");
         }
     }
 }
+
+

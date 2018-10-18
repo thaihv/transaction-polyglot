@@ -8,9 +8,7 @@ import com.uitgis.sdk.controls.MapControl;
 import framework.FrameworkManager;
 import framework.i18n.I18N;
 import framework.ribbon.event.RibbonEventHandler;
-import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener.Change;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -18,8 +16,6 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
@@ -62,75 +58,75 @@ public class OpenGenerator extends RibbonEventHandler {
 
 		TileMainPane tileGenPane = new TileMainPane(mapControl);
 		Stage d = new Stage();
-		d.setScene(new Scene(tileGenPane,400,600));
+		
+//		d.setScene(new Scene(tileGenPane,400,600));
+
 
 		
-//		HBox titleBar = new HBox();
-//		ImageView image = new ImageView();		
-//		Label label = new Label(I18N.getText("window.title"));
-//		label.setTextFill(Color.WHITE);
-//		
-//		HBox spacer = new HBox();
-//		HBox.setHgrow(spacer, Priority.ALWAYS);
-//		Button closeBtn = new Button();
-//		closeBtn.setOnAction(e->{d.close();});
-//		
-//		titleBar.getChildren().addAll(image, label, spacer, closeBtn);
-//		
-//		Separator sep = new Separator(Orientation.HORIZONTAL);
-//		sep.setMinHeight(1);
-//		sep.setMaxHeight(1);
-//		
-//		HBox sepCon = new HBox(sep);
-//		HBox.setHgrow(sep, Priority.ALWAYS);
-//		
-//		
-//		VBox box = new VBox();
-//
-//		HBox contents = new HBox(tileGenPane);
-//
-//		box.getChildren().addAll(titleBar, sepCon, contents);
-//		VBox.setVgrow(contents, Priority.ALWAYS);
-//		
-//		titleBar.setOnMousePressed(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                xOffset = event.getSceneX();
-//                yOffset = event.getSceneY();
-//            }
-//        });
-//		titleBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                d.setX(event.getScreenX() - xOffset);
-//                d.setY(event.getScreenY() - yOffset);
-//            }
-//        });		
-//		d.initStyle(StageStyle.UNDECORATED);
-//
-//		
-//		box.setStyle("-fx-border-color:#cccccc #cccccc transparent #cccccc");	
-//		
-//		d.setScene(new Scene(box,400,600));
-//
-//
-//		sepCon.setPadding(new Insets(0, 5, 0, 5));
-//		contents.setPadding(new Insets(15));
-//		box.setPadding(new Insets(0));		
-//		titleBar.setPadding(new Insets(5));
-//		titleBar.setAlignment(Pos.CENTER);
-//		titleBar.setSpacing(5);		
-//	
-//		image.setImage(IconResources.ICON_TILEGENERATOR);
-//	
-//		
-//		titleBar.setId("mapleskin-titlebar");
-//
-//		closeBtn.setId("mapleskin-closebutton");
-//
-//		contents.setId("mapleskin-contents");
-//		sep.setId("mapleskin-underline");
+		HBox titleBar = new HBox();
+		ImageView image = new ImageView();		
+		Label label = new Label(I18N.getText("window.title"));
+		label.setTextFill(Color.WHITE);
 		
+		HBox spacer = new HBox();
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		Button closeBtn = new Button();
+		closeBtn.setOnAction(e->{d.close();});
+		
+		titleBar.getChildren().addAll(image, label, spacer, closeBtn);
+		
+		Separator sep = new Separator(Orientation.HORIZONTAL);
+		sep.setMinHeight(1);
+		sep.setMaxHeight(1);
+		
+		HBox sepCon = new HBox(sep);
+		HBox.setHgrow(sep, Priority.ALWAYS);
+		
+		
+		VBox box = new VBox();
+
+		HBox contents = new HBox(tileGenPane);
+
+		box.getChildren().addAll(titleBar, sepCon, contents);
+		VBox.setVgrow(contents, Priority.ALWAYS);
+		
+		titleBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+		titleBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                d.setX(event.getScreenX() - xOffset);
+                d.setY(event.getScreenY() - yOffset);
+            }
+        });		
+	
+		box.setStyle("-fx-border-color:#cccccc;");	
+		sepCon.setPadding(new Insets(0, 5, 0, 5));
+		contents.setPadding(new Insets(15));
+		box.setPadding(new Insets(0));		
+		titleBar.setPadding(new Insets(5));
+		titleBar.setAlignment(Pos.CENTER);
+		titleBar.setSpacing(5);		
+	
+		image.setImage(IconResources.ICON_TILEGENERATOR);
+	
+		
+		titleBar.setId("tileskin-titlebar");
+		closeBtn.setId("tileskin-closebutton");
+		contents.setId("tileskin-contents");
+		sep.setId("tileskin-underline");
+		
+		Scene scene = new Scene(box, 400, 600);
+		String css = this.getClass().getResource("/styles/tilemap.css").toExternalForm(); 
+		scene.getStylesheets().add(css);
+		
+		d.setScene(scene);
+		d.initStyle(StageStyle.UNDECORATED);
 		d.show();
 		
 

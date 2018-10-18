@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.Step3Controller">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.InputController">
    <children>
-      <Label text="THIRD STEP">
+      <Label text="FIRST STEP">
          <font>
             <Font name="System Bold" size="24.0" />
          </font></Label>
@@ -26,12 +26,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Field 5" />
-            <Label text="Field 6" GridPane.rowIndex="1" />
-            <Label text="Field 7" GridPane.rowIndex="2" />
-            <TextField fx:id="tfField5" GridPane.columnIndex="1" />
-            <TextField fx:id="tfField6" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="tfField7" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Field 1" />
+            <Label text="Field 2" GridPane.rowIndex="1" />
+            <Label text="Field 3" GridPane.rowIndex="2" />
+            <TextField fx:id="tfField1" GridPane.columnIndex="1" />
+            <TextField fx:id="tfField2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="tfField3" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
