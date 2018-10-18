@@ -107,15 +107,12 @@ public class WizardController {
 		Parent step5 = fxmlLoaderStep5.load();
 		step5.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep5.getController());
 		
-		FXMLLoader fxmlLoaderStep6 = new FXMLLoader(WizardController.class.getResource("/fxml/ThreadConfiguration.fxml"), null, bf, cb);
-		Parent step6 = fxmlLoaderStep6.load();
-		step6.getProperties().put(CONTROLLER_KEY, fxmlLoaderStep6.getController());
 		
 		FXMLLoader fxmlLoaderCompleted = new FXMLLoader(WizardController.class.getResource("/fxml/Completed.fxml"), null, bf, cb);
 		Parent completed = fxmlLoaderCompleted.load();
 		completed.getProperties().put(CONTROLLER_KEY, fxmlLoaderCompleted.getController());
 
-		steps.addAll(Arrays.asList(step1, step2, step3, step4, step5, step6, completed));
+		steps.addAll(Arrays.asList(step1, step2, step3, step4, step5, completed));
 	}
 
 	private Circle createIndicatorCircle(int i) {

@@ -21,7 +21,7 @@ public class OutputController {
 
     @FXML
     public void initialize() {
-        tfField4.textProperty().bindBidirectional(model.field4Property());
+//        tfField4.textProperty().bindBidirectional(model.field4Property());
     }
     
     @Submit

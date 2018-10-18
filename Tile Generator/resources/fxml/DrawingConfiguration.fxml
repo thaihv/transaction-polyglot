@@ -1,41 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.DrawingController">
-   <children>
-      <Label text="THIRD STEP">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font></Label>
-      <GridPane>
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Field 5" />
-            <Label text="Field 6" GridPane.rowIndex="1" />
-            <Label text="Field 7" GridPane.rowIndex="2" />
-            <TextField fx:id="tfField5" GridPane.columnIndex="1" />
-            <TextField fx:id="tfField6" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="tfField7" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         </children>
-      </GridPane>
-   </children>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="233.0" prefWidth="399.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.DrawingController">
    <padding>
-      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
+   <children>
+      <VBox alignment="CENTER_LEFT" prefHeight="107.0" prefWidth="501.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="124.0" text="Background" />
+                  <Separator prefHeight="18.0" prefWidth="310.0" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Separator>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="501.0" spacing="5.0">
+               <children>
+                  <Label text="Background Color" />
+                  <ColorPicker prefHeight="27.0" prefWidth="93.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="104.0" text="Transparent" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="96.0" prefWidth="501.0" spacing="5.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="206.0" text="Annotation (only for vector)" HBox.hgrow="ALWAYS" />
+                  <Separator prefHeight="18.0" prefWidth="310.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Separator>
+               </children>
+            </HBox>
+            <CheckBox mnemonicParsing="false" text="Improve Label Quality" />
+            <CheckBox mnemonicParsing="false" text="Eliminate Label Overlaps" />
+         </children>
+      </VBox>
+   </children>
 </VBox>

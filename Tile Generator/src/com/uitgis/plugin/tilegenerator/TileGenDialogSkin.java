@@ -83,7 +83,7 @@ public class TileGenDialogSkin extends Stage {
 
 		box.setStyle("-fx-border-color:#cccccc;");
 		sepCon.setPadding(new Insets(0, 5, 0, 5));
-		contents.setPadding(new Insets(15));
+//		contents.setPadding(new Insets(5));
 		box.setPadding(new Insets(0));
 		titleBar.setPadding(new Insets(5));
 		titleBar.setAlignment(Pos.CENTER);
@@ -100,7 +100,7 @@ public class TileGenDialogSkin extends Stage {
 		contents.setId("mapleskin-contents");
 		sep.setId("mapleskin-underline");
 
-		Scene scene = new Scene(box, 400, 600);
+		Scene scene = new Scene(box);
 		
 		ArrayList<String> arrSheets = Main.getStyleSheets();
 		if(arrSheets != null) {
