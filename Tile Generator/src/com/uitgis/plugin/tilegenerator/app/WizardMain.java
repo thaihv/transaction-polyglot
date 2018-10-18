@@ -18,7 +18,7 @@ public class WizardMain extends Application {
 
 		final Injector injector = Guice.createInjector( new WizardModule() );
 
-		final Parent p = FXMLLoader.load( WizardMain.class.getResource("/wizard-fxml/Wizard.fxml"),
+		final Parent p = FXMLLoader.load( WizardMain.class.getResource("/fxml/Wizard.fxml"),
 										  null,
 										  new JavaFXBuilderFactory(),
 										  (clazz) -> injector.getInstance(clazz)

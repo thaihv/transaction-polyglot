@@ -27,7 +27,6 @@ public class TileMainPane extends BorderPane {
 			setCenter(p);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
