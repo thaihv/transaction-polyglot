@@ -7,6 +7,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -42,14 +43,17 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+            <VBox fx:id="vbxTileFile" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="File Tile Map" VBox.vgrow="ALWAYS" />
+                  <RadioButton fx:id="rbTileFile" mnemonicParsing="false" selected="true" text="File Tile Map" VBox.vgrow="ALWAYS">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tglGroupOutput" />
+                     </toggleGroup></RadioButton>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="123.0" text="Location" />
-                        <TextField prefHeight="25.0" prefWidth="286.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="..." />
+                        <TextField fx:id="tfLocation" prefHeight="25.0" prefWidth="286.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnBuildAsFile" mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="..." />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -62,10 +66,10 @@
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="117.0" prefWidth="394.0">
                <children>
-                  <RadioButton mnemonicParsing="false" text="GSS Tile Map" />
+                  <RadioButton fx:id="rbTileGSS" mnemonicParsing="false" text="GSS Tile Map" toggleGroup="$tglGroupOutput" />
                </children>
             </VBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox fx:id="hbxTileGSS" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label prefWidth="120.0" text="GSS" HBox.hgrow="ALWAYS" />
                   <TextField prefHeight="25.0" prefWidth="274.0" HBox.hgrow="ALWAYS" />

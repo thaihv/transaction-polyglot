@@ -1,5 +1,7 @@
 package com.uitgis.plugin.tilegenerator.model;
 
+import com.uitgis.sdk.gdx.GDX;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,6 +16,27 @@ public class WizardData {
     private final StringProperty field6 = new SimpleStringProperty();
     private final StringProperty field7 = new SimpleStringProperty();
 
+    
+	public static final int MAP_FROM_MAPEDITOR = 0;
+	public static final int MAP_FROM_GDX = 1;
+	public static final int FULL_EXTENT			= 0;
+	public static final int CURRENT_EXTENT		= 1;
+	public static final int USER_DEFINED_EXTENT	= 2;
+	public static final int ORIGIN_FROM_EXTENT = 0;
+	public static final int ORIGIN_FROM_USER = 1;
+	
+	
+	private int mOriginFrom;
+	private int mGssIndex = -1;	
+	private int mMapEditorIndex = -1;
+	private int mMapFrom;
+	private int mExtent;
+	private int mMultipleNumber = 2;
+	private GDX mGdx;
+	
+	private StringProperty mGdxPath = new SimpleStringProperty();	
+	
+    
     public String getField1() {
         return field1.get();
     }

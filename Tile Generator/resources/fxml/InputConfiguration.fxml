@@ -7,6 +7,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -34,11 +35,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" selected="true" text="Select Map" />
-                  <RadioButton mnemonicParsing="false" text="Select GDX" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ComboBox prefHeight="25.0" prefWidth="285.0" GridPane.columnIndex="1" />
+                  <RadioButton fx:id="rbSelectMap" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" selected="true" text="Select Map">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tglGroupMap" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton fx:id="rbSelectGDX" mnemonicParsing="false" text="Select GDX" toggleGroup="$tglGroupMap" GridPane.rowIndex="1" />
+                  <TextField fx:id="tfGdxFile" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="btnGdxBrowse" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cmbMap" prefHeight="25.0" prefWidth="285.0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>
@@ -51,14 +55,17 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <RadioButton mnemonicParsing="false" prefHeight="26.0" prefWidth="200.0" selected="true" text="Full Extent" />
-            <RadioButton mnemonicParsing="false" prefHeight="22.0" prefWidth="236.0" text="Current Extent of Map Editor / GDX" />
-            <RadioButton mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="User Defined Extent" />
-            <GridPane alignment="CENTER_LEFT" prefHeight="104.0" prefWidth="412.0">
+            <RadioButton fx:id="rbFullExtent" mnemonicParsing="false" prefHeight="26.0" prefWidth="200.0" selected="true" text="Full Extent">
+               <toggleGroup>
+                  <ToggleGroup fx:id="tglGroupExtent" />
+               </toggleGroup></RadioButton>
+            <RadioButton fx:id="rbCurrExtent" mnemonicParsing="false" prefHeight="22.0" prefWidth="236.0" text="Current Extent of Map Editor / GDX" toggleGroup="$tglGroupExtent" />
+            <RadioButton fx:id="rbUsrDefineExtent" mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="User Defined Extent" toggleGroup="$tglGroupExtent" />
+            <GridPane alignment="CENTER_LEFT">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="131.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="178.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="128.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="136.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="155.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="146.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -66,10 +73,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="tfField1" GridPane.columnIndex="1" />
-                  <TextField fx:id="tfField2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <TextField fx:id="tfField3" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.rowIndex="1" />
+                  <TextField fx:id="tfTop" GridPane.columnIndex="1" />
+                  <TextField fx:id="tfRight" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <TextField fx:id="tfBottom" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="tfLeft" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
