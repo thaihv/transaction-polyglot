@@ -20,11 +20,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
                <children>
                   <Label id="section-label" prefHeight="17.0" text="Input Map Source" HBox.hgrow="ALWAYS" />
-                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </Separator>
+                  <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <GridPane alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="465.0">
@@ -52,11 +48,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="32.0" spacing="10.0">
                <children>
                   <Label id="section-label" prefHeight="17.0" text="Target Envelope" HBox.hgrow="ALWAYS" />
-                  <Separator id="section-separator" prefHeight="20.0" HBox.hgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </Separator>
+                  <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <RadioButton mnemonicParsing="false" prefHeight="26.0" prefWidth="200.0" selected="true" text="Full Extent" />
