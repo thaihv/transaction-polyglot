@@ -31,7 +31,7 @@ public class TileGenerator extends MaplePlugin {
 
 	public void init(RibbonMenu menu) {
 		
-		FrameworkManager.getStyleSheets().add("/styles/tilemap.css");
+		FrameworkManager.getStyleSheets().add("styles/tilemap.css");
 		RibbonTab tab = PlugInUtil.getRibbonTab(menu, ContentID.MENU_DATATOOL, "Tool");								
 		ClassLoader loader = getClass().getClassLoader();
 		URL url = loader.getResource("icons/tilegenerator.png");

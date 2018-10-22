@@ -12,17 +12,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="461.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.PyramidController">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.PyramidController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="142.0" text="Tile Size" />
-                  <Separator prefHeight="18.0" prefWidth="374.0" HBox.hgrow="ALWAYS">
+                  <Label id="section-label" prefHeight="17.0" text="Level Order" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -31,40 +31,40 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
                <children>
-                  <RadioButton mnemonicParsing="false" text="Ascending" />
+                  <RadioButton mnemonicParsing="false" selected="true" text="Ascending" />
                   <RadioButton mnemonicParsing="false" text="Descending" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <HBox prefHeight="62.0" prefWidth="441.0">
+      <HBox prefHeight="62.0" prefWidth="441.0" spacing="10.0">
          <children>
             <Label text="Number of levels" />
             <Spinner />
          </children>
       </HBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
+      <VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Label prefHeight="17.0" prefWidth="142.0" text="Scales of Each Level" />
-                  <Separator prefHeight="18.0" prefWidth="374.0" HBox.hgrow="ALWAYS">
+                  <Label id="section-label" text="Scales of Each Level" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="17.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Separator>
                </children>
             </HBox>
-            <VBox>
+            <VBox prefHeight="150.0" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <TableView>
+                  <TableView fixedCellSize="25.0" prefHeight="200.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn prefWidth="75.0" text="!" />
                       <TableColumn prefWidth="75.0" text="Level" />
                         <TableColumn prefWidth="197.0" text="Scale" />
                     </columns>
                   </TableView>
-                  <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
                      <children>
                         <Button mnemonicParsing="false" text="Calculate scales" />
                         <Label text="Using multiple number" />

@@ -17,10 +17,10 @@
    <children>
       <VBox prefHeight="122.0" prefWidth="437.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="124.0" text="Input Map Source" />
-                  <Separator prefHeight="18.0" prefWidth="374.0">
+                  <Label id="section-label" prefHeight="17.0" text="Input Map Source" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -30,8 +30,8 @@
             <GridPane alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="465.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="92.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="313.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="64.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="290.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="66.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -49,24 +49,24 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="262.0" prefWidth="434.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="32.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="111.0" text="Target Envelope" />
-                  <Separator prefHeight="20.0" prefWidth="382.0">
+                  <Label id="section-label" prefHeight="17.0" text="Target Envelope" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="20.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Separator>
                </children>
             </HBox>
-            <RadioButton mnemonicParsing="false" prefHeight="26.0" prefWidth="200.0" text="Full Extent" />
+            <RadioButton mnemonicParsing="false" prefHeight="26.0" prefWidth="200.0" selected="true" text="Full Extent" />
             <RadioButton mnemonicParsing="false" prefHeight="22.0" prefWidth="236.0" text="Current Extent of Map Editor / GDX" />
             <RadioButton mnemonicParsing="false" prefHeight="25.0" prefWidth="176.0" text="User Defined Extent" />
             <GridPane alignment="CENTER_LEFT" prefHeight="104.0" prefWidth="412.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="131.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="231.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="67.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="178.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="128.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

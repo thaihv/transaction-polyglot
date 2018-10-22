@@ -8,17 +8,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="233.0" prefWidth="399.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.DrawingController">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.DrawingController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="107.0" prefWidth="501.0" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="124.0" text="Background" />
-                  <Separator prefHeight="18.0" prefWidth="310.0" HBox.hgrow="ALWAYS">
+                  <Label id="section-label" prefHeight="17.0" text="Background" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -34,20 +34,20 @@
             <CheckBox mnemonicParsing="false" prefHeight="17.0" prefWidth="104.0" text="Transparent" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="96.0" prefWidth="501.0" spacing="5.0" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefHeight="96.0" spacing="5.0" VBox.vgrow="ALWAYS">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="206.0" text="Annotation (only for vector)" HBox.hgrow="ALWAYS" />
-                  <Separator prefHeight="18.0" prefWidth="310.0">
+                  <Label id="section-label" prefHeight="17.0" text="Annotation (only for vector)" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Separator>
                </children>
             </HBox>
-            <CheckBox mnemonicParsing="false" text="Improve Label Quality" />
-            <CheckBox mnemonicParsing="false" text="Eliminate Label Overlaps" />
+            <CheckBox mnemonicParsing="false" selected="true" text="Improve Label Quality" />
+            <CheckBox mnemonicParsing="false" selected="true" text="Eliminate Label Overlaps" />
          </children>
       </VBox>
    </children>

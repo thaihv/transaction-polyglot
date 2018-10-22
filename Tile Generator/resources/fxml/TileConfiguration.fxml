@@ -9,17 +9,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.TileController">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.TileController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="142.0" text="Tile Size" />
-                  <Separator prefHeight="18.0" prefWidth="374.0" HBox.hgrow="ALWAYS">
+                  <Label id="section-label" prefHeight="17.0" text="Tile Size" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -38,19 +38,19 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="170.0" prefWidth="368.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0" spacing="10.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="142.0" text="The Origin" />
-                  <Separator prefHeight="18.0" prefWidth="374.0" HBox.hgrow="ALWAYS">
+                  <Label id="section-label" prefHeight="17.0" text="The Origin" HBox.hgrow="ALWAYS" />
+                  <Separator id="section-separator" prefHeight="18.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Separator>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="368.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="368.0" spacing="10.0">
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" text="Use Lower Point of Target Extent" />
+                  <RadioButton mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" selected="true" text="Use Lower Point of Target Extent" />
                   <RadioButton mnemonicParsing="false" text="Use User Defined Origin" />
                </children>
             </HBox>

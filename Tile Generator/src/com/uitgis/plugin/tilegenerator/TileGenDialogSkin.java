@@ -81,9 +81,9 @@ public class TileGenDialogSkin extends Stage {
 			}
 		});
 
-		box.setStyle("-fx-border-color:#cccccc;");
+		box.setStyle("-fx-border-color:#DC143C;");
 		sepCon.setPadding(new Insets(0, 5, 0, 5));
-//		contents.setPadding(new Insets(5));
+		contents.setPadding(new Insets(5));
 		box.setPadding(new Insets(0));
 		titleBar.setPadding(new Insets(5));
 		titleBar.setAlignment(Pos.CENTER);

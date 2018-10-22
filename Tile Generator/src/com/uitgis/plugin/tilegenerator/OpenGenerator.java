@@ -12,6 +12,7 @@ import framework.ribbon.RibbonMenu.FileMenuSection;
 import framework.ribbon.event.RibbonEventHandler;
 import javafx.collections.MapChangeListener.Change;
 import javafx.event.ActionEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class OpenGenerator extends RibbonEventHandler {
@@ -40,7 +41,10 @@ public class OpenGenerator extends RibbonEventHandler {
 
 		TileMainPane tileGenPane = new TileMainPane(mapControl);
 		Stage tileStage = new TileGenDialogSkin(tileGenPane, true, IconResources.ICON_TILEGENERATOR).getDialog();
-
+		tileStage.initModality(Modality.NONE);
+		tileStage.initOwner(Main.getPrimaryStage());
+		
+		
 		tileStage.setOnShown(e -> {
 			opened = true;
 
