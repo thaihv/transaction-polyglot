@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -34,6 +36,13 @@ public class InputController {
 
 	@Inject
 	WizardData model;
+	
+    public ObservableList<String> choiceMapItems = FXCollections.observableArrayList(
+            "Choice A",
+            "Choice B",
+            "Choice C",
+            "Choice D"
+    );	
 
 	@FXML
 	public void initialize() {
@@ -44,6 +53,9 @@ public class InputController {
 		tfRight.textProperty().bindBidirectional(model.field3Property());
 
 		cmbMap.disableProperty().bind(rbSelectGDX.selectedProperty());
+		cmbMap.getItems().addAll(choiceMapItems);
+		cmbMap.getSelectionModel().selectFirst();
+		
 		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.setOnAction(event -> {

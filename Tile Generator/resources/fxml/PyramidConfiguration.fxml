@@ -14,62 +14,63 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.PyramidController">
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
-   <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
-               <children>
-                  <Label id="section-label" prefHeight="17.0" text="Level Order" HBox.hgrow="ALWAYS" />
-                  <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
-               <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="Ascending">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="tglLevelOrder" />
-                     </toggleGroup></RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Descending" toggleGroup="$tglLevelOrder" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <HBox prefHeight="62.0" prefWidth="441.0" spacing="10.0">
-         <children>
-            <Label text="Number of levels" />
-            <Spinner />
-         </children>
-      </HBox>
-      <VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <Label id="section-label" text="Scales of Each Level" HBox.hgrow="ALWAYS" />
-                  <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
-            <VBox prefHeight="150.0" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <TableView fixedCellSize="25.0" prefHeight="200.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="!" />
-                      <TableColumn prefWidth="75.0" text="Level" />
-                        <TableColumn prefWidth="197.0" text="Scale" />
-                    </columns>
-                  </TableView>
-                  <HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
-                     <children>
-                        <Button mnemonicParsing="false" text="Calculate scales" />
-                        <Label text="Using multiple number" />
-                        <TextField HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </VBox>
-   </children>
+	<padding>
+		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+	</padding>
+	<children>
+		<VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
+			<children>
+				<HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
+					<children>
+						<Label id="section-label" prefHeight="17.0" text="Level Order" HBox.hgrow="ALWAYS" />
+						<Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
+					</children>
+				</HBox>
+				<HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
+					<children>
+						<RadioButton mnemonicParsing="false" selected="true" text="Ascending">
+							<toggleGroup>
+								<ToggleGroup fx:id="tglLevelOrder" />
+							</toggleGroup>
+						</RadioButton>
+						<RadioButton mnemonicParsing="false" text="Descending" toggleGroup="$tglLevelOrder" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+		<HBox prefHeight="62.0" prefWidth="441.0" spacing="10.0">
+			<children>
+				<Label text="Number of levels" />
+				<Spinner fx:id="spinNumLevels" editable="true" />
+			</children>
+		</HBox>
+		<VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
+			<children>
+				<HBox alignment="CENTER_LEFT" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
+					<children>
+						<Label id="section-label" text="Scales of Each Level" HBox.hgrow="ALWAYS" />
+						<Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
+					</children>
+				</HBox>
+				<VBox prefHeight="150.0" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
+					<children>
+						<TableView fx:id="tblScaleLevel" editable="true" fixedCellSize="25.0" prefHeight="200.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
+							<columns>
+								<TableColumn fx:id="colActive" prefWidth="86.0" text="!" />
+								<TableColumn fx:id="colLevel" editable="false" prefWidth="97.0" text="Level" />
+								<TableColumn fx:id="colScale" prefWidth="230.0" text="Scale (m/pixel)" />
+							</columns>
+						</TableView>
+						<HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
+							<children>
+								<Button mnemonicParsing="false" text="Calculate scales" />
+								<Label text="Using multiple number" />
+								<TextField HBox.hgrow="ALWAYS" />
+							</children>
+						</HBox>
+					</children>
+				</VBox>
+			</children>
+		</VBox>
+	</children>
 </VBox>
