@@ -6,6 +6,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -42,8 +43,11 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="368.0" spacing="10.0">
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" selected="true" text="Use Lower Point of Target Extent" />
-                  <RadioButton mnemonicParsing="false" text="Use User Defined Origin" />
+                  <RadioButton mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" selected="true" text="Use Lower Point of Target Extent">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tglOriginPoint" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton mnemonicParsing="false" text="Use User Defined Origin" toggleGroup="$tglOriginPoint" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="368.0" spacing="10.0">

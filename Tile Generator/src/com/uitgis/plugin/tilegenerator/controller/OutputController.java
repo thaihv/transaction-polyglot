@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
 public class OutputController {
@@ -30,11 +29,9 @@ public class OutputController {
     @FXML
     Button btnBuildAsFile;
     
+  
     @FXML
-    VBox vbxTileFile;
-    
-    @FXML
-    HBox hbxTileGSS;
+    HBox hbxTileGSS, hbxLocation, hbxExpression;
     
     @Inject
     WizardData model;
@@ -44,9 +41,9 @@ public class OutputController {
 //        tfField4.textProperty().bindBidirectional(model.field4Property());
     	
     	
-    	
-//    	vbxTileFile.disableProperty().bind(rbTileGSS.selectedProperty());
-//    	hbxTileGSS.disableProperty().bind(rbTileFile.selectedProperty());
+    	hbxExpression.disableProperty().bind(rbTileGSS.selectedProperty());
+    	hbxLocation.disableProperty().bind(rbTileGSS.selectedProperty());
+    	hbxTileGSS.disableProperty().bind(rbTileFile.selectedProperty());
     	
     	btnBuildAsFile.setOnAction(event -> {
 			DirectoryChooser dirChooser = new DirectoryChooser();

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,8 +28,11 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="Ascending" />
-                  <RadioButton mnemonicParsing="false" text="Descending" />
+                  <RadioButton mnemonicParsing="false" selected="true" text="Ascending">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tglLevelOrder" />
+                     </toggleGroup></RadioButton>
+                  <RadioButton mnemonicParsing="false" text="Descending" toggleGroup="$tglLevelOrder" />
                </children>
             </HBox>
          </children>

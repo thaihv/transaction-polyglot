@@ -43,20 +43,20 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <VBox fx:id="vbxTileFile" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
                   <RadioButton fx:id="rbTileFile" mnemonicParsing="false" selected="true" text="File Tile Map" VBox.vgrow="ALWAYS">
                      <toggleGroup>
                         <ToggleGroup fx:id="tglGroupOutput" />
                      </toggleGroup></RadioButton>
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                  <HBox fx:id="hbxLocation" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="123.0" text="Location" />
                         <TextField fx:id="tfLocation" prefHeight="25.0" prefWidth="286.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnBuildAsFile" mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="..." />
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox fx:id="hbxExpression" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label prefWidth="120.0" text="Subpath Expression" HBox.hgrow="ALWAYS" />
                         <TextField prefHeight="25.0" prefWidth="274.0" HBox.hgrow="ALWAYS" />
