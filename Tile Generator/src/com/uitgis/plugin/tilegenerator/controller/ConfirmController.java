@@ -20,13 +20,13 @@ public class ConfirmController {
 
     @FXML
     public void initialize() {
-        tfField1.textProperty().bind(model.field1Property());
-        tfField2.textProperty().bind(model.field2Property());
-        tfField3.textProperty().bind(model.field3Property());
-        tfField4.textProperty().bind(model.field4Property());
-        tfField5.textProperty().bind(model.field5Property());
-        tfField6.textProperty().bind(model.field6Property());
-        tfField7.textProperty().bind(model.field7Property());
+//        tfField1.textProperty().bind(model.field1Property());
+//        tfField2.textProperty().bind(model.field2Property());
+//        tfField3.textProperty().bind(model.field3Property());
+//        tfField4.textProperty().bind(model.field4Property());
+//        tfField5.textProperty().bind(model.field5Property());
+//        tfField6.textProperty().bind(model.field6Property());
+//        tfField7.textProperty().bind(model.field7Property());
     }
 
     @Submit

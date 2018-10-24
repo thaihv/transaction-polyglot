@@ -1,15 +1,25 @@
 package com.uitgis.plugin.tilegenerator.controller;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.uitgis.maple.application.ContentID;
+import com.uitgis.maple.contents.map.ui.MapTabPane;
+import com.uitgis.maple.contents.toolbox.ui.ToolboxHelper;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
+import com.uitgis.sdk.controls.MapControl;
+import com.vividsolutions.jts.geom.Envelope;
 
+import framework.FrameworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -37,24 +47,32 @@ public class InputController {
 	@Inject
 	WizardData model;
 	
-    public ObservableList<String> choiceMapItems = FXCollections.observableArrayList(
-            "Choice A",
-            "Choice B",
-            "Choice C",
-            "Choice D"
-    );	
+    public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
+	private MapTabPane mapTab = (MapTabPane)FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
+	private ArrayList<MapControl> maps = mapTab.getAllMapControls();
+    private MapControl mc = ToolboxHelper.getCurrentMapControl();
 
 	@FXML
 	public void initialize() {
 
-		tfLeft.textProperty().bindBidirectional(model.field1Property());
-		tfTop.textProperty().bindBidirectional(model.field2Property());
-		tfBottom.textProperty().bindBidirectional(model.field3Property());
-		tfRight.textProperty().bindBidirectional(model.field3Property());
+		if (!mc.gdxEmpty()) {
+			Envelope ev = mc.getEnvelope();
+			model.leftExtentProperty().set(Double.toString(ev.getMinX()));
+			model.rightExtentProperty().set(Double.toString(ev.getMaxX()));
+			model.topExtentProperty().set(Double.toString(ev.getMaxY()));
+			model.bottomExtentProperty().set(Double.toString(ev.getMinY()));
+		}
+	
+		choiceMapItems.addAll(maps.stream().map(c-> c.getMapTitle()).collect(Collectors.toList()));
+
+		tfLeft.textProperty().bindBidirectional(model.leftExtentProperty());
+		tfTop.textProperty().bindBidirectional(model.topExtentProperty());
+		tfBottom.textProperty().bindBidirectional(model.bottomExtentProperty());
+		tfRight.textProperty().bindBidirectional(model.rightExtentProperty());
 
 		cmbMap.disableProperty().bind(rbSelectGDX.selectedProperty());
 		cmbMap.getItems().addAll(choiceMapItems);
-		cmbMap.getSelectionModel().selectFirst();
+		cmbMap.getSelectionModel().select(mc.getMapTitle());
 		
 		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
@@ -121,4 +139,23 @@ public class InputController {
 			log.debug("[SUBMIT] the user has completed step Input Configuration");
 		}
 	}
+	
+	@FXML
+	public void selectMapAction(ActionEvent event) {
+
+		Optional<MapControl> mc = maps.stream().filter(p -> p.getMapTitle().equals(cmbMap.getValue())).findFirst();
+		
+		if (mc.isPresent()) {
+			if (!mc.get().gdxEmpty()) {
+				Envelope ev = mc.get().getEnvelope();
+				model.leftExtentProperty().set(Double.toString(ev.getMinX()));
+				model.rightExtentProperty().set(Double.toString(ev.getMaxX()));
+				model.topExtentProperty().set(Double.toString(ev.getMaxY()));
+				model.bottomExtentProperty().set(Double.toString(ev.getMinY()));
+			}
+			
+		}			
+
+
+	}	
 }

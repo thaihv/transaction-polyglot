@@ -9,8 +9,11 @@ import com.google.inject.Inject;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import framework.i18n.I18N;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -29,6 +32,8 @@ public class OutputController {
     @FXML
     Button btnBuildAsFile;
     
+	@FXML
+	ComboBox<String> cmbTileFormat;
   
     @FXML
     HBox hbxTileGSS, hbxLocation, hbxExpression;
@@ -36,6 +41,8 @@ public class OutputController {
     @Inject
     WizardData model;
 
+    public ObservableList<String> choiceTileFormats = FXCollections.observableArrayList("PNG","JPEG");
+    
     @FXML
     public void initialize() {
 //        tfField4.textProperty().bindBidirectional(model.field4Property());
@@ -45,6 +52,9 @@ public class OutputController {
     	hbxLocation.disableProperty().bind(rbTileGSS.selectedProperty());
     	hbxTileGSS.disableProperty().bind(rbTileFile.selectedProperty());
     	
+    	cmbTileFormat.getItems().addAll(choiceTileFormats);
+    	cmbTileFormat.getSelectionModel().selectFirst();
+		
     	btnBuildAsFile.setOnAction(event -> {
 			DirectoryChooser dirChooser = new DirectoryChooser();
 			dirChooser.setTitle(I18N.getText("SearchFolder"));
