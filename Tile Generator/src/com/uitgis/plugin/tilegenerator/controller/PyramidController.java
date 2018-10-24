@@ -29,7 +29,7 @@ public class PyramidController {
     @FXML
     Spinner<Integer> spinNumLevels;
     @FXML
-    TableView<TileScale> tblScaleLevel;
+    TableView<TileScale> tblScale;
     @FXML
     TableColumn<TileScale,Boolean> colActive;
     @FXML
@@ -62,7 +62,7 @@ public class PyramidController {
     	});
     	
     	
-    	tblScaleLevel.setItems(model.getListTileScale());
+    	tblScale.setItems(model.getListTileScale());
     	
     	colLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
     	
