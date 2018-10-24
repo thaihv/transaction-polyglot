@@ -8,12 +8,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class TileScale {
-	
-	private BooleanProperty active;
 
 	private IntegerProperty level;
-
 	private DoubleProperty scale;
+	private BooleanProperty active;
 
 	public TileScale(boolean bActive, int nLevel, double dScale) {
 		setActive(bActive);
@@ -27,8 +25,9 @@ public class TileScale {
 	}
 
 	public BooleanProperty activeProperty() {
-	    if (this.active == null) this.active = new SimpleBooleanProperty(true);
-	    return this.active; 
+		if (this.active == null)
+			this.active = new SimpleBooleanProperty(true);
+		return this.active;
 
 	}
 
@@ -41,7 +40,8 @@ public class TileScale {
 	}
 
 	public IntegerProperty levelProperty() {
-		if (this.level == null) this.level = new SimpleIntegerProperty(0);
+		if (this.level == null)
+			this.level = new SimpleIntegerProperty(0);
 		return this.level;
 	}
 
@@ -54,7 +54,8 @@ public class TileScale {
 	}
 
 	public DoubleProperty scaleProperty() {
-		if (this.scale == null) this.scale = new SimpleDoubleProperty(Double.MIN_VALUE);
+		if (this.scale == null)
+			this.scale = new SimpleDoubleProperty(Double.MIN_VALUE);
 		return this.scale;
 	}
 
