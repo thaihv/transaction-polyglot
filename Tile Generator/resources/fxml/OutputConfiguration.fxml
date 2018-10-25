@@ -69,10 +69,10 @@
                   <RadioButton fx:id="rbTileGSS" mnemonicParsing="false" text="GSS Tile Map" toggleGroup="$tglGroupOutput" />
                </children>
             </VBox>
-            <HBox fx:id="hbxTileGSS" prefHeight="100.0" prefWidth="200.0">
+            <HBox fx:id="hbxTileGSS" alignment="CENTER_LEFT">
                <children>
                   <Label prefWidth="120.0" text="GSS" HBox.hgrow="ALWAYS" />
-                  <TextField prefHeight="25.0" prefWidth="274.0" HBox.hgrow="ALWAYS" />
+                  <ComboBox prefHeight="25.0" prefWidth="321.0" promptText="Select a source" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>
