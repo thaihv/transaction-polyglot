@@ -2,6 +2,8 @@ package com.uitgis.plugin.tilegenerator.model;
 
 import com.uitgis.sdk.gdx.GDX;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -13,6 +15,9 @@ public class WizardData {
 	private final StringProperty rightExtent = new SimpleStringProperty();
 	private final StringProperty topExtent = new SimpleStringProperty();
 	private final StringProperty bottomExtent = new SimpleStringProperty();
+
+	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
+
 	private GDX GDX;
 
 	private final ObservableList<TileScale> listTileScale = FXCollections
@@ -27,6 +32,7 @@ public class WizardData {
 		rightExtent.set("");
 		topExtent.set("");
 		bottomExtent.set("");
+		threadNum.set(1);
 		listTileScale.clear();
 		listTileScale.add(new TileScale(true, 0, 0));
 	}
@@ -79,6 +85,8 @@ public class WizardData {
 		this.bottomExtentProperty().set(bottomExtent);
 	}
 
+
+
 	public GDX getGDX() {
 		return GDX;
 	}
@@ -86,5 +94,20 @@ public class WizardData {
 	public void setGDX(GDX gDX) {
 		GDX = gDX;
 	}
+
+	public IntegerProperty threadNumProperty() {
+		return this.threadNum;		
+	}
+	
+
+	public int getThreadNum() {
+		return this.threadNumProperty().get();
+	}
+	
+
+	public void setThreadNum(int threadNum) {
+		this.threadNumProperty().set(threadNum);
+	}
+	
 
 }

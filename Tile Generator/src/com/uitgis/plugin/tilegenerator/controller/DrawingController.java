@@ -1,13 +1,13 @@
 package com.uitgis.plugin.tilegenerator.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DrawingController {
 
@@ -24,6 +24,7 @@ public class DrawingController {
 //        tfField5.textProperty().bindBidirectional(model.field5Property());
 //        tfField6.textProperty().bindBidirectional(model.field6Property());
 //        tfField7.textProperty().bindBidirectional(model.field7Property());
+
     }
 
     @Validate
@@ -60,7 +61,7 @@ public class DrawingController {
     @Submit
     public void submit() throws Exception {
         if( log.isDebugEnabled() ) {
-            log.debug("[SUBMIT] the user has completed step 3");
+            log.debug("[SUBMIT] the user has completed step Drawing Configuration");
         }
     }
 }

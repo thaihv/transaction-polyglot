@@ -70,7 +70,7 @@ public class OutputController {
     public void submit() throws Exception {
 
         if( log.isDebugEnabled() ) {
-            log.debug("[SUBMIT] the user has completed step 2");
+            log.debug("[SUBMIT] the user has completed step Output Configuration");
         }
     }
 }

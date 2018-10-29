@@ -3,3 +3,4 @@
 /configuration/
 /data/
 /derby.log
+/app.lock
