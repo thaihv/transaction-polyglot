@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -194,7 +196,7 @@ public class WizardController {
 		Stage stage = (Stage) btnFinish.getScene().getWindow();
 		stage.close();
 
-		Task<Void> tileGenTask = new TileGenTask();
+		Task<Void> tileGenTask = new TileGenTask(model.getThreadNum());
 		try {
 			ProgressDialog dlg = DialogManager.getProgressDialog(Main.getPrimaryStage(), Modality.NONE, StageStyle.DECORATED, "Tile Generator", null, tileGenTask);
 			MapleDialogSkin skin = UIUtil.applyMapleDialogSkin(dlg, false);
@@ -202,17 +204,6 @@ public class WizardController {
 		} catch (Exception e) {
 			FrameworkManager.log(tileGenTask.getClass(), e.getMessage(), e.getCause(), true);
 		}
-
-//		ExecutorService executor = Executors.newFixedThreadPool(model.getThreadNum());
-//		for (int i = 0; i < model.getThreadNum(); i++) {
-//			Task<Void> t = new TileGenTask();
-//			executor.execute(t);
-//		}
-//
-//		executor.shutdown();
-//
-//		while (!executor.isTerminated()) {
-//		}
 
 	}
 
