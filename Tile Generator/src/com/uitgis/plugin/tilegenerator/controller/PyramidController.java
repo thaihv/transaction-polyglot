@@ -84,18 +84,16 @@ public class PyramidController {
 			}
 
 		});
+		
 
 		tblScale.setItems(model.getListTileScale());
-
 		colLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
-
 		colScale.setCellValueFactory(cd -> cd.getValue().scaleProperty().asObject());
 		colScale.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+		
 
 		colActive.setCellValueFactory(cd -> cd.getValue().activeProperty());
-
-		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell
-				.forTableColumn(colActive);
+		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell.forTableColumn(colActive);
 		colActive.setCellFactory(new Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>>() {
 			@Override
 			public TableCell<TileScale, Boolean> call(TableColumn<TileScale, Boolean> column) {
@@ -139,7 +137,7 @@ public class PyramidController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Step 3");
             alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "All scales are required." );
+            alert.setContentText( "All values in Scale field are required! Input value for first level and calculate it." );
             alert.showAndWait();
             return false;
         }

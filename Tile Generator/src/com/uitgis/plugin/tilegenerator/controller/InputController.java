@@ -51,7 +51,7 @@ public class InputController {
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
 	
 	@FXML
-	ToggleGroup tglGroupExtent;
+	ToggleGroup tglGroupExtent, tglGroupMap;
 
 	@FXML
 	ComboBox<String> cmbMap;
@@ -121,6 +121,7 @@ public class InputController {
 				}
 			}
 		});
+
 		tglGroupExtent.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {           
 

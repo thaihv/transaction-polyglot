@@ -2,6 +2,7 @@ package com.uitgis.plugin.tilegenerator.model;
 
 import com.uitgis.sdk.gdx.GDX;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,6 +16,7 @@ public class WizardData {
 	private final StringProperty rightExtent = new SimpleStringProperty();
 	private final StringProperty topExtent = new SimpleStringProperty();
 	private final StringProperty bottomExtent = new SimpleStringProperty();
+	
 
 	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
 
