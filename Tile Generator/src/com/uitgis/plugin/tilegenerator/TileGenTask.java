@@ -15,50 +15,43 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 public class TileGenTask extends Task<Void> {
+
 	private Thread mThread;
 	private int mThreadNum;
+	private final int totalWork = 500;
 	private int count = 0;
-	
-	synchronized void amountSync() {
-	    count = count + 1;
+
+	private synchronized void amountSync() {
+		count = count + 1;
 	}
+
 	public TileGenTask(int mThreadNum) {
 		super();
 		this.mThreadNum = mThreadNum;
 	}
+
 	public int getmThreadNum() {
 		return mThreadNum;
 	}
+
 	public void setmThreadNum(int mThreadNum) {
 		this.mThreadNum = mThreadNum;
-	}	
+	}
+
 	@Override
 	protected Void call() throws Exception {
 		mThread = Thread.currentThread();
+		updateProgress(0, totalWork);
 
-		final int max = 500;
-		updateProgress(0, max);
-
-		if (mThreadNum < 0) 
+		if (mThreadNum < 0)
 			return null;
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(mThreadNum);
 		List<Callable<String>> taskList = new ArrayList<Callable<String>>();
+
 		for (int i = 0; i < mThreadNum; i++) {
-			Callable<String> callable = () -> {
-				for (int tile = 1; tile <= max / mThreadNum; tile++) {
-					if (isCancelled()) {
-						break;
-					}
-					Thread.sleep(50);
-					amountSync();
-					updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + max);
-					System.out.println(Thread.currentThread().getName() + " " + ": Amount " + count + "/" + max);
 
-				}
-
-				return Thread.currentThread().getName();
-			};
+			TileGenCallable callable = new TileGenCallable(1, totalWork / mThreadNum);
 			taskList.add(callable);
 
 		}
@@ -69,7 +62,7 @@ public class TileGenTask extends Task<Void> {
 			try {
 
 				System.out.println(new Date() + "::" + fut.get());
-				 allDone &= fut.isDone();
+				allDone &= fut.isDone();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -81,7 +74,7 @@ public class TileGenTask extends Task<Void> {
 			});
 		}
 		done();
-		
+
 		return null;
 	}
 
@@ -92,11 +85,53 @@ public class TileGenTask extends Task<Void> {
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCancelled"));
 			});
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		super.cancelled();
 	}
+
+	public class TileGenCallable implements Callable<String> {
+
+		private int min, max;
+
+		public int getMin() {
+			return min;
+		}
+
+		public void setMin(int min) {
+			this.min = min;
+		}
+
+		public int getMax() {
+			return max;
+		}
+
+		public void setMax(int max) {
+			this.max = max;
+		}
+
+		public TileGenCallable(int min, int max) {
+			super();
+			this.min = min;
+			this.max = max;
+		}
+
+		@Override
+		public String call() throws Exception {
+			for (int tile = min; tile <= max; tile++) {
+				if (isCancelled()) {
+					break;
+				}
+				Thread.sleep(50);
+				amountSync();
+				updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + totalWork);
+				System.out.println(Thread.currentThread().getName() + " " + ": Amount " + count + "/" + totalWork);
+			}
+
+			return Thread.currentThread().getName();
+		}
+
+	};
 }

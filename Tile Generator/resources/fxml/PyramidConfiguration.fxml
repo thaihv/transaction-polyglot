@@ -28,12 +28,12 @@
 				</HBox>
 				<HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
 					<children>
-						<RadioButton mnemonicParsing="false" selected="true" text="Ascending">
+						<RadioButton fx:id="rbAsc" mnemonicParsing="false" selected="true" text="Ascending">
 							<toggleGroup>
 								<ToggleGroup fx:id="tglLevelOrder" />
 							</toggleGroup>
 						</RadioButton>
-						<RadioButton mnemonicParsing="false" text="Descending" toggleGroup="$tglLevelOrder" />
+						<RadioButton fx:id="rbDesc" mnemonicParsing="false" text="Descending" toggleGroup="$tglLevelOrder" />
 					</children>
 				</HBox>
 			</children>
@@ -63,9 +63,9 @@
 						</TableView>
 						<HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
 							<children>
-								<Button mnemonicParsing="false" text="Calculate scales" />
+								<Button fx:id="btnCalcScale" mnemonicParsing="false" onAction="#calcScales" text="Calculate scales" />
 								<Label text="Using multiple number" />
-								<TextField text="2" HBox.hgrow="ALWAYS" />
+								<TextField fx:id="tfMultipleNum" text="2" HBox.hgrow="ALWAYS" />
 							</children>
 						</HBox>
 					</children>
