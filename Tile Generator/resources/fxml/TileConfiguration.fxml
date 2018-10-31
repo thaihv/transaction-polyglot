@@ -56,25 +56,25 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="368.0" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" selected="true" text="Use Lower Point of Target Extent">
+                  <RadioButton fx:id="rbExtentPoint" mnemonicParsing="false" prefHeight="29.0" prefWidth="194.0" selected="true" text="Use Lower Point of Target Extent">
                      <toggleGroup>
                         <ToggleGroup fx:id="tglOriginPoint" />
                      </toggleGroup></RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Use User Defined Origin" toggleGroup="$tglOriginPoint" />
+                  <RadioButton fx:id="rbDefinedPoint" mnemonicParsing="false" text="Use User Defined Origin" toggleGroup="$tglOriginPoint" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="368.0" spacing="10.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="145.0" text="X Coordinate of Origin" />
-                  <TextField HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="tfOriginX" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="146.0" text="Y Coordinate of Origin" />
-                  <TextField HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="tfOriginY" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

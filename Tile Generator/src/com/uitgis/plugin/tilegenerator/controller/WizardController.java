@@ -191,7 +191,9 @@ public class WizardController {
 		Stage stage = (Stage) btnFinish.getScene().getWindow();
 		stage.close();
 
-		Task<Void> tileGenTask = new TileGenTask(model.getThreadNum());
+		Task<Void> tileGenTask = new TileGenTask(model.getThreadNum());		
+		injector.injectMembers(tileGenTask);		
+		
 		try {
 			ProgressDialog dlg = DialogManager.getProgressDialog(Main.getPrimaryStage(), Modality.NONE, StageStyle.DECORATED, "Tile Generator", null, tileGenTask);
 			MapleDialogSkin skin = UIUtil.applyMapleDialogSkin(dlg, false);

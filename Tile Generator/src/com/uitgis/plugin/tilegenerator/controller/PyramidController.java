@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.TileScale;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
@@ -107,9 +108,10 @@ public class PyramidController {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
 				int selected = tglLevelOrder.getToggles().indexOf(tglLevelOrder.getSelectedToggle());
-
+				model.setOrderLevel(selected);
 				if (selected == 0) {
 					for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
+						
 						model.getListTileScale().get(i).setLevel(i);
 					}
 
@@ -134,11 +136,7 @@ public class PyramidController {
 				scaleDone = false;
 		}
         if( !scaleDone ) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Step 3");
-            alert.setHeaderText( "Missing Field" );
-            alert.setContentText( "All values in Scale field are required! Input value for first level and calculate it." );
-            alert.showAndWait();
+        	Noti.showAlert("Missing Field", "All values in Scale field are required! Input value for first level and calculate it.");
             return false;
         }
 		return true;

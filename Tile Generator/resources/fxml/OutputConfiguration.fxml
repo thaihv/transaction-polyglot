@@ -39,7 +39,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="396.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="109.0" text="Tile Map Name" />
-                  <TextField prefHeight="25.0" prefWidth="290.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="tfMapName" prefHeight="25.0" prefWidth="290.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="396.0">
@@ -74,7 +74,7 @@
                   <HBox fx:id="hbxExpression" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label prefWidth="120.0" text="Subpath Expression" HBox.hgrow="ALWAYS" />
-                        <TextField prefHeight="25.0" prefWidth="274.0" text="/{$L}/Y{$Y}/X{$X}" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfExpression" prefHeight="25.0" prefWidth="274.0" text="/{$L}/Y{$Y}/X{$X}" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

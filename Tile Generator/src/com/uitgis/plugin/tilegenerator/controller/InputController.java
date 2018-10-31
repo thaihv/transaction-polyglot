@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.uitgis.maple.application.ContentID;
+import com.uitgis.maple.common.util.Noti;
 import com.uitgis.maple.contents.map.ui.MapTabPane;
 import com.uitgis.maple.contents.toolbox.ui.ToolboxHelper;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
@@ -28,7 +29,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
@@ -150,38 +150,21 @@ public class InputController {
 	public boolean validate() throws Exception {
 
 		if (tfLeft.getText() == null || tfLeft.getText().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Left Extent");
-			alert.setHeaderText("Missing Field");
-			alert.setContentText("Left Extent is required.");
-			alert.showAndWait();
-
+			Noti.showAlert("Missing Field", "Left Extent field is required.");
 			return false;
 		}
 
 		if (tfTop.getText() == null || tfTop.getText().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Top Extent");
-			alert.setHeaderText("Missing Field");
-			alert.setContentText("Top Extent is required.");
-			alert.showAndWait();
+			Noti.showAlert("Missing Field", "Top Extent field is required.");
 			return false;
 		}
 
 		if (tfBottom.getText() == null || tfBottom.getText().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Bottom Extent");
-			alert.setHeaderText("Missing Field");
-			alert.setContentText("Bottom Extent is required.");
-			alert.showAndWait();
+			Noti.showAlert("Missing Field", "Bottom Extent field is required.");
 			return false;
 		}
 		if (tfRight.getText() == null || tfRight.getText().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Right Extent");
-			alert.setHeaderText("Missing Field");
-			alert.setContentText("Right Extent is required.");
-			alert.showAndWait();
+			Noti.showAlert("Missing Field", "Right Extent field is required.");
 			return false;
 		}
 		return true;
