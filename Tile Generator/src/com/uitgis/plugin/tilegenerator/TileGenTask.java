@@ -21,7 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 import com.google.inject.Inject;
 import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
-import com.uitgis.sdk.datamodel.map.wms.GeographicBoundingBox;
 import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
 import com.uitgis.sdk.reference.CRSHelper;
@@ -187,6 +186,7 @@ public class TileGenTask extends Task<Void> {
 					Envelope bbox = new Envelope(x, y, 
 							x + mLevelDefs[i].getTileDistanceOnXAXIS(), y + mLevelDefs[i].getTileDistanceOnYAXIS(),
 							mConfiguration.getTargetCRS());
+					
 					
 					
 //					BuilderJob job = (type == TMConfiguration.TYPE_FILE_TILEMAP) ?

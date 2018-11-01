@@ -39,7 +39,7 @@ public class WizardData {
 	private IntegerProperty orderLevel = new SimpleIntegerProperty(0);
 	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
 	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
-	
+	private IntegerProperty tileFormat = new SimpleIntegerProperty(0);
 	
 	
 	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
@@ -328,6 +328,21 @@ public class WizardData {
 	public void setGenerateEmptyTile(final boolean generateEmptyTile) {
 		this.generateEmptyTileProperty().set(generateEmptyTile);
 	}
+
+	public IntegerProperty tileFormatProperty() {
+		return this.tileFormat;
+	}
+	
+
+	public int getTileFormat() {
+		return this.tileFormatProperty().get();
+	}
+	
+
+	public void setTileFormat(final int tileFormat) {
+		this.tileFormatProperty().set(tileFormat);
+	}
+	
 	
 	
 	

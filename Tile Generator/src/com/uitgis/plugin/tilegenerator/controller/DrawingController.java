@@ -21,10 +21,12 @@ public class DrawingController {
 
     @FXML
     public void initialize() {
+    	
     	ckbTransparent.selectedProperty().bindBidirectional(model.transparentBackgroundProperty());
     	ckbImprvLblQuality.selectedProperty().bindBidirectional(model.improveLabelQualityProperty());
     	ckbElimiateLblOverlaps.selectedProperty().bindBidirectional(model.eliminateLabelQualityProperty());
-
+    	
+    	
 
     }
 

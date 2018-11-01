@@ -94,12 +94,8 @@ public class TMConfiguration {
 		}
 
 		try {
-			int width = model.getTileWidth();
-			int height = model.getTileHeight();
-			int maptype = model.getTileMapType();
-			
-			mNumberOfLevels         = model.getListTileScale().size();
-			
+
+			mNumberOfLevels         = model.getListTileScale().size();		
 			ObservableList<TileScale> levels = model.getListTileScale();
 			List<LevelSpec> levelSpecList = new ArrayList<LevelSpec>();
 			
@@ -117,11 +113,12 @@ public class TMConfiguration {
 			mImproveLabelQuality    = model.isImproveLabelQuality();
 			mEliminateLabelOverlaps = model.isEliminateLabelQuality();
 			mTransparentBackground  = model.isTransparentBackground();
-			mOrigin = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
-			mTileMapType = maptype;
-			mAllowOverwrite = model.isOverWriteAllowed();
-			mTileWidth = width;
-			mTileHeight = height;
+			mOrigin                 = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
+			mTileMapType            = model.getTileMapType();
+			mAllowOverwrite         = model.isOverWriteAllowed();
+			mTileFormat             = model.getTileFormat();
+			mTileWidth              = model.getTileWidth();;
+			mTileHeight             = model.getTileHeight();
 		} catch (Throwable t) {
 			System.out.println(t);
 		}

@@ -76,14 +76,20 @@ public class OutputController {
 		});
 
 		tglGroupOutput.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {           
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
 				int selected = tglGroupOutput.getToggles().indexOf(tglGroupOutput.getSelectedToggle());
 				model.setTileMapType(selected);
-			
+
 			}
-		});		
-		
+		});
+
+		cmbTileFormat.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			if (newVal.equals("PNG"))
+				model.setTileFormat(0);
+			else
+				model.setTileFormat(1);
+		});
 	}
 
 	@Validate
