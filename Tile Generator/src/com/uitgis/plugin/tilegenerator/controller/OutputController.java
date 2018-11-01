@@ -10,6 +10,8 @@ import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import framework.i18n.I18N;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
@@ -58,7 +61,9 @@ public class OutputController {
 		cmbTileFormat.getItems().addAll(choiceTileFormats);
 		cmbTileFormat.getSelectionModel().selectFirst();
 
+		tfMapName.textProperty().bindBidirectional(model.tileNameProperty());
 		tfLocation.textProperty().bindBidirectional(model.destinationFolderProperty());
+		tfExpression.textProperty().bindBidirectional(model.pathExpressionProperty());
 
 		btnBuildAsFile.setOnAction(event -> {
 			DirectoryChooser dirChooser = new DirectoryChooser();
@@ -69,6 +74,16 @@ public class OutputController {
 				tfLocation.setText(file.getAbsolutePath());
 			}
 		});
+
+		tglGroupOutput.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {           
+
+				int selected = tglGroupOutput.getToggles().indexOf(tglGroupOutput.getSelectedToggle());
+				model.setTileMapType(selected);
+			
+			}
+		});		
+		
 	}
 
 	@Validate

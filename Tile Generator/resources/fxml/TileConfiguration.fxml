@@ -81,8 +81,8 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <CheckBox mnemonicParsing="false" text="Create tile, even if it is empty map" />
-            <CheckBox mnemonicParsing="false" text="Overwrite Tile-Map, if the Tile-Map with same name already exist" />
+            <CheckBox fx:id="ckbCreateEmptyTile" mnemonicParsing="false" text="Create tile, even if it is empty map" />
+            <CheckBox fx:id="ckbOverwrite" mnemonicParsing="false" text="Overwrite Tile-Map, if the Tile-Map with same name already exist" />
          </children>
       </VBox>
    </children>

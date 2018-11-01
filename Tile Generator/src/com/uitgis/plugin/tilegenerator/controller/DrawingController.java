@@ -7,54 +7,29 @@ import com.google.inject.Inject;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 
 public class DrawingController {
 
     private Logger log = LoggerFactory.getLogger(DrawingController.class);
 
     @FXML
-    TextField tfField5, tfField6, tfField7;
+    CheckBox ckbTransparent, ckbImprvLblQuality, ckbElimiateLblOverlaps;
 
     @Inject
     WizardData model;
 
     @FXML
     public void initialize() {
-//        tfField5.textProperty().bindBidirectional(model.field5Property());
-//        tfField6.textProperty().bindBidirectional(model.field6Property());
-//        tfField7.textProperty().bindBidirectional(model.field7Property());
+    	ckbTransparent.selectedProperty().bindBidirectional(model.transparentBackgroundProperty());
+    	ckbImprvLblQuality.selectedProperty().bindBidirectional(model.improveLabelQualityProperty());
+    	ckbElimiateLblOverlaps.selectedProperty().bindBidirectional(model.eliminateLabelQualityProperty());
+
 
     }
 
     @Validate
     public boolean validate() throws Exception {
-//        if( tfField5.getText() == null || tfField5.getText().isEmpty() ) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Step 3");
-//            alert.setHeaderText( "Missing Field" );
-//            alert.setContentText( "Field 5 is required." );
-//            alert.showAndWait();
-//            return false;
-//        }
-//
-//        if( tfField6.getText() == null || tfField6.getText().isEmpty() ) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Step 3");
-//            alert.setHeaderText( "Missing Field" );
-//            alert.setContentText( "Field 6 is required." );
-//            alert.showAndWait();
-//            return false;
-//        }
-//
-//        if( tfField7.getText() == null || tfField7.getText().isEmpty() ) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Step 3");
-//            alert.setHeaderText( "Missing Field" );
-//            alert.setContentText( "Field 7 is required." );
-//            alert.showAndWait();
-//            return false;
-//        }
         return true;
     }
 

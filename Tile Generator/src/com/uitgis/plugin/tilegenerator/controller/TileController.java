@@ -8,6 +8,7 @@ import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -18,7 +19,8 @@ public class TileController {
 
     @FXML
     TextField tfOriginX, tfOriginY;
-
+    @FXML 
+    CheckBox ckbOverwrite, ckbCreateEmptyTile;
     @FXML
     ToggleGroup tglOriginPoint;
     
@@ -36,7 +38,8 @@ public class TileController {
     	
     	tfOriginX.textProperty().bindBidirectional(model.originXProperty());
     	tfOriginY.textProperty().bindBidirectional(model.originYProperty());
-    	
+    	ckbOverwrite.selectedProperty().bindBidirectional(model.overWriteAllowedProperty());
+    	ckbCreateEmptyTile.selectedProperty().bindBidirectional(model.generateEmptyTileProperty());
     	
     	tfOriginX.disableProperty().bind(rbExtentPoint.selectedProperty());
     	tfOriginY.disableProperty().bind(rbExtentPoint.selectedProperty());
