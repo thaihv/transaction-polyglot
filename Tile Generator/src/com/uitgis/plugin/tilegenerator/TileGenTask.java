@@ -1,15 +1,30 @@
 package com.uitgis.plugin.tilegenerator;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.imageio.IIOException;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOInvalidTreeException;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.stream.ImageOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -18,23 +33,47 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.google.inject.Inject;
+import com.sun.org.apache.xml.internal.utils.DOMBuilder;
 import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
+import com.uitgis.sdk.controls.MapTransform;
+import com.uitgis.sdk.datamodel.coverage.CoverageHelper;
+import com.uitgis.sdk.datamodel.coverage.geotiff.CRS2GeoTiffMetadataAdapter;
+import com.uitgis.sdk.datamodel.coverage.geotiff.GeoTiffConstants;
+import com.uitgis.sdk.datamodel.coverage.geotiff.GeoTiffIIOMetadataEncoder;
+import com.uitgis.sdk.layer.AbstractLayer;
+import com.uitgis.sdk.layer.FeatureLayer;
 import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
+import com.uitgis.sdk.layer.RasterLayer;
+import com.uitgis.sdk.layer.ScreenOffset;
+import com.uitgis.sdk.layer.TileMapLayer;
+import com.uitgis.sdk.layer.WMSLayer;
 import com.uitgis.sdk.reference.CRSHelper;
 import com.uitgis.sdk.reference.crs.CoordinateReferenceSystem;
 import com.uitgis.sdk.reference.crs.GeographicCRS;
+import com.uitgis.sdk.reference.crs.ProjectedCRS;
 import com.uitgis.sdk.reference.datum.GeodeticDatum;
+import com.uitgis.sdk.reference.operation.AffineTransform;
+import com.uitgis.sdk.reference.operation.matrix.XAffineTransform;
+import com.uitgis.sdk.style.symbol.Context;
 import com.vividsolutions.jts.geom.Envelope;
 
 import framework.i18n.I18N;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 
 public class TileGenTask extends Task<Void> {
+
+	private static final String KEY_LEVEL = "{$L}";
+	private static final String KEY_X = "{$X}";
+	private static final String KEY_Y = "{$Y}";
 
 	private Thread mThread;
 	private int mThreadNum;
@@ -67,24 +106,24 @@ public class TileGenTask extends Task<Void> {
 
 	@Override
 	protected Void call() throws Exception {
-		
+
 		// Initilize a thread pool & task list
 		mThread = Thread.currentThread();
 		if (mThreadNum < 0)
 			return null;
 		ExecutorService executor = Executors.newFixedThreadPool(mThreadNum);
 		List<Callable<String>> taskList = new ArrayList<Callable<String>>();
-		
+
 		// Seting up Tile Configuration & check condition to gen
 		mConfiguration = new TMConfiguration(model);
 		mOverwriteMode = false;
 		boolean buildable = false;
-		
+
 		int type = mConfiguration.getTypeOfTileMap();
 		if (type == TMConfiguration.TYPE_FILE_TILEMAP) {
 			buildable = checkFTMDuplication();
 		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
-			//buildable = checkGTMDuplication();
+			// buildable = checkGTMDuplication();
 		}
 
 		if (!buildable) {
@@ -144,9 +183,9 @@ public class TileGenTask extends Task<Void> {
 			double hdistance = model.getTileWidth() * levels[i].scale * factor;
 			double vdistance = model.getTileHeight() * levels[i].scale * factor;
 			int hStart = getGridCellNo(envelope.getMinX() - origin.getX(), hdistance, false);
-			int hEnd   = getGridCellNo(envelope.getMaxX() - origin.getX(), hdistance, true);
+			int hEnd = getGridCellNo(envelope.getMaxX() - origin.getX(), hdistance, true);
 			int vStart = getGridCellNo(envelope.getMinY() - origin.getY(), vdistance, false);
-			int vEnd   = getGridCellNo(envelope.getMaxY() - origin.getY(), vdistance, true);
+			int vEnd = getGridCellNo(envelope.getMaxY() - origin.getY(), vdistance, true);
 
 			mLevelDefs[i] = new LevelDefinition(level, new TileRange(hStart, hEnd, vStart, vEnd), hdistance, vdistance);
 
@@ -155,58 +194,46 @@ public class TileGenTask extends Task<Void> {
 		if (type == TMConfiguration.TYPE_FILE_TILEMAP) {
 			ensureFTMPrerequisite();
 		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
-			//ensureGTMPrerequisite();
+			// ensureGTMPrerequisite();
 		}
 
 		// Ok, Done to calculate Total of Works, let display to status
 		totalWork = totalTiles;
 		updateProgress(0, totalWork);
 		updateMessage("Building pyramid of tiles ... (total number of tiles: " + totalWork);
-		
+
 		// Divide the task to units and assign to thread
 		long time = System.currentTimeMillis();
-		
-		// for each level
+
+		// For each level
 		for (int i = 0; i < numOfLevels; i++) {
 			if (mLevelDefs[i] == null) {
 				continue;
 			}
-			
+
 			TileRange range = mLevelDefs[i].getTileRange();
 			// Calculate by Y
-			for (int vindex=range.getMinimumY()-1, vEnd=range.getMaximumY(); vindex<vEnd; vindex ++) {
+			for (int vindex = range.getMinimumY() - 1, vEnd = range.getMaximumY(); vindex < vEnd; vindex++) {
 				double y = origin.getY() + vindex * mLevelDefs[i].getTileDistanceOnYAXIS();
 				// Calculate by X
-				for (int hindex=range.getMinimumX()-1, hEnd=range.getMaximumX(); hindex<hEnd; hindex ++) {
+				for (int hindex = range.getMinimumX() - 1, hEnd = range.getMaximumX(); hindex < hEnd; hindex++) {
 					if (isCancelled()) {
 						break;
 					}
-					
+
 					double x = origin.getX() + hindex * mLevelDefs[i].getTileDistanceOnXAXIS();
-					Envelope bbox = new Envelope(x, y, 
-							x + mLevelDefs[i].getTileDistanceOnXAXIS(), y + mLevelDefs[i].getTileDistanceOnYAXIS(),
-							mConfiguration.getTargetCRS());
-					
-					
-					
-//					BuilderJob job = (type == TMConfiguration.TYPE_FILE_TILEMAP) ?
-//							new BuilderJobOnFile(mLevelDefs[i].getLevel(), hindex, vindex, bbox) :
-//							new BuilderJobOnGSS(mLevelDefs[i].getLevel(), hindex, vindex, bbox);
-//					queue.enqueue(job);
-					
-				}	// X
-			}	// Y
-		}	// LEVEL	
-		
-		System.out.println((System.currentTimeMillis()-time) + "ms has been elapsed to build " + totalTiles + " tiles.");
-		
 
-		for (int i = 0; i < mThreadNum; i++) {
+					Envelope bbox = new Envelope(x, y, x + mLevelDefs[i].getTileDistanceOnXAXIS(), y + mLevelDefs[i].getTileDistanceOnYAXIS(), mConfiguration.getTargetCRS());
+					BufferedImage bi = new BufferedImage(mConfiguration.getTileWidth(), mConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
+					Graphics g = bi.getGraphics();
+					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
+				
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
+					taskList.add(callable);
 
-			TileGenCallable callable = new TileGenCallable(1, totalWork / mThreadNum);
-			taskList.add(callable);
-
-		}
+				} // X
+			} // Y
+		} // LEVEL
 
 		List<Future<String>> futureList = executor.invokeAll(taskList);
 		boolean allDone = true;
@@ -226,6 +253,7 @@ public class TileGenTask extends Task<Void> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCompleted"));
 			});
 		}
+		System.out.println((System.currentTimeMillis() - time) + "ms has been elapsed to build " + totalTiles + " tiles.");
 		done();
 
 		return null;
@@ -313,44 +341,271 @@ public class TileGenTask extends Task<Void> {
 		}
 	}
 
+	private File getTileFile(TMConfiguration configuration, int level, int xIndex, int yIndex) {
+		String expression = configuration.getTilePathExpression();
+		expression = replaceVariables(expression, KEY_LEVEL, String.valueOf(level));
+		expression = replaceVariables(expression, KEY_X, String.valueOf(xIndex));
+		expression = replaceVariables(expression, KEY_Y, String.valueOf(yIndex));
+
+		File tileMapFolder = new File(configuration.getDestinationFolder(), configuration.getTileMapName());
+		return new File(tileMapFolder, expression + "." + configuration.getOutputTypeAsString());
+	}
+
+	private String replaceVariables(String source, String key, String replaceValue) {
+		int index = -1;
+		while ((index = source.indexOf(key)) > -1) {
+			String pre = source.substring(0, index);
+			String sub = source.substring(index + key.length());
+			source = pre + replaceValue + sub;
+		}
+		return source;
+	}
+
+	protected void save(BufferedImage bi, File tileFile, String format) throws IOException {
+		FileOutputStream out = null;
+		try {
+			tileFile.getParentFile().mkdirs();
+
+			out = new FileOutputStream(tileFile);
+			writeRaster(bi, format, out);
+		} finally {
+			try {
+				out.close();
+			} catch (Throwable t) {
+			}
+		}
+	}
+
+	protected void writeRaster(BufferedImage bi, String format, OutputStream out) throws IOException {
+		ImageIO.write(bi, format, out);
+	}
+
+	public void getMapImage(Context context, List<ILayer> layers) {
+
+		if (context.getEnvelope() != null) {
+			MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(), context.getHeight(),
+					context.getMapCRS());
+			context.setMapToScreenTransform(transform);
+
+			if (layers == null || layers.size() == 0) {
+				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
+					ILayer layer = model.getGDX().getLayer(i);
+
+					context.setDrawAllVertices(true);
+					drawLayer(context, layer);
+					if (context.isStopped()) {
+						break;
+					}
+				}
+
+				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
+					ILayer layer = model.getGDX().getLayer(i);
+					drawLabels(context, layer);
+					if (context.isStopped()) {
+						break;
+					}
+				}
+			} else {
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					ILayer layer = layers.get(i);
+					drawLayer(context, layer);
+					if (context.isStopped()) {
+						break;
+					}
+				}
+
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					ILayer layer = layers.get(i);
+					drawLabels(context, layer);
+					if (context.isStopped()) {
+						break;
+					}
+				}
+			}
+
+			// anti-aliasing
+			Object textAntiAlasing = context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			Object graphicAntiAliasing = context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					(textAntiAlasing == RenderingHints.VALUE_TEXT_ANTIALIAS_ON ? RenderingHints.VALUE_ANTIALIAS_ON
+							: RenderingHints.VALUE_ANTIALIAS_OFF));
+
+			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, graphicAntiAliasing);
+		}
+	}
+
+	private void drawLayer(Context ctx, ILayer layer) {
+
+		if (!layer.isVisible()) {
+			return;
+		}
+
+		if (ctx.getEnvelope() == null) {
+			return;
+		}
+		if (layer instanceof GroupLayer) {
+			GroupLayer grouplayer = (GroupLayer) layer;
+
+			ArrayList<ILayer> layers = new ArrayList<ILayer>();
+			int cnt = grouplayer.getLayerCount();
+			for (int i = 0; i < cnt; i++) {
+				layers.add(grouplayer.getLayer(i));
+			}
+			if (isDrawableLayer(ctx, grouplayer)) {
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					ILayer sublayer = layers.get(i);
+					drawLayer(ctx, sublayer);
+				}
+			}
+		} else if (isDrawableLayer(ctx, layer)) {
+			if (layer instanceof FeatureLayer) {
+
+				FeatureLayer fl = (FeatureLayer) layer;
+				ScreenOffset sOffset = fl.getScreenOffset();
+				if (sOffset != null) {
+					ctx.getGraphics().translate(sOffset.getPixelOffsetX(ctx.getScale()),
+							sOffset.getPixelOffsetY(ctx.getScale()));
+				}
+
+				fl.drawLayer(ctx);
+
+				if (sOffset != null) {
+					ctx.getGraphics().translate(sOffset.getPixelOffsetX(ctx.getScale()) * -1,
+							sOffset.getPixelOffsetY(ctx.getScale()) * -1);
+				}
+			} else if (layer instanceof RasterLayer) {
+			} else if (layer instanceof WMSLayer) {
+				((WMSLayer) layer).drawLayer(ctx);
+			} else if (layer instanceof TileMapLayer) {
+				((TileMapLayer) layer).drawLayer(ctx);
+			}
+		}
+	}
+
+	private boolean isDrawableLayer(Context ctx, ILayer layer) {
+		return layer.isVisible() && layer.getOpacity() > 0 && ctx.getScale() >= ((AbstractLayer) layer).getMinScale()
+				&& ctx.getScale() < ((AbstractLayer) layer).getMaxScale() && ((AbstractLayer) layer).isDataUsable();
+	}
+
+	private void drawLabels(Context ctx, ILayer layer) {
+		if (layer instanceof GroupLayer) {
+			GroupLayer grouplayer = (GroupLayer) layer;
+//			ArrayList<ILayer> layers = grouplayer.getLayers();
+			ArrayList<ILayer> layers = new ArrayList<ILayer>();
+			int cnt = grouplayer.getLayerCount();
+			for (int i = 0; i < cnt; i++) {
+				layers.add(grouplayer.getLayer(i));
+			}
+
+			if (isDrawableLayer(ctx, grouplayer)) {
+				for (int i = 0; i < layers.size(); i++) {
+					ILayer sublayer = layers.get(i);
+					drawLabels(ctx, sublayer);
+				}
+			}
+		} else {
+			if (layer instanceof FeatureLayer) {
+				if (isDrawableLayer(ctx, layer)) {
+					((FeatureLayer) layer).drawLabel(ctx);
+				}
+			}
+		}
+	}
+
 	public class TileGenCallable implements Callable<String> {
 
-		private int min, max;
+		private Context context;
+		private Envelope envelope;
+		private int level;
+		private int xTileIndex;
+		private int yTileIndex;
+		private List<ILayer> Ilayers;
+		private BufferedImage bi;
 
-		public int getMin() {
-			return min;
-		}
-
-		public void setMin(int min) {
-			this.min = min;
-		}
-
-		public int getMax() {
-			return max;
-		}
-
-		public void setMax(int max) {
-			this.max = max;
-		}
-
-		public TileGenCallable(int min, int max) {
+		public TileGenCallable(Context context, Envelope envelope, List<ILayer> Ilayers, BufferedImage bi, int level, int xTileIndex, int yTileIndex) {
 			super();
-			this.min = min;
-			this.max = max;
+			this.context = context;
+			this.envelope = envelope;
+			this.level = level;
+			this.xTileIndex = xTileIndex;
+			this.yTileIndex = yTileIndex;
+			this.Ilayers = Ilayers;
+			this.bi = bi;
+		}
+
+		public List<ILayer> getIlayers() {
+			return Ilayers;
+		}
+
+		public void setIlayers(List<ILayer> ilayers) {
+			Ilayers = ilayers;
+		}
+
+		public Context getContext() {
+			return context;
+		}
+
+		public void setContext(Context context) {
+			this.context = context;
+		}
+
+		public Envelope getEnvelope() {
+			return envelope;
+		}
+
+		public void setEnvelope(Envelope envelope) {
+			this.envelope = envelope;
+		}
+
+		public int getLevel() {
+			return level;
+		}
+
+		public void setLevel(int level) {
+			this.level = level;
+		}
+
+		public int getxTileIndex() {
+			return xTileIndex;
+		}
+
+		public void setxTileIndex(int xTileIndex) {
+			this.xTileIndex = xTileIndex;
+		}
+
+		public int getyTileIndex() {
+			return yTileIndex;
+		}
+
+		public void setyTileIndex(int yTileIndex) {
+			this.yTileIndex = yTileIndex;
 		}
 
 		@Override
 		public String call() throws Exception {
-			for (int tile = min; tile <= max; tile++) {
-				if (isCancelled()) {
-					break;
-				}
-				Thread.sleep(50);
+			if (isCancelled()) {
+				return null;
+			}
+			try {
+				double scale = envelope.getWidth() / mConfiguration.getTileWidth()
+						/ DisplayConstant.STANDARD_PIXEL_SIZE_IN_METER;
+
+				context.setScale(scale);
+				context.setEnvelope(envelope);
+
+				System.out.println(context.getScale());
+				getMapImage(context, Ilayers);
+
+				File tileFile = getTileFile(mConfiguration, level, xTileIndex, yTileIndex);
+				save(bi, tileFile, mConfiguration.getOutputTypeAsString());
+
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + totalWork);
-				System.out.println(Thread.currentThread().getName() + " " + ": Amount " + count + "/" + totalWork);
+				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex);
+			} catch (Throwable t) {
+				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");
+				t.printStackTrace(System.err);
 			}
-
 			return Thread.currentThread().getName();
 		}
 

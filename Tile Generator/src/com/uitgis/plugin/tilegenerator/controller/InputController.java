@@ -3,6 +3,7 @@ package com.uitgis.plugin.tilegenerator.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,10 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapControl;
 import com.uitgis.sdk.gdx.GDX;
 import com.uitgis.sdk.gdx.GDXHelper;
+import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
+import com.uitgis.sdk.reference.CRSHelper;
+import com.uitgis.sdk.reference.crs.CoordinateReferenceSystem;
 import com.vividsolutions.jts.geom.Envelope;
 
 import framework.FrameworkManager;
@@ -49,7 +53,7 @@ public class InputController {
 
 	@FXML
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
-	
+
 	@FXML
 	ToggleGroup tglGroupExtent, tglGroupMap;
 
@@ -58,40 +62,37 @@ public class InputController {
 
 	@Inject
 	WizardData model;
-	
-    public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
-	private MapTabPane mapTab = (MapTabPane)FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
-	private ArrayList<MapControl> maps = mapTab.getAllMapControls();
-    private MapControl mc = ToolboxHelper.getCurrentMapControl();
 
-    
+	public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
+	private MapTabPane mapTab = (MapTabPane) FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
+	private ArrayList<MapControl> maps = mapTab.getAllMapControls();
+	private MapControl mc = ToolboxHelper.getCurrentMapControl();
+
 	@FXML
 	public void initialize() {
 
-		if (!mc.gdxEmpty())
-		{
+		if (!mc.gdxEmpty()) {
 			model.setGDX(mc.getGDX());
-			setTileEnvelope(model.getGDX().getEnvelope());
+			setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
+//			setTileEnvelope(model.getGDX().getEnvelope());
 		}
-	
-		choiceMapItems.addAll(maps.stream().map(c-> c.getMapTitle()).collect(Collectors.toList()));
+
+		choiceMapItems.addAll(maps.stream().map(c -> c.getMapTitle()).collect(Collectors.toList()));
 
 		tfLeft.textProperty().bindBidirectional(model.leftExtentProperty());
 		tfTop.textProperty().bindBidirectional(model.topExtentProperty());
 		tfBottom.textProperty().bindBidirectional(model.bottomExtentProperty());
 		tfRight.textProperty().bindBidirectional(model.rightExtentProperty());
-		
-		tfLeft.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(),rbCurrExtent.selectedProperty()));
-		tfTop.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(),rbCurrExtent.selectedProperty()));
-		tfBottom.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(),rbCurrExtent.selectedProperty()));
-		tfRight.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(),rbCurrExtent.selectedProperty()));		
-		
-		
+
+		tfLeft.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
+		tfTop.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
+		tfBottom.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
+		tfRight.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
 
 		cmbMap.disableProperty().bind(rbSelectGDX.selectedProperty());
 		cmbMap.getItems().addAll(choiceMapItems);
 		cmbMap.getSelectionModel().select(mc.getMapTitle());
-		
+
 		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.setOnAction(event -> {
@@ -106,15 +107,15 @@ public class InputController {
 				tfGdxFile.setText(file.getPath());
 				try {
 					model.setGDX(GDXHelper.loadGDX(file));
-					if(!model.getGDX().isEmpty()) {
+					if (!model.getGDX().isEmpty()) {
 						if (rbFullExtent.isSelected()) {
 							setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-						}else {
+						} else {
 							if (rbCurrExtent.isSelected())
 								setTileEnvelope(model.getGDX().getEnvelope());
 						}
 					}
-					
+
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -123,24 +124,24 @@ public class InputController {
 		});
 
 		tglGroupExtent.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {           
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
 				int selected = tglGroupExtent.getToggles().indexOf(tglGroupExtent.getSelectedToggle());
-				
-				if (selected == 0){ // Full extent
-					if(model.getGDX() != null) {
+
+				if (selected == 0) { // Full extent
+					if (model.getGDX() != null) {
 						setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-					}				
-					
-				}else {
+					}
+
+				} else {
 					if (selected == 1) { // Current Extent
-						if(model.getGDX() != null) {
+						if (model.getGDX() != null) {
 							setTileEnvelope(model.getGDX().getEnvelope());
 						}
 					}
-						
+
 				}
-				
+
 			}
 		});
 
@@ -177,23 +178,23 @@ public class InputController {
 			log.debug("[SUBMIT] the user has completed step Input Configuration");
 		}
 	}
-	
+
 	@FXML
 	public void selectMapAction(ActionEvent event) {
 
 		Optional<MapControl> mc = maps.stream().filter(p -> p.getMapTitle().equals(cmbMap.getValue())).findFirst();
-		
+
 		if (mc.isPresent()) {
 			if (!mc.get().gdxEmpty()) {
 				model.setGDX(mc.get().getGDX());
 				if (rbFullExtent.isSelected()) {
 					setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-				}else {
+				} else {
 					if (rbCurrExtent.isSelected())
 						setTileEnvelope(model.getGDX().getEnvelope());
 				}
 			}
-		}			
+		}
 
 	}
 
@@ -205,13 +206,28 @@ public class InputController {
 			this.model.bottomExtentProperty().set(Double.toString(ev.getMinY()));
 		}
 	}
+
 	public Envelope calcfullExtentFromGDX(GDX gDX) {
 		Envelope envelope = new Envelope();
-		for(int i = 0 ; i < gDX.getLayerCount(); i++) {
+		for (int i = 0; i < gDX.getLayerCount(); i++) {
 			ILayer layer = gDX.getLayer(i);
 			envelope.expandToInclude(layer.getDataEnvelope());
 		}
 		return envelope;
+//		GroupLayer group = model.getGDX().getRootGroupLayer();
+//		List<ILayer> layers = group.getLayers();
+//		
+//		CoordinateReferenceSystem targetCRS = model.getGDX().getEnvelope().getCoordinateReferenceSystem();
+//		Envelope envelope = model.getGDX().getEnvelope();
+//
+//		Envelope groupBounds = layers.get(0).getDataEnvelope();
+//		for (ILayer l : layers) {
+//			groupBounds = groupBounds.intersection(l.getDataEnvelope());
+//
+//		}
+//		envelope = CRSHelper.getIntersectionBounds(envelope, groupBounds, targetCRS);	
+//		return envelope;
+		
 
-	}	
+	}
 }
