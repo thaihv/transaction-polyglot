@@ -11,20 +11,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 
-import javax.imageio.IIOException;
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriter;
-import javax.imageio.metadata.IIOInvalidTreeException;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.stream.ImageOutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -33,18 +26,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.google.inject.Inject;
-import com.sun.org.apache.xml.internal.utils.DOMBuilder;
 import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapTransform;
-import com.uitgis.sdk.datamodel.coverage.CoverageHelper;
-import com.uitgis.sdk.datamodel.coverage.geotiff.CRS2GeoTiffMetadataAdapter;
-import com.uitgis.sdk.datamodel.coverage.geotiff.GeoTiffConstants;
-import com.uitgis.sdk.datamodel.coverage.geotiff.GeoTiffIIOMetadataEncoder;
 import com.uitgis.sdk.layer.AbstractLayer;
 import com.uitgis.sdk.layer.FeatureLayer;
 import com.uitgis.sdk.layer.GroupLayer;
@@ -56,10 +41,7 @@ import com.uitgis.sdk.layer.WMSLayer;
 import com.uitgis.sdk.reference.CRSHelper;
 import com.uitgis.sdk.reference.crs.CoordinateReferenceSystem;
 import com.uitgis.sdk.reference.crs.GeographicCRS;
-import com.uitgis.sdk.reference.crs.ProjectedCRS;
 import com.uitgis.sdk.reference.datum.GeodeticDatum;
-import com.uitgis.sdk.reference.operation.AffineTransform;
-import com.uitgis.sdk.reference.operation.matrix.XAffineTransform;
 import com.uitgis.sdk.style.symbol.Context;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -67,7 +49,6 @@ import framework.i18n.I18N;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
-import javafx.scene.Parent;
 
 public class TileGenTask extends Task<Void> {
 
@@ -79,6 +60,7 @@ public class TileGenTask extends Task<Void> {
 	private int mThreadNum;
 	private int totalWork;
 	private int count = 0;
+	Semaphore lock = new Semaphore(100);
 
 	private LevelDefinition[] mLevelDefs;
 	private TMConfiguration mConfiguration;
@@ -107,12 +89,16 @@ public class TileGenTask extends Task<Void> {
 	@Override
 	protected Void call() throws Exception {
 
-		// Initilize a thread pool & task list
+		// Initialize a thread pool & task list
 		mThread = Thread.currentThread();
 		if (mThreadNum < 0)
 			return null;
 		ExecutorService executor = Executors.newFixedThreadPool(mThreadNum);
-		List<Callable<String>> taskList = new ArrayList<Callable<String>>();
+		
+		//threadExecutor.setRejectedExecutionHandler(new );
+//		List<Callable<String>> taskList = new ArrayList<Callable<String>>();
+		
+		List<Future<?>> tasks = new ArrayList<>();
 
 		// Seting up Tile Configuration & check condition to gen
 		mConfiguration = new TMConfiguration(model);
@@ -201,7 +187,9 @@ public class TileGenTask extends Task<Void> {
 		totalWork = totalTiles;
 		updateProgress(0, totalWork);
 		updateMessage("Building ... (total number of tiles: " + totalWork + ")");
+		
 
+		
 		// Divide the task to units and assign to thread
 		long time = System.currentTimeMillis();
 
@@ -227,18 +215,51 @@ public class TileGenTask extends Task<Void> {
 					BufferedImage bi = new BufferedImage(mConfiguration.getTileWidth(), mConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
 					Graphics g = bi.getGraphics();
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
-									
+					
+//					while (tasks.size() > 1000) {
+//						try {
+//						
+//							for (Future<?> fut : tasks) {
+//								if (fut.isDone())
+//									tasks.remove(fut.get());
+//							}
+//							
+//						}
+//						catch (Throwable t) {
+//						}
+//					}
+					
+					lock.acquire();
+					
 					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
 					
-					taskList.add(callable);
+					Future<?> task = executor.submit(callable);			
+					
+					tasks.add(task);
+					
+
+					
+//					taskList.add(callable);
 
 				} // X
 			} // Y
 		} // LEVEL
 
-		List<Future<String>> futureList = executor.invokeAll(taskList);
+//		List<Future<String>> futureList = executor.invokeAll(taskList);
+//		boolean allDone = true;
+//		for (Future<String> fut : futureList) {
+//			try {
+//
+//				System.out.println(new Date() + "::" + fut.get());
+//				allDone &= fut.isDone();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+
+		
 		boolean allDone = true;
-		for (Future<String> fut : futureList) {
+		for (Future<?> fut : tasks) {
 			try {
 
 				System.out.println(new Date() + "::" + fut.get());
@@ -246,8 +267,7 @@ public class TileGenTask extends Task<Void> {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-
+		}		
 		executor.shutdown();
 		
 		if (allDone) {
@@ -609,9 +629,12 @@ public class TileGenTask extends Task<Void> {
 				updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + totalWork);
 				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex);
 			} catch (Throwable t) {
-				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");
+				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");				
 				t.printStackTrace(System.err);
 			}
+			finally {
+	              lock.release();
+	        }
 			return Thread.currentThread().getName();
 		}
 
