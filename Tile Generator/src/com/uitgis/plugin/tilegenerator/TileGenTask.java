@@ -200,7 +200,7 @@ public class TileGenTask extends Task<Void> {
 		// Ok, Done to calculate Total of Works, let display to status
 		totalWork = totalTiles;
 		updateProgress(0, totalWork);
-		updateMessage("Building pyramid of tiles ... (total number of tiles: " + totalWork);
+		updateMessage("Building ... (total number of tiles: " + totalWork + ")");
 
 		// Divide the task to units and assign to thread
 		long time = System.currentTimeMillis();
@@ -223,12 +223,13 @@ public class TileGenTask extends Task<Void> {
 
 					double x = origin.getX() + hindex * mLevelDefs[i].getTileDistanceOnXAXIS();
 
-					Envelope bbox = new Envelope(x, y, x + mLevelDefs[i].getTileDistanceOnXAXIS(), y + mLevelDefs[i].getTileDistanceOnYAXIS(), mConfiguration.getTargetCRS());
+					Envelope bbox = new Envelope(x, x + mLevelDefs[i].getTileDistanceOnXAXIS(), y, y + mLevelDefs[i].getTileDistanceOnYAXIS(), mConfiguration.getTargetCRS());
 					BufferedImage bi = new BufferedImage(mConfiguration.getTileWidth(), mConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
 					Graphics g = bi.getGraphics();
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
-				
+									
 					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
+					
 					taskList.add(callable);
 
 				} // X
@@ -248,6 +249,7 @@ public class TileGenTask extends Task<Void> {
 		}
 
 		executor.shutdown();
+		
 		if (allDone) {
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCompleted"));
@@ -590,10 +592,14 @@ public class TileGenTask extends Task<Void> {
 				double scale = envelope.getWidth() / mConfiguration.getTileWidth()
 						/ DisplayConstant.STANDARD_PIXEL_SIZE_IN_METER;
 
-				context.setScale(scale);
+//				context.setY(yTileIndex);
+//				context.setX(xTileIndex);
+//				context.setWidth(mConfiguration.getTileWidth());
+//				context.setHeight(mConfiguration.getTileHeight());
+//				context.setScale(mConfiguration.getLevels()[level].scale);
 				context.setEnvelope(envelope);
 
-				System.out.println(context.getScale());
+				System.out.println(context.getWidth() + ":" +context.getHeight()  + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope() + " X: " + context.getX() + " Y: " + context.getY());
 				getMapImage(context, Ilayers);
 
 				File tileFile = getTileFile(mConfiguration, level, xTileIndex, yTileIndex);
