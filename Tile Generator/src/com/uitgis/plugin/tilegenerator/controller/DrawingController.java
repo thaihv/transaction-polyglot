@@ -8,6 +8,9 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class DrawingController {
 
@@ -15,12 +18,17 @@ public class DrawingController {
 
     @FXML
     CheckBox ckbTransparent, ckbImprvLblQuality, ckbElimiateLblOverlaps;
+    
+    @FXML
+    Label lblGraphicTitle;
 
     @Inject
     WizardData model;
 
     @FXML
     public void initialize() {
+    	
+    	lblGraphicTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
     	
     	ckbTransparent.selectedProperty().bindBidirectional(model.transparentBackgroundProperty());
     	ckbImprvLblQuality.selectedProperty().bindBidirectional(model.improveLabelQualityProperty());

@@ -16,7 +16,7 @@
    <children>
       <VBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label text="%comp.graphic.title">
+            <Label fx:id="lblGraphicTitle" text="%comp.graphic.title">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

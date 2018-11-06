@@ -7,7 +7,10 @@ import com.google.inject.Inject;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.converter.NumberStringConverter;
 
 public class ConfirmController {
@@ -16,12 +19,16 @@ public class ConfirmController {
 
 	@FXML
 	TextField tfThreadNum;
+	
+	@FXML
+	Label lblRunnerTitle;
 
 	@Inject
 	WizardData model;
 
 	@FXML
 	public void initialize() {
+		lblRunnerTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 		tfThreadNum.textProperty().bindBidirectional(model.threadNumProperty(), new NumberStringConverter());
 	}
 

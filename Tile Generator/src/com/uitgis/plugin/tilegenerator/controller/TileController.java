@@ -9,9 +9,12 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class TileController {
 
@@ -23,6 +26,8 @@ public class TileController {
     CheckBox ckbOverwrite, ckbCreateEmptyTile;
     @FXML
     ToggleGroup tglOriginPoint;
+    @FXML
+    Label lblTileTitle;    
     
     @FXML 
     RadioButton rbExtentPoint, rbDefinedPoint;
@@ -32,6 +37,8 @@ public class TileController {
 
     @FXML
     public void initialize() {
+    	
+    	lblTileTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
     	
     	model.originXProperty().bindBidirectional(model.leftExtentProperty());
     	model.originYProperty().bindBidirectional(model.bottomExtentProperty());

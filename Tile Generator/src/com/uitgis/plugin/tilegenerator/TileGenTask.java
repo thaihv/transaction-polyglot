@@ -56,15 +56,15 @@ public class TileGenTask extends Task<Void> {
 	private static final String KEY_X = "{$X}";
 	private static final String KEY_Y = "{$Y}";
 
-	private Thread mThread;
-	private int mThreadNum;
+	private Thread mainthread;
+	private int numberOfThread;
 	private int totalWork;
 	private int count = 0;
 	Semaphore lock = new Semaphore(100);
 
-	private LevelDefinition[] mLevelDefs;
-	private TMConfiguration mConfiguration;
-	private boolean mOverwriteMode;
+	private LevelDefinition[] levelDefs;
+	private TMConfiguration tmConfiguration;
+	private boolean isOverwriteMode;
 
 	@Inject
 	WizardData model;
@@ -75,37 +75,33 @@ public class TileGenTask extends Task<Void> {
 
 	public TileGenTask(int mThreadNum) {
 		super();
-		this.mThreadNum = mThreadNum;
+		this.numberOfThread = mThreadNum;
 	}
 
 	public int getmThreadNum() {
-		return mThreadNum;
+		return numberOfThread;
 	}
 
 	public void setmThreadNum(int mThreadNum) {
-		this.mThreadNum = mThreadNum;
+		this.numberOfThread = mThreadNum;
 	}
 
 	@Override
 	protected Void call() throws Exception {
-
+		
 		// Initialize a thread pool & task list
-		mThread = Thread.currentThread();
-		if (mThreadNum < 0)
+		mainthread = Thread.currentThread();
+		if (numberOfThread < 0)
 			return null;
-		ExecutorService executor = Executors.newFixedThreadPool(mThreadNum);
-		
-		//threadExecutor.setRejectedExecutionHandler(new );
-//		List<Callable<String>> taskList = new ArrayList<Callable<String>>();
-		
+		ExecutorService executor = Executors.newFixedThreadPool(numberOfThread);
 		List<Future<?>> tasks = new ArrayList<>();
 
 		// Seting up Tile Configuration & check condition to gen
-		mConfiguration = new TMConfiguration(model);
-		mOverwriteMode = false;
+		tmConfiguration = new TMConfiguration(model);
+		isOverwriteMode = false;
 		boolean buildable = false;
 
-		int type = mConfiguration.getTypeOfTileMap();
+		int type = tmConfiguration.getTypeOfTileMap();
 		if (type == TMConfiguration.TYPE_FILE_TILEMAP) {
 			buildable = checkFTMDuplication();
 		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
@@ -127,7 +123,7 @@ public class TileGenTask extends Task<Void> {
 		}
 
 		// Get levels to calculate
-		TMConfiguration.LevelSpec[] levels = mConfiguration.getLevels();
+		TMConfiguration.LevelSpec[] levels = tmConfiguration.getLevels();
 		if (levels.length == 0) {
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("err.message.2"));
@@ -135,17 +131,17 @@ public class TileGenTask extends Task<Void> {
 			return null;
 		}
 
-		CoordinateReferenceSystem targetCRS = mConfiguration.getTargetCRS();
-		Envelope envelope = mConfiguration.getTargetEnvelope();
+		CoordinateReferenceSystem targetCRS = tmConfiguration.getTargetCRS();
+		Envelope envelope = tmConfiguration.getTargetEnvelope();
 
-		Envelope groupBounds = layers.get(0).getDataEnvelope();
-		for (ILayer l : layers) {
-			groupBounds = groupBounds.intersection(l.getDataEnvelope());
+//		Envelope groupBounds = layers.get(0).getDataEnvelope();
+//		for (ILayer l : layers) {
+//			groupBounds = groupBounds.intersection(l.getDataEnvelope());
+//
+//		}
+//		envelope = CRSHelper.getIntersectionBounds(envelope, groupBounds, targetCRS);
 
-		}
-		envelope = CRSHelper.getIntersectionBounds(envelope, groupBounds, targetCRS);
-
-		Point2D origin = mConfiguration.getOrigin();
+		Point2D origin = tmConfiguration.getOrigin();
 
 		double factor = 1;
 		if (targetCRS instanceof GeographicCRS) {
@@ -155,8 +151,8 @@ public class TileGenTask extends Task<Void> {
 			factor = 360D / circumference;
 		}
 
-		int numOfLevels = mConfiguration.getNumberOfLevels();
-		mLevelDefs = new LevelDefinition[numOfLevels];
+		int numOfLevels = tmConfiguration.getNumberOfLevels();
+		levelDefs = new LevelDefinition[numOfLevels];
 
 		int totalTiles = 0;
 
@@ -165,7 +161,7 @@ public class TileGenTask extends Task<Void> {
 				continue;
 			}
 
-			int level = mConfiguration.getLevelOrder() == TMConfiguration.ORDER_DESCENDING ? levels.length - i - 1 : i;
+			int level = tmConfiguration.getLevelOrder() == TMConfiguration.ORDER_DESCENDING ? levels.length - i - 1 : i;
 			double hdistance = model.getTileWidth() * levels[i].scale * factor;
 			double vdistance = model.getTileHeight() * levels[i].scale * factor;
 			int hStart = getGridCellNo(envelope.getMinX() - origin.getX(), hdistance, false);
@@ -173,7 +169,7 @@ public class TileGenTask extends Task<Void> {
 			int vStart = getGridCellNo(envelope.getMinY() - origin.getY(), vdistance, false);
 			int vEnd = getGridCellNo(envelope.getMaxY() - origin.getY(), vdistance, true);
 
-			mLevelDefs[i] = new LevelDefinition(level, new TileRange(hStart, hEnd, vStart, vEnd), hdistance, vdistance);
+			levelDefs[i] = new LevelDefinition(level, new TileRange(hStart, hEnd, vStart, vEnd), hdistance, vdistance);
 
 			totalTiles += (hEnd - hStart + 1) * (vEnd - vStart + 1);
 		}
@@ -182,82 +178,51 @@ public class TileGenTask extends Task<Void> {
 		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
 			// ensureGTMPrerequisite();
 		}
-
 		// Ok, Done to calculate Total of Works, let display to status
 		totalWork = totalTiles;
 		updateProgress(0, totalWork);
 		updateMessage("Building ... (total number of tiles: " + totalWork + ")");
-		
 
-		
 		// Divide the task to units and assign to thread
 		long time = System.currentTimeMillis();
 
 		// For each level
 		for (int i = 0; i < numOfLevels; i++) {
-			if (mLevelDefs[i] == null) {
+			if (levelDefs[i] == null) {
 				continue;
 			}
-
-			TileRange range = mLevelDefs[i].getTileRange();
+			TileRange range = levelDefs[i].getTileRange();
 			// Calculate by Y
 			for (int vindex = range.getMinimumY() - 1, vEnd = range.getMaximumY(); vindex < vEnd; vindex++) {
-				double y = origin.getY() + vindex * mLevelDefs[i].getTileDistanceOnYAXIS();
+				double y = origin.getY() + vindex * levelDefs[i].getTileDistanceOnYAXIS();
 				// Calculate by X
 				for (int hindex = range.getMinimumX() - 1, hEnd = range.getMaximumX(); hindex < hEnd; hindex++) {
 					if (isCancelled()) {
 						break;
 					}
 
-					double x = origin.getX() + hindex * mLevelDefs[i].getTileDistanceOnXAXIS();
+					double x = origin.getX() + hindex * levelDefs[i].getTileDistanceOnXAXIS();
 
-					Envelope bbox = new Envelope(x, x + mLevelDefs[i].getTileDistanceOnXAXIS(), y, y + mLevelDefs[i].getTileDistanceOnYAXIS(), mConfiguration.getTargetCRS());
-					BufferedImage bi = new BufferedImage(mConfiguration.getTileWidth(), mConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
+					Envelope bbox = new Envelope(x, x + levelDefs[i].getTileDistanceOnXAXIS(), y,
+							y + levelDefs[i].getTileDistanceOnYAXIS(), tmConfiguration.getTargetCRS());
+					BufferedImage bi = new BufferedImage(tmConfiguration.getTileWidth(),
+							tmConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
 					Graphics g = bi.getGraphics();
-					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
-					
-//					while (tasks.size() > 1000) {
-//						try {
-//						
-//							for (Future<?> fut : tasks) {
-//								if (fut.isDone())
-//									tasks.remove(fut.get());
-//							}
-//							
-//						}
-//						catch (Throwable t) {
-//						}
-//					}
-					
-					lock.acquire();
-					
-					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
-					
-					Future<?> task = executor.submit(callable);			
-					
-					tasks.add(task);
-					
 
-					
-//					taskList.add(callable);
+					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
+
+					lock.acquire();
+
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
+
+					Future<?> task = executor.submit(callable);
+
+					tasks.add(task);
 
 				} // X
 			} // Y
 		} // LEVEL
-
-//		List<Future<String>> futureList = executor.invokeAll(taskList);
-//		boolean allDone = true;
-//		for (Future<String> fut : futureList) {
-//			try {
-//
-//				System.out.println(new Date() + "::" + fut.get());
-//				allDone &= fut.isDone();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-
-		
+		// Check if all is done to message to user
 		boolean allDone = true;
 		for (Future<?> fut : tasks) {
 			try {
@@ -267,15 +232,16 @@ public class TileGenTask extends Task<Void> {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}		
+		}
 		executor.shutdown();
-		
+
 		if (allDone) {
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCompleted"));
 			});
 		}
-		System.out.println((System.currentTimeMillis() - time) + "ms has been elapsed to build " + totalTiles + " tiles.");
+		System.out.println(
+				(System.currentTimeMillis() - time) + "ms has been elapsed to build " + totalTiles + " tiles.");
 		done();
 
 		return null;
@@ -284,7 +250,8 @@ public class TileGenTask extends Task<Void> {
 	@Override
 	protected void cancelled() {
 		try {
-			mThread.interrupt();
+			mainthread.interrupt();
+			lock.release();
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCancelled"));
 			});
@@ -304,13 +271,13 @@ public class TileGenTask extends Task<Void> {
 	}
 
 	private boolean checkFTMDuplication() {
-		File tileMapFolder = new File(mConfiguration.getDestinationFolder(), mConfiguration.getTileMapName());
+		File tileMapFolder = new File(tmConfiguration.getDestinationFolder(), tmConfiguration.getTileMapName());
 		File tileMapFile = new File(tileMapFolder, "tilemap.xml"); //$NON-NLS-1$
 		boolean buildable = true;
 
 		if (tileMapFile.exists()) {
-			if (mConfiguration.overwriteAllowed()) {
-				mOverwriteMode = true;
+			if (tmConfiguration.overwriteAllowed()) {
+				isOverwriteMode = true;
 			} else {
 				buildable = false;
 			}
@@ -320,11 +287,11 @@ public class TileGenTask extends Task<Void> {
 	}
 
 	private void ensureFTMPrerequisite() {
-		if (mOverwriteMode) {
+		if (isOverwriteMode) {
 			return;
 		}
 
-		File tileMapFolder = new File(model.getDestinationFolder(), mConfiguration.getTileMapName());
+		File tileMapFolder = new File(model.getDestinationFolder(), tmConfiguration.getTileMapName());
 		File tileMapFile = new File(tileMapFolder, "tilemap.xml"); //$NON-NLS-1$
 
 		tileMapFolder.mkdirs();
@@ -339,7 +306,7 @@ public class TileGenTask extends Task<Void> {
 					"http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$
 			DocumentBuilder builder = fac.newDocumentBuilder();
 			org.w3c.dom.Document doc = builder.newDocument();
-			TileMapDomHelper.encodeTileMapXML(doc, mConfiguration);
+			TileMapDomHelper.encodeTileMapXML(doc, tmConfiguration);
 
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer t = tf.newTransformer();
@@ -544,7 +511,8 @@ public class TileGenTask extends Task<Void> {
 		private List<ILayer> Ilayers;
 		private BufferedImage bi;
 
-		public TileGenCallable(Context context, Envelope envelope, List<ILayer> Ilayers, BufferedImage bi, int level, int xTileIndex, int yTileIndex) {
+		public TileGenCallable(Context context, Envelope envelope, List<ILayer> Ilayers, BufferedImage bi, int level,
+				int xTileIndex, int yTileIndex) {
 			super();
 			this.context = context;
 			this.envelope = envelope;
@@ -609,32 +577,32 @@ public class TileGenTask extends Task<Void> {
 				return null;
 			}
 			try {
-				double scale = envelope.getWidth() / mConfiguration.getTileWidth()
-						/ DisplayConstant.STANDARD_PIXEL_SIZE_IN_METER;
-
-//				context.setY(yTileIndex);
-//				context.setX(xTileIndex);
-//				context.setWidth(mConfiguration.getTileWidth());
-//				context.setHeight(mConfiguration.getTileHeight());
-//				context.setScale(mConfiguration.getLevels()[level].scale);
+				// Setting context to the respective tile 
 				context.setEnvelope(envelope);
+				context.setWidth(tmConfiguration.getTileWidth());
+				context.setHeight(tmConfiguration.getTileHeight());
+				context.setScale(tmConfiguration.getLevels()[level].scale);
 
-				System.out.println(context.getWidth() + ":" +context.getHeight()  + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope() + " X: " + context.getX() + " Y: " + context.getY());
+				MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(),
+						context.getHeight(), context.getMapCRS());
+				context.setMapToScreenTransform(transform);
+
+				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
+				
 				getMapImage(context, Ilayers);
 
-				File tileFile = getTileFile(mConfiguration, level, xTileIndex, yTileIndex);
-				save(bi, tileFile, mConfiguration.getOutputTypeAsString());
+				File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
+				save(bi, tileFile, tmConfiguration.getOutputTypeAsString());
 
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + totalWork);
 				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex);
 			} catch (Throwable t) {
-				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");				
+				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");
 				t.printStackTrace(System.err);
+			} finally {
+				lock.release();
 			}
-			finally {
-	              lock.release();
-	        }
 			return Thread.currentThread().getName();
 		}
 

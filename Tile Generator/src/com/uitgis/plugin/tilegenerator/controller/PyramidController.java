@@ -13,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -24,6 +25,8 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
@@ -33,6 +36,10 @@ public class PyramidController {
 
 	@FXML
 	TextField tfMultipleNum;
+	
+	@FXML
+	Label lblPyramidTitle;
+	
 	@FXML
 	Button btnCalcScale;
 	@FXML
@@ -54,7 +61,9 @@ public class PyramidController {
 
 	@FXML
 	public void initialize() {
-
+		
+		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
+		
 		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
 		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {

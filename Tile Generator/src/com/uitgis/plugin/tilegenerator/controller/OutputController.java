@@ -17,11 +17,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
 
 public class OutputController {
@@ -30,7 +33,10 @@ public class OutputController {
 
 	@FXML
 	TextField tfLocation, tfMapName, tfExpression;
-
+	
+	@FXML
+	Label lblOutputTitle;
+	
 	@FXML
 	ToggleGroup tglGroupOutput;
 
@@ -53,7 +59,10 @@ public class OutputController {
 
 	@FXML
 	public void initialize() {
-
+		
+		
+		lblOutputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
+		
 		hbxExpression.disableProperty().bind(rbTileGSS.selectedProperty());
 		hbxLocation.disableProperty().bind(rbTileGSS.selectedProperty());
 		hbxTileGSS.disableProperty().bind(rbTileFile.selectedProperty());

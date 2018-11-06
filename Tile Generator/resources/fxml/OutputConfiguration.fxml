@@ -16,7 +16,7 @@
    <children>
       <VBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label text="%comp.output.title" VBox.vgrow="ALWAYS">
+            <Label fx:id="lblOutputTitle" text="%comp.output.title" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -27,6 +27,9 @@
                </padding>
             </Label>
          </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="123.0" prefWidth="396.0">
          <children>

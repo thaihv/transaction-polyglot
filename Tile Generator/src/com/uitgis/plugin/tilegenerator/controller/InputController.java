@@ -3,7 +3,6 @@ package com.uitgis.plugin.tilegenerator.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,10 +18,7 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapControl;
 import com.uitgis.sdk.gdx.GDX;
 import com.uitgis.sdk.gdx.GDXHelper;
-import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
-import com.uitgis.sdk.reference.CRSHelper;
-import com.uitgis.sdk.reference.crs.CoordinateReferenceSystem;
 import com.vividsolutions.jts.geom.Envelope;
 
 import framework.FrameworkManager;
@@ -35,10 +31,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 public class InputController {
@@ -48,6 +47,9 @@ public class InputController {
 	@FXML
 	TextField tfGdxFile, tfLeft, tfTop, tfBottom, tfRight;
 
+	@FXML
+	Label lblInputTitle;
+	
 	@FXML
 	Button btnGdxBrowse;
 
@@ -70,6 +72,8 @@ public class InputController {
 
 	@FXML
 	public void initialize() {
+		
+		lblInputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
 		if (!mc.gdxEmpty()) {
 			model.setGDX(mc.getGDX());
