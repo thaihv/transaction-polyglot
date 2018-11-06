@@ -32,6 +32,9 @@
                </padding>
             </Label>
          </children>
+         <padding>
+            <Insets bottom="30.0" />
+         </padding>
       </VBox>
 		<VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
 			<children>
@@ -52,12 +55,18 @@
 					</children>
 				</HBox>
 			</children>
+         <padding>
+            <Insets bottom="2.0" />
+         </padding>
 		</VBox>
 		<HBox prefHeight="62.0" prefWidth="441.0" spacing="10.0">
 			<children>
 				<Label text="Number of levels" />
 				<Spinner fx:id="spinNumLevels" editable="true" />
 			</children>
+         <padding>
+            <Insets bottom="2.0" top="2.0" />
+         </padding>
 		</HBox>
 		<VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
 			<children>
@@ -86,6 +95,9 @@
 					</children>
 				</VBox>
 			</children>
+         <padding>
+            <Insets bottom="22.0" />
+         </padding>
 		</VBox>
 	</children>
 </VBox>

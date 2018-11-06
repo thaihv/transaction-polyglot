@@ -30,6 +30,9 @@
          <VBox.margin>
             <Insets />
          </VBox.margin>
+         <padding>
+            <Insets bottom="61.0" />
+         </padding>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="123.0" prefWidth="396.0">
          <children>

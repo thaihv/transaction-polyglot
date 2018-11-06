@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.ConfirmController">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="457.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.ConfirmController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
@@ -18,6 +18,9 @@
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </Label>
             <Label text="%comp.runner.description">
                <padding>
@@ -25,12 +28,18 @@
                </padding>
             </Label>
          </children>
+         <VBox.margin>
+            <Insets bottom="169.0" />
+         </VBox.margin>
       </VBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
             <Label prefHeight="17.0" prefWidth="283.0" text="Number of Worker Threads" HBox.hgrow="ALWAYS" />
             <TextField fx:id="tfThreadNum" text="1" HBox.hgrow="ALWAYS" />
          </children>
+         <padding>
+            <Insets bottom="200.0" />
+         </padding>
       </HBox>
    </children>
 </VBox>
