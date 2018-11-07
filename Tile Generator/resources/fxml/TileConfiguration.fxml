@@ -44,9 +44,9 @@
             <HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="58.0" text="Width" />
-                  <TextField text="512" />
+                  <TextField fx:id="tfTileWidth" text="512" />
                   <Label prefHeight="17.0" prefWidth="60.0" text="Height" />
-                  <TextField text="512" />
+                  <TextField fx:id="tfTileHeight" text="512" />
                </children>
             </HBox>
          </children>

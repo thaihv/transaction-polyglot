@@ -38,7 +38,6 @@ import com.uitgis.sdk.layer.RasterLayer;
 import com.uitgis.sdk.layer.ScreenOffset;
 import com.uitgis.sdk.layer.TileMapLayer;
 import com.uitgis.sdk.layer.WMSLayer;
-import com.uitgis.sdk.reference.CRSHelper;
 import com.uitgis.sdk.reference.crs.CoordinateReferenceSystem;
 import com.uitgis.sdk.reference.crs.GeographicCRS;
 import com.uitgis.sdk.reference.datum.GeodeticDatum;
@@ -134,13 +133,6 @@ public class TileGenTask extends Task<Void> {
 		CoordinateReferenceSystem targetCRS = tmConfiguration.getTargetCRS();
 		Envelope envelope = tmConfiguration.getTargetEnvelope();
 
-//		Envelope groupBounds = layers.get(0).getDataEnvelope();
-//		for (ILayer l : layers) {
-//			groupBounds = groupBounds.intersection(l.getDataEnvelope());
-//
-//		}
-//		envelope = CRSHelper.getIntersectionBounds(envelope, groupBounds, targetCRS);
-
 		Point2D origin = tmConfiguration.getOrigin();
 
 		double factor = 1;
@@ -213,7 +205,7 @@ public class TileGenTask extends Task<Void> {
 
 					lock.acquire();
 
-					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, i, hindex, vindex);
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex);
 
 					Future<?> task = executor.submit(callable);
 
@@ -279,6 +271,9 @@ public class TileGenTask extends Task<Void> {
 			if (tmConfiguration.overwriteAllowed()) {
 				isOverwriteMode = true;
 			} else {
+				Platform.runLater(() -> {
+					Noti.showAlert(I18N.getText("err.title.5"), I18N.getText("err.message.5"));
+				});
 				buildable = false;
 			}
 		}
@@ -457,7 +452,7 @@ public class TileGenTask extends Task<Void> {
 				}
 
 				fl.drawLayer(ctx);
-
+		
 				if (sOffset != null) {
 					ctx.getGraphics().translate(sOffset.getPixelOffsetX(ctx.getScale()) * -1,
 							sOffset.getPixelOffsetY(ctx.getScale()) * -1);
@@ -595,7 +590,7 @@ public class TileGenTask extends Task<Void> {
 				save(bi, tileFile, tmConfiguration.getOutputTypeAsString());
 
 				amountSync();
-				updateMessage(I18N.getText("Msg_GenTileProcess") + " " + ": Amount " + count + "/" + totalWork);
+				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);
 				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex);
 			} catch (Throwable t) {
 				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");

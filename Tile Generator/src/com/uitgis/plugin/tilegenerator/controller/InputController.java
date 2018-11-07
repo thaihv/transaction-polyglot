@@ -3,6 +3,7 @@ package com.uitgis.plugin.tilegenerator.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,10 +19,14 @@ import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapControl;
 import com.uitgis.sdk.gdx.GDX;
 import com.uitgis.sdk.gdx.GDXHelper;
+import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
+import com.uitgis.sdk.reference.CRSHelper;
 import com.vividsolutions.jts.geom.Envelope;
 
 import framework.FrameworkManager;
+import framework.i18n.I18N;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -49,7 +54,7 @@ public class InputController {
 
 	@FXML
 	Label lblInputTitle;
-	
+
 	@FXML
 	Button btnGdxBrowse;
 
@@ -72,7 +77,7 @@ public class InputController {
 
 	@FXML
 	public void initialize() {
-		
+
 		lblInputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
 		if (!mc.gdxEmpty()) {
@@ -208,30 +213,22 @@ public class InputController {
 			this.model.rightExtentProperty().set(Double.toString(ev.getMaxX()));
 			this.model.topExtentProperty().set(Double.toString(ev.getMaxY()));
 			this.model.bottomExtentProperty().set(Double.toString(ev.getMinY()));
+			this.model.setTargetEnvelope(ev);
 		}
 	}
 
 	public Envelope calcfullExtentFromGDX(GDX gDX) {
+
 		Envelope envelope = new Envelope();
 		for (int i = 0; i < gDX.getLayerCount(); i++) {
 			ILayer layer = gDX.getLayer(i);
-			envelope.expandToInclude(layer.getDataEnvelope());
+			if (layer.isVisible() && layer.isDataUsable())
+				if (!layer.getDataEnvelope().isEmpty())
+					envelope.expandToInclude(layer.getDataEnvelope());
 		}
+//		envelope = CRSHelper.transformEnvelope(envelope, mc.getDisplayCRS());
+		envelope.setCoordinateReferenceSystem(gDX.getMapCRS());
 		return envelope;
-//		GroupLayer group = model.getGDX().getRootGroupLayer();
-//		List<ILayer> layers = group.getLayers();
-//		
-//		CoordinateReferenceSystem targetCRS = model.getGDX().getEnvelope().getCoordinateReferenceSystem();
-//		Envelope envelope = model.getGDX().getEnvelope();
-//
-//		Envelope groupBounds = layers.get(0).getDataEnvelope();
-//		for (ILayer l : layers) {
-//			groupBounds = groupBounds.intersection(l.getDataEnvelope());
-//
-//		}
-//		envelope = CRSHelper.getIntersectionBounds(envelope, groupBounds, targetCRS);	
-//		return envelope;
-		
 
 	}
 }

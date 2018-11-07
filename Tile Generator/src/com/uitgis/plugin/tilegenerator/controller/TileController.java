@@ -15,13 +15,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.converter.NumberStringConverter;
 
 public class TileController {
 
     private Logger log = LoggerFactory.getLogger(TileController.class);
 
     @FXML
-    TextField tfOriginX, tfOriginY;
+    TextField tfTileWidth, tfTileHeight, tfOriginX, tfOriginY;
     @FXML 
     CheckBox ckbOverwrite, ckbCreateEmptyTile;
     @FXML
@@ -42,6 +43,9 @@ public class TileController {
     	
     	model.originXProperty().bindBidirectional(model.leftExtentProperty());
     	model.originYProperty().bindBidirectional(model.bottomExtentProperty());
+    	
+    	tfTileWidth.textProperty().bindBidirectional(model.tileWidthProperty(), new NumberStringConverter());
+    	tfTileHeight.textProperty().bindBidirectional(model.tileHeightProperty(), new NumberStringConverter());
     	
     	tfOriginX.textProperty().bindBidirectional(model.originXProperty());
     	tfOriginY.textProperty().bindBidirectional(model.originYProperty());

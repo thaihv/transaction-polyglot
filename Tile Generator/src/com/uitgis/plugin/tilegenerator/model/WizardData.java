@@ -3,6 +3,7 @@ package com.uitgis.plugin.tilegenerator.model;
 import java.io.File;
 
 import com.uitgis.sdk.gdx.GDX;
+import com.vividsolutions.jts.geom.Envelope;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -23,25 +24,27 @@ public class WizardData {
 	private final StringProperty originX = new SimpleStringProperty();
 	private final StringProperty originY = new SimpleStringProperty();
 
-	private final StringProperty destinationFolder = new SimpleStringProperty(new File(System.getProperty("user.home")).getPath());
+	private final StringProperty destinationFolder = new SimpleStringProperty(
+			new File(System.getProperty("user.home")).getPath());
 	private final StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
-	
+
 	private final StringProperty tileName = new SimpleStringProperty();
 	private IntegerProperty tileMapType = new SimpleIntegerProperty(0);
-	
+
 	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
 	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true);
 	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
-	
+
 	private BooleanProperty overWriteAllowed = new SimpleBooleanProperty(false);
 	private BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
-	
+
 	private IntegerProperty orderLevel = new SimpleIntegerProperty(0);
 	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
 	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
 	private IntegerProperty tileFormat = new SimpleIntegerProperty(0);
-	
-	
+
+	private Envelope targetEnvelope = new Envelope();
+
 	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
 
 	private GDX GDX;
@@ -116,6 +119,14 @@ public class WizardData {
 		this.bottomExtentProperty().set(bottomExtent);
 	}
 
+	public Envelope getTargetEnvelope() {
+		return targetEnvelope;
+	}
+
+	public void setTargetEnvelope(Envelope targetEnvelope) {
+		this.targetEnvelope = targetEnvelope;
+	}
+
 	public GDX getGDX() {
 		return GDX;
 	}
@@ -175,12 +186,10 @@ public class WizardData {
 	public IntegerProperty orderLevelProperty() {
 		return this.orderLevel;
 	}
-	
 
 	public int getOrderLevel() {
 		return this.orderLevelProperty().get();
 	}
-	
 
 	public void setOrderLevel(final int orderLevel) {
 		this.orderLevelProperty().set(orderLevel);
@@ -189,27 +198,22 @@ public class WizardData {
 	public IntegerProperty tileWidthProperty() {
 		return this.tileWidth;
 	}
-	
 
 	public int getTileWidth() {
 		return this.tileWidthProperty().get();
 	}
-	
 
 	public void setTileWidth(final int tileWidth) {
 		this.tileWidthProperty().set(tileWidth);
 	}
-	
 
 	public IntegerProperty tileHeightProperty() {
 		return this.tileHeight;
 	}
-	
 
 	public int getTileHeight() {
 		return this.tileHeightProperty().get();
 	}
-	
 
 	public void setTileHeight(final int tileHeight) {
 		this.tileHeightProperty().set(tileHeight);
@@ -218,12 +222,10 @@ public class WizardData {
 	public StringProperty pathExpressionProperty() {
 		return this.pathExpression;
 	}
-	
 
 	public String getPathExpression() {
 		return this.pathExpressionProperty().get();
 	}
-	
 
 	public void setPathExpression(final String pathExpression) {
 		this.pathExpressionProperty().set(pathExpression);
@@ -232,12 +234,10 @@ public class WizardData {
 	public StringProperty tileNameProperty() {
 		return this.tileName;
 	}
-	
 
 	public String getTileName() {
 		return this.tileNameProperty().get();
 	}
-	
 
 	public void setTileName(final String tileName) {
 		this.tileNameProperty().set(tileName);
@@ -246,12 +246,10 @@ public class WizardData {
 	public IntegerProperty tileMapTypeProperty() {
 		return this.tileMapType;
 	}
-	
 
 	public int getTileMapType() {
 		return this.tileMapTypeProperty().get();
 	}
-	
 
 	public void setTileMapType(final int tileMapType) {
 		this.tileMapTypeProperty().set(tileMapType);
@@ -260,12 +258,10 @@ public class WizardData {
 	public BooleanProperty transparentBackgroundProperty() {
 		return this.transparentBackground;
 	}
-	
 
 	public boolean isTransparentBackground() {
 		return this.transparentBackgroundProperty().get();
 	}
-	
 
 	public void setTransparentBackground(final boolean transparentBackground) {
 		this.transparentBackgroundProperty().set(transparentBackground);
@@ -274,27 +270,22 @@ public class WizardData {
 	public BooleanProperty improveLabelQualityProperty() {
 		return this.improveLabelQuality;
 	}
-	
 
 	public boolean isImproveLabelQuality() {
 		return this.improveLabelQualityProperty().get();
 	}
-	
 
 	public void setImproveLabelQuality(final boolean improveLabelQuality) {
 		this.improveLabelQualityProperty().set(improveLabelQuality);
 	}
-	
 
 	public BooleanProperty eliminateLabelQualityProperty() {
 		return this.eliminateLabelQuality;
 	}
-	
 
 	public boolean isEliminateLabelQuality() {
 		return this.eliminateLabelQualityProperty().get();
 	}
-	
 
 	public void setEliminateLabelQuality(final boolean eliminateLabelQuality) {
 		this.eliminateLabelQualityProperty().set(eliminateLabelQuality);
@@ -303,27 +294,22 @@ public class WizardData {
 	public BooleanProperty overWriteAllowedProperty() {
 		return this.overWriteAllowed;
 	}
-	
 
 	public boolean isOverWriteAllowed() {
 		return this.overWriteAllowedProperty().get();
 	}
-	
 
 	public void setOverWriteAllowed(final boolean overWriteAllowed) {
 		this.overWriteAllowedProperty().set(overWriteAllowed);
 	}
-	
 
 	public BooleanProperty generateEmptyTileProperty() {
 		return this.generateEmptyTile;
 	}
-	
 
 	public boolean isGenerateEmptyTile() {
 		return this.generateEmptyTileProperty().get();
 	}
-	
 
 	public void setGenerateEmptyTile(final boolean generateEmptyTile) {
 		this.generateEmptyTileProperty().set(generateEmptyTile);
@@ -332,24 +318,13 @@ public class WizardData {
 	public IntegerProperty tileFormatProperty() {
 		return this.tileFormat;
 	}
-	
 
 	public int getTileFormat() {
 		return this.tileFormatProperty().get();
 	}
-	
 
 	public void setTileFormat(final int tileFormat) {
 		this.tileFormatProperty().set(tileFormat);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

@@ -123,7 +123,7 @@ public class TMConfiguration {
 			System.out.println(t);
 		}
 		try {
-			Envelope ev = model.getGDX().getEnvelope();
+			Envelope ev = model.getTargetEnvelope();
 			if (ev != null) {
 				mTargetEnvelope = ev;
 			}
