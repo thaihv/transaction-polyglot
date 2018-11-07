@@ -1,5 +1,6 @@
 package com.uitgis.plugin.tilegenerator;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -57,6 +58,7 @@ public class TileGenTask extends Task<Void> {
 
 	private Thread mainthread;
 	private int numberOfThread;
+	private int imageType;
 	private int totalWork;
 	private int count = 0;
 	Semaphore lock = new Semaphore(100);
@@ -197,9 +199,19 @@ public class TileGenTask extends Task<Void> {
 
 					Envelope bbox = new Envelope(x, x + levelDefs[i].getTileDistanceOnXAXIS(), y,
 							y + levelDefs[i].getTileDistanceOnYAXIS(), tmConfiguration.getTargetCRS());
+					
+					imageType = tmConfiguration.isTransparentBackground() ? 
+							BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;					
+					
 					BufferedImage bi = new BufferedImage(tmConfiguration.getTileWidth(),
-							tmConfiguration.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
+							tmConfiguration.getTileHeight(), imageType);
 					Graphics g = bi.getGraphics();
+					
+					if (imageType == BufferedImage.TYPE_INT_RGB) {
+						javafx.scene.paint.Color fx = tmConfiguration.geColorBackground();
+						g.setColor(new Color((float) fx.getRed(),(float) fx.getGreen(),(float) fx.getBlue()));
+						g.fillRect(0, 0, tmConfiguration.getTileWidth(), tmConfiguration.getTileHeight());
+					}					
 
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
 
@@ -582,7 +594,7 @@ public class TileGenTask extends Task<Void> {
 						context.getHeight(), context.getMapCRS());
 				context.setMapToScreenTransform(transform);
 
-				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
+//				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
 				
 				getMapImage(context, Ilayers);
 

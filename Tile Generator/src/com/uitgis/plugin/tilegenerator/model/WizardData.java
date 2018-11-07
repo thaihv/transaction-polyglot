@@ -7,12 +7,15 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 
 public class WizardData {
 
@@ -34,7 +37,9 @@ public class WizardData {
 	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
 	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true);
 	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
+	private ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
 
+	
 	private BooleanProperty overWriteAllowed = new SimpleBooleanProperty(false);
 	private BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
 
@@ -326,5 +331,20 @@ public class WizardData {
 	public void setTileFormat(final int tileFormat) {
 		this.tileFormatProperty().set(tileFormat);
 	}
+
+	public ObjectProperty<Color> colorBackgroundProperty() {
+		return this.colorBackground;
+	}
+	
+
+	public Color getColorBackground() {
+		return this.colorBackgroundProperty().get();
+	}
+	
+
+	public void setColorBackground(final Color colorBackground) {
+		this.colorBackgroundProperty().set(colorBackground);
+	}
+	
 
 }

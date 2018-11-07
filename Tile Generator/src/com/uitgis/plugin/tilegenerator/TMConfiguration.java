@@ -13,6 +13,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 
 public class TMConfiguration {
 
@@ -71,7 +72,7 @@ public class TMConfiguration {
 
 	private boolean mTransparentBackground;
 
-	private int[] mBackground;
+	private Color mBackground;
 
 	private boolean mAntialiasing;
 
@@ -113,6 +114,7 @@ public class TMConfiguration {
 			mImproveLabelQuality    = model.isImproveLabelQuality();
 			mEliminateLabelOverlaps = model.isEliminateLabelQuality();
 			mTransparentBackground  = model.isTransparentBackground();
+			mBackground				= model.getColorBackground();
 			mOrigin                 = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
 			mTileMapType            = model.getTileMapType();
 			mAllowOverwrite         = model.isOverWriteAllowed();
@@ -282,12 +284,13 @@ public class TMConfiguration {
 		mTransparentBackground = transparentBackground;
 	}
 
-	public int[] getBackground() {
+
+	public Color geColorBackground() {
 		return mBackground;
 	}
 
-	public void setBackground(int[] background) {
-		mBackground = background;
+	public void seColorBackground(Color mBackground) {
+		this.mBackground = mBackground;
 	}
 
 	public boolean isImproveLabelQuality() {

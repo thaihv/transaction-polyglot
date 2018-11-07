@@ -42,7 +42,7 @@
             <HBox alignment="CENTER_LEFT" prefWidth="437.0" spacing="5.0">
                <children>
                   <Label text="Background Color" />
-                  <ColorPicker prefHeight="40.0" prefWidth="93.0" HBox.hgrow="ALWAYS" />
+                  <ColorPicker fx:id="colorpkBackground" prefHeight="40.0" prefWidth="93.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <CheckBox fx:id="ckbTransparent" mnemonicParsing="false" prefHeight="17.0" prefWidth="104.0" text="Transparent" />
