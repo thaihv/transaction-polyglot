@@ -89,7 +89,7 @@ public class TileGenTask extends Task<Void> {
 
 	@Override
 	protected Void call() throws Exception {
-		
+
 		// Initialize a thread pool & task list
 		mainthread = Thread.currentThread();
 		if (numberOfThread < 0)
@@ -199,25 +199,26 @@ public class TileGenTask extends Task<Void> {
 
 					Envelope bbox = new Envelope(x, x + levelDefs[i].getTileDistanceOnXAXIS(), y,
 							y + levelDefs[i].getTileDistanceOnYAXIS(), tmConfiguration.getTargetCRS());
-					
-					imageType = tmConfiguration.isTransparentBackground() ? 
-							BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB;					
-					
+
+					imageType = tmConfiguration.isTransparentBackground() ? BufferedImage.TYPE_INT_ARGB
+							: BufferedImage.TYPE_INT_RGB;
+
 					BufferedImage bi = new BufferedImage(tmConfiguration.getTileWidth(),
 							tmConfiguration.getTileHeight(), imageType);
 					Graphics g = bi.getGraphics();
-					
+
 					if (imageType == BufferedImage.TYPE_INT_RGB) {
 						javafx.scene.paint.Color fx = tmConfiguration.geColorBackground();
-						g.setColor(new Color((float) fx.getRed(),(float) fx.getGreen(),(float) fx.getBlue()));
+						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue()));
 						g.fillRect(0, 0, tmConfiguration.getTileWidth(), tmConfiguration.getTileHeight());
-					}					
+					}
 
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
 
 					lock.acquire();
 
-					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex);
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(),
+							hindex, vindex);
 
 					Future<?> task = executor.submit(callable);
 
@@ -226,7 +227,7 @@ public class TileGenTask extends Task<Void> {
 				} // X
 			} // Y
 		} // LEVEL
-		// Check if all is done to message to user
+			// Check if all is done to message to user
 		boolean allDone = true;
 		for (Future<?> fut : tasks) {
 			try {
@@ -464,7 +465,7 @@ public class TileGenTask extends Task<Void> {
 				}
 
 				fl.drawLayer(ctx);
-		
+
 				if (sOffset != null) {
 					ctx.getGraphics().translate(sOffset.getPixelOffsetX(ctx.getScale()) * -1,
 							sOffset.getPixelOffsetY(ctx.getScale()) * -1);
@@ -584,7 +585,7 @@ public class TileGenTask extends Task<Void> {
 				return null;
 			}
 			try {
-				// Setting context to the respective tile 
+				// Setting context to the respective tile
 				context.setEnvelope(envelope);
 				context.setWidth(tmConfiguration.getTileWidth());
 				context.setHeight(tmConfiguration.getTileHeight());
@@ -595,7 +596,7 @@ public class TileGenTask extends Task<Void> {
 				context.setMapToScreenTransform(transform);
 
 //				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
-				
+
 				getMapImage(context, Ilayers);
 
 				File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
@@ -603,7 +604,8 @@ public class TileGenTask extends Task<Void> {
 
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);
-				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex);
+				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:"
+						+ yTileIndex);
 			} catch (Throwable t) {
 				System.err.println("ERROR [Level:" + level + " X:" + xTileIndex + " Y:" + yTileIndex + "]");
 				t.printStackTrace(System.err);
