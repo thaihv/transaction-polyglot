@@ -393,9 +393,13 @@ public class TileGenTask extends Task<Void> {
 			context.getGraphics().setRenderingHint(
 					RenderingHints.KEY_ANTIALIASING,
 					tmConfiguration.getAntialiasing() ? 
-							RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);			
-			System.out.println("isImproveLabelQuality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
-			System.out.println("getAntialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
+							RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+			// Hide overlapped for label.
+			context.setHideLabelOverlaps(tmConfiguration.isEliminateLabelOverlaps());
+			
+//			System.out.println("Improve Label Quality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
+//			System.out.println("Antialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
+//			System.out.println("Hide Overlap Label  " + context.getHideLabelOverlaps());
 			
 			if (layers == null || layers.size() == 0) {
 				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {

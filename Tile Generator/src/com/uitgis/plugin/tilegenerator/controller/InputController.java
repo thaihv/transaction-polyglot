@@ -167,7 +167,19 @@ public class InputController {
 				}
 			}
 		});
+		tglGroupMap.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
+				int selected = tglGroupMap.getToggles().indexOf(tglGroupMap.getSelectedToggle());
+				
+				if (selected == 0) { // From monitor
+					
 
+				} else { //from GDX file
+
+				}
+
+			}
+		});
 		tglGroupExtent.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
@@ -276,7 +288,6 @@ public class InputController {
 				if (!layer.getDataEnvelope().isEmpty())
 					envelope.expandToInclude(layer.getDataEnvelope());
 		}
-//		envelope = CRSHelper.transformEnvelope(envelope, mc.getDisplayCRS());
 		envelope.setCoordinateReferenceSystem(gDX.getMapCRS());
 		return envelope;
 
