@@ -200,6 +200,7 @@ public class TileGenTask extends Task<Void> {
 					Envelope bbox = new Envelope(x, x + levelDefs[i].getTileDistanceOnXAXIS(), y,
 							y + levelDefs[i].getTileDistanceOnYAXIS(), tmConfiguration.getTargetCRS());
 
+					// Transparent for tile background or not
 					imageType = tmConfiguration.isTransparentBackground() ? BufferedImage.TYPE_INT_ARGB
 							: BufferedImage.TYPE_INT_RGB;
 
@@ -207,14 +208,15 @@ public class TileGenTask extends Task<Void> {
 							tmConfiguration.getTileHeight(), imageType);
 					Graphics g = bi.getGraphics();
 
+					// Not transparent, fill a selected color
 					if (imageType == BufferedImage.TYPE_INT_RGB) {
 						javafx.scene.paint.Color fx = tmConfiguration.geColorBackground();
-						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue()));
+						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue(), (float) fx.getOpacity()));
 						g.fillRect(0, 0, tmConfiguration.getTileWidth(), tmConfiguration.getTileHeight());
 					}
 
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
-
+					// Semaphore acquired to control access resources to limit 100 concurrencies
 					lock.acquire();
 
 					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(),
@@ -383,7 +385,18 @@ public class TileGenTask extends Task<Void> {
 			MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(), context.getHeight(),
 					context.getMapCRS());
 			context.setMapToScreenTransform(transform);
-
+			// Anti-aliasing for text 
+			context.getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
+					tmConfiguration.isImproveLabelQuality() ? 
+							RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+			// Anti-alias for shape
+			context.getGraphics().setRenderingHint(
+					RenderingHints.KEY_ANTIALIASING,
+					tmConfiguration.getAntialiasing() ? 
+							RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);			
+			System.out.println("isImproveLabelQuality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
+			System.out.println("getAntialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
+			
 			if (layers == null || layers.size() == 0) {
 				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
 					ILayer layer = model.getGDX().getLayer(i);
@@ -419,15 +432,6 @@ public class TileGenTask extends Task<Void> {
 					}
 				}
 			}
-
-			// anti-aliasing
-			Object textAntiAlasing = context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-			Object graphicAntiAliasing = context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING);
-			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					(textAntiAlasing == RenderingHints.VALUE_TEXT_ANTIALIAS_ON ? RenderingHints.VALUE_ANTIALIAS_ON
-							: RenderingHints.VALUE_ANTIALIAS_OFF));
-
-			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, graphicAntiAliasing);
 		}
 	}
 

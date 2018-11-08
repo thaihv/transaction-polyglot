@@ -36,6 +36,7 @@ public class WizardData {
 
 	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
 	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true);
+	private BooleanProperty antialiasing = new SimpleBooleanProperty(false);
 	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
 	private ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
 
@@ -345,6 +346,21 @@ public class WizardData {
 	public void setColorBackground(final Color colorBackground) {
 		this.colorBackgroundProperty().set(colorBackground);
 	}
+
+	public BooleanProperty antialiasingProperty() {
+		return this.antialiasing;
+	}
+	
+
+	public boolean isAntialiasing() {
+		return this.antialiasingProperty().get();
+	}
+	
+
+	public void setAntialiasing(final boolean antialiasing) {
+		this.antialiasingProperty().set(antialiasing);
+	}
+	
 	
 
 }

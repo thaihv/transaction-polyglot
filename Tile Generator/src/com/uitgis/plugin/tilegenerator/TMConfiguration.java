@@ -113,6 +113,7 @@ public class TMConfiguration {
 			mLevelOrder             = model.getOrderLevel();
 			mImproveLabelQuality    = model.isImproveLabelQuality();
 			mEliminateLabelOverlaps = model.isEliminateLabelQuality();
+			mAntialiasing 			= model.isAntialiasing();
 			mTransparentBackground  = model.isTransparentBackground();
 			mBackground				= model.getColorBackground();
 			mOrigin                 = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));

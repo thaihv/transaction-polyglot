@@ -3,8 +3,8 @@ package com.uitgis.plugin.tilegenerator.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -15,18 +15,15 @@ import com.uitgis.maple.application.ContentID;
 import com.uitgis.maple.common.util.Noti;
 import com.uitgis.maple.contents.map.ui.MapTabPane;
 import com.uitgis.maple.contents.toolbox.ui.ToolboxHelper;
+import com.uitgis.plugin.tilegenerator.LabelEngine;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapControl;
 import com.uitgis.sdk.gdx.GDX;
 import com.uitgis.sdk.gdx.GDXHelper;
-import com.uitgis.sdk.layer.GroupLayer;
 import com.uitgis.sdk.layer.ILayer;
-import com.uitgis.sdk.reference.CRSHelper;
 import com.vividsolutions.jts.geom.Envelope;
 
 import framework.FrameworkManager;
-import framework.i18n.I18N;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -41,6 +38,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
@@ -51,22 +49,16 @@ public class InputController {
 
 	@FXML
 	TextField tfGdxFile, tfLeft, tfTop, tfBottom, tfRight;
-
 	@FXML
 	Label lblInputTitle;
-
 	@FXML
 	Button btnGdxBrowse;
-
 	@FXML
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
-
 	@FXML
 	ToggleGroup tglGroupExtent, tglGroupMap;
-
 	@FXML
 	ComboBox<String> cmbMap;
-
 	@Inject
 	WizardData model;
 
@@ -80,14 +72,25 @@ public class InputController {
 
 		lblInputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
+		// For the first initiation of Display using a GDX from MapControl
 		if (!mc.gdxEmpty()) {
 			model.setGDX(mc.getGDX());
+			model.setEliminateLabelQuality(model.getGDX().isHideLabelOverlaps());
+			model.setImproveLabelQuality(model.getGDX().isLabelAntiAlasing());
+			model.setAntialiasing(model.getGDX().isAntiAliasing());
+			int r = model.getGDX().getBackgroundColor().getRed();
+			int g = model.getGDX().getBackgroundColor().getGreen();
+			int b = model.getGDX().getBackgroundColor().getBlue();
+			int a = model.getGDX().getBackgroundColor().getAlpha();
+			double opacity = a / 255.0;
+			Color colorbackground = Color.rgb(r, g, b, opacity);
+			model.setColorBackground(colorbackground);
+			System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+					+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
 			setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-//			setTileEnvelope(model.getGDX().getEnvelope());
 		}
 
 		choiceMapItems.addAll(maps.stream().map(c -> c.getMapTitle()).collect(Collectors.toList()));
-
 		tfLeft.textProperty().bindBidirectional(model.leftExtentProperty());
 		tfTop.textProperty().bindBidirectional(model.topExtentProperty());
 		tfBottom.textProperty().bindBidirectional(model.bottomExtentProperty());
@@ -102,6 +105,7 @@ public class InputController {
 		cmbMap.getItems().addAll(choiceMapItems);
 		cmbMap.getSelectionModel().select(mc.getMapTitle());
 
+		// If using GDX file instead of MapControl by select
 		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.setOnAction(event -> {
@@ -117,6 +121,38 @@ public class InputController {
 				try {
 					model.setGDX(GDXHelper.loadGDX(file));
 					if (!model.getGDX().isEmpty()) {
+						// Get out properties from header file
+						Properties properties = model.getGDX().getGDXHeader().getProperties();
+						// Hide label overlapped
+						String value = (String) properties.get("LABEL_ENGINE");
+						model.setEliminateLabelQuality(!LabelEngine.DISPLAY_ALL.name().equals(value));
+						// Anti aliasing for text
+						value = (String) properties.get("TEXT_ANTIALIASING");
+						model.setImproveLabelQuality(value == null || !value.equalsIgnoreCase("FALSE"));
+						// Background Color
+						value = (String) properties.get("MAP_BACKGROUND");
+						int[] background = new int[3];
+						try {
+							boolean hasAlpha = value.length() >= 8;
+							if (hasAlpha) {
+								background[0] = Integer.parseInt(value.substring(2, 4), 16);
+								background[1] = Integer.parseInt(value.substring(4, 6), 16);
+								background[2] = Integer.parseInt(value.substring(6, 8), 16);
+							} else {
+								background[0] = Integer.parseInt(value.substring(0, 2), 16);
+								background[1] = Integer.parseInt(value.substring(2, 4), 16);
+								background[2] = Integer.parseInt(value.substring(4, 6), 16);
+							}
+						} catch (Throwable t) {
+							background[0] = background[1] = background[2] = 255;
+						}
+						model.setColorBackground(Color.rgb(background[0], background[1], background[2]));
+						// Anti aliasing for shape
+						value = (String) properties.get("ANTIALIASING");
+						model.setAntialiasing(value != null && value.equalsIgnoreCase("TRUE"));
+						System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+								+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
+
 						if (rbFullExtent.isSelected()) {
 							setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
 						} else {
@@ -196,6 +232,20 @@ public class InputController {
 		if (mc.isPresent()) {
 			if (!mc.get().gdxEmpty()) {
 				model.setGDX(mc.get().getGDX());
+
+				model.setEliminateLabelQuality(model.getGDX().isHideLabelOverlaps());
+				model.setImproveLabelQuality(model.getGDX().isLabelAntiAlasing());
+				model.setAntialiasing(model.getGDX().isAntiAliasing());
+				int r = model.getGDX().getBackgroundColor().getRed();
+				int g = model.getGDX().getBackgroundColor().getGreen();
+				int b = model.getGDX().getBackgroundColor().getBlue();
+				int a = model.getGDX().getBackgroundColor().getAlpha();
+				double opacity = a / 255.0;
+				Color colorbackground = Color.rgb(r, g, b, opacity);
+				model.setColorBackground(colorbackground);
+				System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+						+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
+
 				if (rbFullExtent.isSelected()) {
 					setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
 				} else {
