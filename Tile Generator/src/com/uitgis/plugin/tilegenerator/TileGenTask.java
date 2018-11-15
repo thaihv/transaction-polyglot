@@ -31,6 +31,9 @@ import com.google.inject.Inject;
 import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 import com.uitgis.sdk.controls.MapTransform;
+import com.uitgis.sdk.datamodel.table.IResultSet;
+import com.uitgis.sdk.datamodel.table.IResultSetIterator;
+import com.uitgis.sdk.filter.spatial.Intersects;
 import com.uitgis.sdk.layer.AbstractLayer;
 import com.uitgis.sdk.layer.FeatureLayer;
 import com.uitgis.sdk.layer.GroupLayer;
@@ -44,6 +47,7 @@ import com.uitgis.sdk.reference.crs.GeographicCRS;
 import com.uitgis.sdk.reference.datum.GeodeticDatum;
 import com.uitgis.sdk.style.symbol.Context;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 import framework.i18n.I18N;
 import javafx.application.Platform;
@@ -379,7 +383,9 @@ public class TileGenTask extends Task<Void> {
 		ImageIO.write(bi, format, out);
 	}
 
-	public void getMapImage(Context context, List<ILayer> layers) {
+	public boolean getMapImage(Context context, List<ILayer> layers) {
+		
+		boolean hasContent = false;
 
 		if (context.getEnvelope() != null) {
 			MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(), context.getHeight(),
@@ -404,7 +410,6 @@ public class TileGenTask extends Task<Void> {
 			if (layers == null || layers.size() == 0) {
 				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
 					ILayer layer = model.getGDX().getLayer(i);
-
 					context.setDrawAllVertices(true);
 					drawLayer(context, layer);
 					if (context.isStopped()) {
@@ -420,6 +425,17 @@ public class TileGenTask extends Task<Void> {
 					}
 				}
 			} else {
+				// Check empty tiles
+				for (int i = layers.size() - 1; i >= 0; i--) {
+					ILayer layer = layers.get(i);
+					boolean b = isNotEmptyTile(context, layer);
+					hasContent = hasContent || b;					
+					if (context.isStopped()) {
+						break;
+					}
+
+				}
+				// Drawing...
 				for (int i = layers.size() - 1; i >= 0; i--) {
 					ILayer layer = layers.get(i);
 					drawLayer(context, layer);
@@ -437,6 +453,7 @@ public class TileGenTask extends Task<Void> {
 				}
 			}
 		}
+		return hasContent;
 	}
 
 	private void drawLayer(Context ctx, ILayer layer) {
@@ -491,7 +508,35 @@ public class TileGenTask extends Task<Void> {
 		return layer.isVisible() && layer.getOpacity() > 0 && ctx.getScale() >= ((AbstractLayer) layer).getMinScale()
 				&& ctx.getScale() < ((AbstractLayer) layer).getMaxScale() && ((AbstractLayer) layer).isDataUsable();
 	}
+	private boolean isNotEmptyTile(Context ctx, ILayer layer) {
+		FeatureLayer ly = (FeatureLayer) layer;
+		Intersects filter = new Intersects((ly).getFeatureTable().getGeometryName(), new GeometryFactory().toGeometry(ctx.getEnvelope()));
+		
+		IResultSet rs = null;
+		IResultSetIterator iterator = null;
+		try {
+			rs = ly.getFeatures(filter);
+			iterator = rs.iterator();
+			
+			if (!iterator.hasNext()) {
+				System.out.println("EMPTY TILE........" + "> Level:" + ctx.getScale() + " X:" + ctx.getX() + " Y:" + ctx.getY());
+				return false;
+			}
+		}
+		catch (Exception e) {
 
+		}
+		finally {
+			if (iterator != null) {
+				iterator.close();
+			}
+			
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return true;
+	}
 	private void drawLabels(Context ctx, ILayer layer) {
 		if (layer instanceof GroupLayer) {
 			GroupLayer grouplayer = (GroupLayer) layer;
@@ -603,13 +648,16 @@ public class TileGenTask extends Task<Void> {
 						context.getHeight(), context.getMapCRS());
 				context.setMapToScreenTransform(transform);
 
+				context.setX(xTileIndex);
+				context.setY(yTileIndex);
 //				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
 
-				getMapImage(context, Ilayers);
-
-				File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
-				save(bi, tileFile, tmConfiguration.getOutputTypeAsString());
-
+				boolean hasDrawn = getMapImage(context, Ilayers);
+				
+				if (hasDrawn || tmConfiguration.emptyTileAllowed()) {
+					File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
+					save(bi, tileFile, tmConfiguration.getOutputTypeAsString());
+				}
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);
 				System.out.println(Thread.currentThread().getName() + "> Level:" + level + " X:" + xTileIndex + " Y:"

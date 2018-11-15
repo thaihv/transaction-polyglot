@@ -119,6 +119,7 @@ public class TMConfiguration {
 			mOrigin                 = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
 			mTileMapType            = model.getTileMapType();
 			mAllowOverwrite         = model.isOverWriteAllowed();
+			mAllowEmptyTile         = model.isGenerateEmptyTile();
 			mTileFormat             = model.getTileFormat();
 			mTileWidth              = model.getTileWidth();;
 			mTileHeight             = model.getTileHeight();
