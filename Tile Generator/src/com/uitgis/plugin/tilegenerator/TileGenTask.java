@@ -496,6 +496,7 @@ public class TileGenTask extends Task<Void> {
 							sOffset.getPixelOffsetY(ctx.getScale()) * -1);
 				}
 			} else if (layer instanceof RasterLayer) {
+				((RasterLayer) layer).drawLayer(ctx);
 			} else if (layer instanceof WMSLayer) {
 				((WMSLayer) layer).drawLayer(ctx);
 			} else if (layer instanceof TileMapLayer) {
@@ -509,31 +510,35 @@ public class TileGenTask extends Task<Void> {
 				&& ctx.getScale() < ((AbstractLayer) layer).getMaxScale() && ((AbstractLayer) layer).isDataUsable();
 	}
 	private boolean isNotEmptyTile(Context ctx, ILayer layer) {
-		FeatureLayer ly = (FeatureLayer) layer;
-		Intersects filter = new Intersects((ly).getFeatureTable().getGeometryName(), new GeometryFactory().toGeometry(ctx.getEnvelope()));
+		if (layer instanceof FeatureLayer) {
 		
-		IResultSet rs = null;
-		IResultSetIterator iterator = null;
-		try {
-			rs = ly.getFeatures(filter);
-			iterator = rs.iterator();
+			FeatureLayer ly = (FeatureLayer) layer;
+			Intersects filter = new Intersects((ly).getFeatureTable().getGeometryName(), new GeometryFactory().toGeometry(ctx.getEnvelope()));
 			
-			if (!iterator.hasNext()) {
-				System.out.println("EMPTY TILE........" + "> Level:" + ctx.getScale() + " X:" + ctx.getX() + " Y:" + ctx.getY());
-				return false;
+			IResultSet rs = null;
+			IResultSetIterator iterator = null;
+			try {
+				rs = ly.getFeatures(filter);
+				iterator = rs.iterator();
+				
+				if (!iterator.hasNext()) {
+	//				System.out.println("EMPTY TILE........" + "> Level:" + ctx.getScale() + " X:" + ctx.getX() + " Y:" + ctx.getY());
+					return false;
+				}
 			}
-		}
-		catch (Exception e) {
-
-		}
-		finally {
-			if (iterator != null) {
-				iterator.close();
+			catch (Exception e) {
+	
 			}
-			
-			if (rs != null) {
-				rs.close();
+			finally {
+				if (iterator != null) {
+					iterator.close();
+				}
+				
+				if (rs != null) {
+					rs.close();
+				}
 			}
+			return true;
 		}
 		return true;
 	}
