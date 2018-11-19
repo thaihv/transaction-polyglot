@@ -184,7 +184,7 @@ public class TileGenTask extends Task<Void> {
 		// Divide the task to units and assign to thread
 		long time = System.currentTimeMillis();
 
-		// For each level
+		// Calculate by Level (Z in case Google XYZ)
 		for (int i = 0; i < numOfLevels; i++) {
 			if (levelDefs[i] == null) {
 				continue;
@@ -215,7 +215,8 @@ public class TileGenTask extends Task<Void> {
 					// Not transparent, fill a selected color
 					if (imageType == BufferedImage.TYPE_INT_RGB) {
 						javafx.scene.paint.Color fx = tmConfiguration.geColorBackground();
-						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue(), (float) fx.getOpacity()));
+						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue(),
+								(float) fx.getOpacity()));
 						g.fillRect(0, 0, tmConfiguration.getTileWidth(), tmConfiguration.getTileHeight());
 					}
 
@@ -223,13 +224,14 @@ public class TileGenTask extends Task<Void> {
 					// Semaphore acquired to control access resources to limit 100 concurrencies
 					lock.acquire();
 
-					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(),
-							hindex, vindex);
+					// If Google tile map indexes setting, reserve vindex by doing assign it to: vEnd - vindex - 1
+					TileGenCallable callable = model.isGoogleXYZ()
+							? new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex,  // Google XYZ
+									vEnd - vindex - 1)
+							: new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex); // Use Default TMS indexed
 
 					Future<?> task = executor.submit(callable);
-
 					tasks.add(task);
-
 				} // X
 			} // Y
 		} // LEVEL
@@ -384,29 +386,28 @@ public class TileGenTask extends Task<Void> {
 	}
 
 	public boolean getMapImage(Context context, List<ILayer> layers) {
-		
+
 		boolean hasContent = false;
 
 		if (context.getEnvelope() != null) {
 			MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(), context.getHeight(),
 					context.getMapCRS());
 			context.setMapToScreenTransform(transform);
-			// Anti-aliasing for text 
-			context.getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
-					tmConfiguration.isImproveLabelQuality() ? 
-							RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+			// Anti-aliasing for text
+			context.getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+					tmConfiguration.isImproveLabelQuality() ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+							: RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 			// Anti-alias for shape
-			context.getGraphics().setRenderingHint(
-					RenderingHints.KEY_ANTIALIASING,
-					tmConfiguration.getAntialiasing() ? 
-							RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
+			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					tmConfiguration.getAntialiasing() ? RenderingHints.VALUE_ANTIALIAS_ON
+							: RenderingHints.VALUE_ANTIALIAS_OFF);
 			// Hide overlapped for label.
 			context.setHideLabelOverlaps(tmConfiguration.isEliminateLabelOverlaps());
-			
+
 //			System.out.println("Improve Label Quality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
 //			System.out.println("Antialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
 //			System.out.println("Hide Overlap Label  " + context.getHideLabelOverlaps());
-			
+
 			if (layers == null || layers.size() == 0) {
 				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
 					ILayer layer = model.getGDX().getLayer(i);
@@ -429,7 +430,7 @@ public class TileGenTask extends Task<Void> {
 				for (int i = layers.size() - 1; i >= 0; i--) {
 					ILayer layer = layers.get(i);
 					boolean b = isNotEmptyTile(context, layer);
-					hasContent = hasContent || b;					
+					hasContent = hasContent || b;
 					if (context.isStopped()) {
 						break;
 					}
@@ -509,31 +510,32 @@ public class TileGenTask extends Task<Void> {
 		return layer.isVisible() && layer.getOpacity() > 0 && ctx.getScale() >= ((AbstractLayer) layer).getMinScale()
 				&& ctx.getScale() < ((AbstractLayer) layer).getMaxScale() && ((AbstractLayer) layer).isDataUsable();
 	}
+
 	private boolean isNotEmptyTile(Context ctx, ILayer layer) {
 		if (layer instanceof FeatureLayer) {
-		
+
 			FeatureLayer ly = (FeatureLayer) layer;
-			Intersects filter = new Intersects((ly).getFeatureTable().getGeometryName(), new GeometryFactory().toGeometry(ctx.getEnvelope()));
-			
+			Intersects filter = new Intersects((ly).getFeatureTable().getGeometryName(),
+					new GeometryFactory().toGeometry(ctx.getEnvelope()));
+
 			IResultSet rs = null;
 			IResultSetIterator iterator = null;
 			try {
 				rs = ly.getFeatures(filter);
 				iterator = rs.iterator();
-				
+
 				if (!iterator.hasNext()) {
-	//				System.out.println("EMPTY TILE........" + "> Level:" + ctx.getScale() + " X:" + ctx.getX() + " Y:" + ctx.getY());
+					// System.out.println("EMPTY TILE........" + "> Level:" + ctx.getScale() + " X:"
+					// + ctx.getX() + " Y:" + ctx.getY());
 					return false;
 				}
-			}
-			catch (Exception e) {
-	
-			}
-			finally {
+			} catch (Exception e) {
+
+			} finally {
 				if (iterator != null) {
 					iterator.close();
 				}
-				
+
 				if (rs != null) {
 					rs.close();
 				}
@@ -542,6 +544,7 @@ public class TileGenTask extends Task<Void> {
 		}
 		return true;
 	}
+
 	private void drawLabels(Context ctx, ILayer layer) {
 		if (layer instanceof GroupLayer) {
 			GroupLayer grouplayer = (GroupLayer) layer;
@@ -658,7 +661,7 @@ public class TileGenTask extends Task<Void> {
 //				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
 
 				boolean hasDrawn = getMapImage(context, Ilayers);
-				
+
 				if (hasDrawn || tmConfiguration.emptyTileAllowed()) {
 					File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
 					save(bi, tileFile, tmConfiguration.getOutputTypeAsString());

@@ -30,6 +30,7 @@ public class WizardData {
 	private final StringProperty destinationFolder = new SimpleStringProperty(
 			new File(System.getProperty("user.home")).getPath());
 	private final StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
+	private BooleanProperty googleXYZ = new SimpleBooleanProperty(false);
 
 	private final StringProperty tileName = new SimpleStringProperty();
 	private IntegerProperty tileMapType = new SimpleIntegerProperty(0);
@@ -75,6 +76,8 @@ public class WizardData {
 		pathExpression.set("/{$L}/Y{$Y}/X{$X}");
 		listTileScale.clear();
 		listTileScale.add(new TileScale(true, 0, 0));
+		
+		googleXYZ.set(false);
 	}
 
 	public StringProperty leftExtentProperty() {
@@ -360,6 +363,21 @@ public class WizardData {
 	public void setAntialiasing(final boolean antialiasing) {
 		this.antialiasingProperty().set(antialiasing);
 	}
+
+	public BooleanProperty googleXYZProperty() {
+		return this.googleXYZ;
+	}
+	
+
+	public boolean isGoogleXYZ() {
+		return this.googleXYZProperty().get();
+	}
+	
+
+	public void setGoogleXYZ(final boolean googleXYZ) {
+		this.googleXYZProperty().set(googleXYZ);
+	}
+	
 	
 	
 
