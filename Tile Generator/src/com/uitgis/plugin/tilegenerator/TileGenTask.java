@@ -225,10 +225,9 @@ public class TileGenTask extends Task<Void> {
 					lock.acquire();
 
 					// If Google tile map indexes setting, reserve vindex by doing assign it to: vEnd - vindex - 1
-					TileGenCallable callable = model.isGoogleXYZ()
-							? new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex,  // Google XYZ
-									vEnd - vindex - 1)
-							: new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex); // Use Default TMS indexed
+					// TileGenCallable callable =  new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vEnd - vindex - 1)
+					
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex); // Use Default TMS indexed
 
 					Future<?> task = executor.submit(callable);
 					tasks.add(task);

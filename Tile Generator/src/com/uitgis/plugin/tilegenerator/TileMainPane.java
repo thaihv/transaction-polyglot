@@ -1,8 +1,6 @@
 package com.uitgis.plugin.tilegenerator;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

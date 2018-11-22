@@ -16,7 +16,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -51,9 +50,6 @@ public class OutputController {
 	ComboBox<String> cmbTileFormat;
 	
 	@FXML
-	CheckBox cbGoogleXYZ;
-
-	@FXML
 	HBox hbxTileGSS, hbxLocation, hbxExpression;
 
 	@Inject
@@ -77,7 +73,6 @@ public class OutputController {
 		tfMapName.textProperty().bindBidirectional(model.tileNameProperty());
 		tfLocation.textProperty().bindBidirectional(model.destinationFolderProperty());
 		tfExpression.textProperty().bindBidirectional(model.pathExpressionProperty());
-		cbGoogleXYZ.selectedProperty().bindBidirectional(model.googleXYZProperty());
 
 		btnBuildAsFile.setOnAction(event -> {
 			DirectoryChooser dirChooser = new DirectoryChooser();
