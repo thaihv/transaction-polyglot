@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER_LEFT" stylesheets="@../../../../GeoDevJD/Maple%201.1/resources/css/maple.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.WizardController">
+<VBox alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uitgis.plugin.tilegenerator.controller.WizardController">
    <children>
       <VBox fx:id="contentPanel" alignment="CENTER" prefHeight="267.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
       <HBox fx:id="hboxIndicators" alignment="CENTER" spacing="2.0">

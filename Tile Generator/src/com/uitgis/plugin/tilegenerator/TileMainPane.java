@@ -1,6 +1,8 @@
 package com.uitgis.plugin.tilegenerator;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -27,6 +29,19 @@ public class TileMainPane extends BorderPane {
 			}
 
 		});
+
+//		ClassLoader cl = FXMLLoader.getDefaultClassLoader(); //same as ClassLoader.getSystemClassLoader();
+		ClassLoader loader = getClass().getClassLoader();
+//		URL[] urls = ((URLClassLoader) loader).getURLs();
+//		System.out.println("LOADER ->" + loader + urls.toString());
+//		for (URL u : urls) {
+//			System.out.println("------> TILE GEN LOADER--------!" + u.getFile());
+//		}
+
+		// Set classloader from Main app to Plugin to make sure plugin can find classes
+		// from it self instead of Maple application, with base classes will be automatically delegated
+		// to SystemClassLoader
+		FXMLLoader.setDefaultClassLoader(loader);
 
 		Parent p;
 		try {
