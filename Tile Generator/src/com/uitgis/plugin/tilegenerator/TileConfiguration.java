@@ -15,7 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
-public class TMConfiguration {
+public class TileConfiguration {
 
 	public static final int OUTPUT_PNG = 0;
 	public static final int OUTPUT_JPEG = 1;
@@ -84,7 +84,7 @@ public class TMConfiguration {
 
 	public BackendDBMSInfo mBackendDBMSInfo;
 
-	public TMConfiguration(WizardData model) {
+	public TileConfiguration(WizardData model) {
 
 		try {
 			String path = model.getDestinationFolder();
@@ -108,7 +108,7 @@ public class TMConfiguration {
 
 				levelSpecList.add(new LevelSpec(level, scale, isOn));
 			}
-			mLevelSpecs = levelSpecList.toArray(new TMConfiguration.LevelSpec[levelSpecList.size()]);
+			mLevelSpecs = levelSpecList.toArray(new TileConfiguration.LevelSpec[levelSpecList.size()]);
 
 			mLevelOrder = model.getOrderLevel();
 			mImproveLabelQuality = model.isImproveLabelQuality();

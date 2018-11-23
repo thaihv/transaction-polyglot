@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class TileMapDomHelper {
 	
-	public static void encodeTileMapXML(Document doc, TMConfiguration configuration) {
+	public static void encodeTileMapXML(Document doc, TileConfiguration configuration) {
 		Element root = doc.createElement("TileMap");
 //		root.setAttribute("allowOverwrite", String.valueOf(configuration.overwriteAllowed()));
 		doc.appendChild(root);
@@ -47,13 +47,13 @@ public class TileMapDomHelper {
 		
 		sub1 = doc.createElement("Pyramid");
 		sub1.setAttribute("numLevels", String.valueOf(configuration.getNumberOfLevels()));
-		sub1.setAttribute("levelOrder", configuration.getLevelOrder()==TMConfiguration.ORDER_DESCENDING?"desc":"asc");
+		sub1.setAttribute("levelOrder", configuration.getLevelOrder()==TileConfiguration.ORDER_DESCENDING?"desc":"asc");
 		root.appendChild(sub1);
 		
 		sub2 = doc.createElement("Resolutions");
 		StringBuffer sb = new StringBuffer();
-		TMConfiguration.LevelSpec[] levels = configuration.getLevels();
-		for (TMConfiguration.LevelSpec l : levels) {
+		TileConfiguration.LevelSpec[] levels = configuration.getLevels();
+		for (TileConfiguration.LevelSpec l : levels) {
 			sb.append(l.scale).append(' ');
 		}
 //		double[] scales = configuration.getScales();

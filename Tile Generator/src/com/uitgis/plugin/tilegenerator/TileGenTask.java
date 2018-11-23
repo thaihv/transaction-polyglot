@@ -60,7 +60,7 @@ public class TileGenTask extends Task<Void> {
 	private static final String KEY_X = "{$X}";
 	private static final String KEY_Y = "{$Y}";
 
-	private Thread mainthread;
+	private Thread mainThread;
 	private int numberOfThread;
 	private int imageType;
 	private int totalWork;
@@ -68,7 +68,7 @@ public class TileGenTask extends Task<Void> {
 	Semaphore lock = new Semaphore(100);
 
 	private LevelDefinition[] levelDefs;
-	private TMConfiguration tmConfiguration;
+	private TileConfiguration tileConfiguration;
 	private boolean isOverwriteMode;
 
 	@Inject
@@ -95,21 +95,21 @@ public class TileGenTask extends Task<Void> {
 	protected Void call() throws Exception {
 
 		// Initialize a thread pool & task list
-		mainthread = Thread.currentThread();
+		mainThread = Thread.currentThread();
 		if (numberOfThread < 0)
 			return null;
 		ExecutorService executor = Executors.newFixedThreadPool(numberOfThread);
 		List<Future<?>> tasks = new ArrayList<>();
 
 		// Seting up Tile Configuration & check condition to gen
-		tmConfiguration = new TMConfiguration(model);
+		tileConfiguration = new TileConfiguration(model);
 		isOverwriteMode = false;
 		boolean buildable = false;
 
-		int type = tmConfiguration.getTypeOfTileMap();
-		if (type == TMConfiguration.TYPE_FILE_TILEMAP) {
+		int type = tileConfiguration.getTypeOfTileMap();
+		if (type == TileConfiguration.TYPE_FILE_TILEMAP) {
 			buildable = checkFTMDuplication();
-		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
+		} else if (type == TileConfiguration.TYPE_GSS_TILEMAP) {
 			// buildable = checkGTMDuplication();
 		}
 
@@ -128,7 +128,7 @@ public class TileGenTask extends Task<Void> {
 		}
 
 		// Get levels to calculate
-		TMConfiguration.LevelSpec[] levels = tmConfiguration.getLevels();
+		TileConfiguration.LevelSpec[] levels = tileConfiguration.getLevels();
 		if (levels.length == 0) {
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("err.message.2"));
@@ -136,10 +136,10 @@ public class TileGenTask extends Task<Void> {
 			return null;
 		}
 
-		CoordinateReferenceSystem targetCRS = tmConfiguration.getTargetCRS();
-		Envelope envelope = tmConfiguration.getTargetEnvelope();
+		CoordinateReferenceSystem targetCRS = tileConfiguration.getTargetCRS();
+		Envelope envelope = tileConfiguration.getTargetEnvelope();
 
-		Point2D origin = tmConfiguration.getOrigin();
+		Point2D origin = tileConfiguration.getOrigin();
 
 		double factor = 1;
 		if (targetCRS instanceof GeographicCRS) {
@@ -149,7 +149,7 @@ public class TileGenTask extends Task<Void> {
 			factor = 360D / circumference;
 		}
 
-		int numOfLevels = tmConfiguration.getNumberOfLevels();
+		int numOfLevels = tileConfiguration.getNumberOfLevels();
 		levelDefs = new LevelDefinition[numOfLevels];
 
 		int totalTiles = 0;
@@ -159,7 +159,7 @@ public class TileGenTask extends Task<Void> {
 				continue;
 			}
 
-			int level = tmConfiguration.getLevelOrder() == TMConfiguration.ORDER_DESCENDING ? levels.length - i - 1 : i;
+			int level = tileConfiguration.getLevelOrder() == TileConfiguration.ORDER_DESCENDING ? levels.length - i - 1 : i;
 			double hdistance = model.getTileWidth() * levels[i].scale * factor;
 			double vdistance = model.getTileHeight() * levels[i].scale * factor;
 			int hStart = getGridCellNo(envelope.getMinX() - origin.getX(), hdistance, false);
@@ -171,9 +171,9 @@ public class TileGenTask extends Task<Void> {
 
 			totalTiles += (hEnd - hStart + 1) * (vEnd - vStart + 1);
 		}
-		if (type == TMConfiguration.TYPE_FILE_TILEMAP) {
+		if (type == TileConfiguration.TYPE_FILE_TILEMAP) {
 			ensureFTMPrerequisite();
-		} else if (type == TMConfiguration.TYPE_GSS_TILEMAP) {
+		} else if (type == TileConfiguration.TYPE_GSS_TILEMAP) {
 			// ensureGTMPrerequisite();
 		}
 		// Ok, Done to calculate Total of Works, let display to status
@@ -202,22 +202,22 @@ public class TileGenTask extends Task<Void> {
 					double x = origin.getX() + hindex * levelDefs[i].getTileDistanceOnXAXIS();
 
 					Envelope bbox = new Envelope(x, x + levelDefs[i].getTileDistanceOnXAXIS(), y,
-							y + levelDefs[i].getTileDistanceOnYAXIS(), tmConfiguration.getTargetCRS());
+							y + levelDefs[i].getTileDistanceOnYAXIS(), tileConfiguration.getTargetCRS());
 
 					// Transparent for tile background or not
-					imageType = tmConfiguration.isTransparentBackground() ? BufferedImage.TYPE_INT_ARGB
+					imageType = tileConfiguration.isTransparentBackground() ? BufferedImage.TYPE_INT_ARGB
 							: BufferedImage.TYPE_INT_RGB;
 
-					BufferedImage bi = new BufferedImage(tmConfiguration.getTileWidth(),
-							tmConfiguration.getTileHeight(), imageType);
+					BufferedImage bi = new BufferedImage(tileConfiguration.getTileWidth(),
+							tileConfiguration.getTileHeight(), imageType);
 					Graphics g = bi.getGraphics();
 
 					// Not transparent, fill a selected color
 					if (imageType == BufferedImage.TYPE_INT_RGB) {
-						javafx.scene.paint.Color fx = tmConfiguration.geColorBackground();
+						javafx.scene.paint.Color fx = tileConfiguration.geColorBackground();
 						g.setColor(new Color((float) fx.getRed(), (float) fx.getGreen(), (float) fx.getBlue(),
 								(float) fx.getOpacity()));
-						g.fillRect(0, 0, tmConfiguration.getTileWidth(), tmConfiguration.getTileHeight());
+						g.fillRect(0, 0, tileConfiguration.getTileWidth(), tileConfiguration.getTileHeight());
 					}
 
 					Context ctx = new Context(model.getGDX(), (Graphics2D) g);
@@ -262,7 +262,7 @@ public class TileGenTask extends Task<Void> {
 	@Override
 	protected void cancelled() {
 		try {
-			mainthread.interrupt();
+			mainThread.interrupt();
 			lock.release();
 			Platform.runLater(() -> {
 				Noti.showInfo(I18N.getText("Msg_GenTileCancelled"));
@@ -283,12 +283,12 @@ public class TileGenTask extends Task<Void> {
 	}
 
 	private boolean checkFTMDuplication() {
-		File tileMapFolder = new File(tmConfiguration.getDestinationFolder(), tmConfiguration.getTileMapName());
+		File tileMapFolder = new File(tileConfiguration.getDestinationFolder(), tileConfiguration.getTileMapName());
 		File tileMapFile = new File(tileMapFolder, "tilemap.xml"); //$NON-NLS-1$
 		boolean buildable = true;
 
 		if (tileMapFile.exists()) {
-			if (tmConfiguration.overwriteAllowed()) {
+			if (tileConfiguration.overwriteAllowed()) {
 				isOverwriteMode = true;
 			} else {
 				Platform.runLater(() -> {
@@ -306,7 +306,7 @@ public class TileGenTask extends Task<Void> {
 			return;
 		}
 
-		File tileMapFolder = new File(model.getDestinationFolder(), tmConfiguration.getTileMapName());
+		File tileMapFolder = new File(model.getDestinationFolder(), tileConfiguration.getTileMapName());
 		File tileMapFile = new File(tileMapFolder, "tilemap.xml"); //$NON-NLS-1$
 
 		tileMapFolder.mkdirs();
@@ -321,7 +321,7 @@ public class TileGenTask extends Task<Void> {
 					"http://www.w3.org/2001/XMLSchema"); //$NON-NLS-1$
 			DocumentBuilder builder = fac.newDocumentBuilder();
 			org.w3c.dom.Document doc = builder.newDocument();
-			TileMapDomHelper.encodeTileMapXML(doc, tmConfiguration);
+			TileMapDomHelper.encodeTileMapXML(doc, tileConfiguration);
 
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer t = tf.newTransformer();
@@ -345,7 +345,7 @@ public class TileGenTask extends Task<Void> {
 		}
 	}
 
-	private File getTileFile(TMConfiguration configuration, int level, int xIndex, int yIndex) {
+	private File getTileFile(TileConfiguration configuration, int level, int xIndex, int yIndex) {
 		String expression = configuration.getTilePathExpression();
 		expression = replaceVariables(expression, KEY_LEVEL, String.valueOf(level));
 		expression = replaceVariables(expression, KEY_X, String.valueOf(xIndex));
@@ -394,14 +394,14 @@ public class TileGenTask extends Task<Void> {
 			context.setMapToScreenTransform(transform);
 			// Anti-aliasing for text
 			context.getGraphics().setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-					tmConfiguration.isImproveLabelQuality() ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+					tileConfiguration.isImproveLabelQuality() ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON
 							: RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 			// Anti-alias for shape
 			context.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					tmConfiguration.getAntialiasing() ? RenderingHints.VALUE_ANTIALIAS_ON
+					tileConfiguration.getAntialiasing() ? RenderingHints.VALUE_ANTIALIAS_ON
 							: RenderingHints.VALUE_ANTIALIAS_OFF);
 			// Hide overlapped for label.
-			context.setHideLabelOverlaps(tmConfiguration.isEliminateLabelOverlaps());
+			context.setHideLabelOverlaps(tileConfiguration.isEliminateLabelOverlaps());
 
 //			System.out.println("Improve Label Quality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
 //			System.out.println("Antialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
@@ -647,9 +647,9 @@ public class TileGenTask extends Task<Void> {
 			try {
 				// Setting context to the respective tile
 				context.setEnvelope(envelope);
-				context.setWidth(tmConfiguration.getTileWidth());
-				context.setHeight(tmConfiguration.getTileHeight());
-				context.setScale(tmConfiguration.getLevels()[level].scale);
+				context.setWidth(tileConfiguration.getTileWidth());
+				context.setHeight(tileConfiguration.getTileHeight());
+				context.setScale(tileConfiguration.getLevels()[level].scale);
 
 				MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(),
 						context.getHeight(), context.getMapCRS());
@@ -661,9 +661,9 @@ public class TileGenTask extends Task<Void> {
 
 				boolean hasDrawn = getMapImage(context, Ilayers);
 
-				if (hasDrawn || tmConfiguration.emptyTileAllowed()) {
-					File tileFile = getTileFile(tmConfiguration, level, xTileIndex, yTileIndex);
-					save(bi, tileFile, tmConfiguration.getOutputTypeAsString());
+				if (hasDrawn || tileConfiguration.emptyTileAllowed()) {
+					File tileFile = getTileFile(tileConfiguration, level, xTileIndex, yTileIndex);
+					save(bi, tileFile, tileConfiguration.getOutputTypeAsString());
 				}
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);
