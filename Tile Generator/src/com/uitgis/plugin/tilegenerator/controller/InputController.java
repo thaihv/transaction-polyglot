@@ -44,9 +44,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 public class InputController {
-
-	private Logger log = LoggerFactory.getLogger(InputController.class);
-
 	@FXML
 	TextField tfGdxFile, tfLeft, tfTop, tfBottom, tfRight;
 	@FXML
@@ -61,7 +58,8 @@ public class InputController {
 	ComboBox<String> cmbMap;
 	@Inject
 	WizardData model;
-
+	
+	private Logger log = LoggerFactory.getLogger(InputController.class);
 	public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
 	private MapTabPane mapTab = (MapTabPane) FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
 	private ArrayList<MapControl> maps = mapTab.getAllMapControls();
@@ -111,11 +109,8 @@ public class InputController {
 		btnGdxBrowse.setOnAction(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open GDX file");
-			fileChooser.getExtensionFilters()
-					.add(new FileChooser.ExtensionFilter("Geography Markup Language", "*.xml"));
-
+			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Geography Markup Language", "*.xml"));
 			File file = fileChooser.showOpenDialog(btnGdxBrowse.getScene().getWindow());
-
 			if (file != null) {
 				tfGdxFile.setText(file.getPath());
 				try {
@@ -150,9 +145,8 @@ public class InputController {
 						// Anti aliasing for shape
 						value = (String) properties.get("ANTIALIASING");
 						model.setAntialiasing(value != null && value.equalsIgnoreCase("TRUE"));
-						System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-								+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
-
+//						System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+//								+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
 						if (rbFullExtent.isSelected()) {
 							setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
 						} else {

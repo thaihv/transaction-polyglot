@@ -31,15 +31,10 @@ import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
 public class PyramidController {
-
-	private Logger log = LoggerFactory.getLogger(PyramidController.class);
-
 	@FXML
 	TextField tfMultipleNum;
-	
 	@FXML
 	Label lblPyramidTitle;
-	
 	@FXML
 	Button btnCalcScale;
 	@FXML
@@ -58,12 +53,12 @@ public class PyramidController {
 	TableColumn<TileScale, Double> colScale;
 	@Inject
 	WizardData model;
-
+	private Logger log = LoggerFactory.getLogger(PyramidController.class);
+	
 	@FXML
 	public void initialize() {
-		
 		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
-		
+
 		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
 		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -93,16 +88,13 @@ public class PyramidController {
 			}
 
 		});
-		
-
 		tblScale.setItems(model.getListTileScale());
 		colLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
 		colScale.setCellValueFactory(cd -> cd.getValue().scaleProperty().asObject());
 		colScale.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-		
-
 		colActive.setCellValueFactory(cd -> cd.getValue().activeProperty());
-		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell.forTableColumn(colActive);
+		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell
+				.forTableColumn(colActive);
 		colActive.setCellFactory(new Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>>() {
 			@Override
 			public TableCell<TileScale, Boolean> call(TableColumn<TileScale, Boolean> column) {
@@ -111,7 +103,6 @@ public class PyramidController {
 				return cell;
 			}
 		});
-
 		tglLevelOrder.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
@@ -119,7 +110,7 @@ public class PyramidController {
 				model.setOrderLevel(selected);
 				if (selected == 0) {
 					for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
-						
+
 						model.getListTileScale().get(i).setLevel(i);
 					}
 
@@ -132,21 +123,20 @@ public class PyramidController {
 
 			}
 		});
-
 	}
 
 	@Validate
 	public boolean validate() throws Exception {
-		
 		boolean scaleDone = true;
 		for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
 			if (model.getListTileScale().get(i).scaleProperty().lessThanOrEqualTo(0).getValue())
 				scaleDone = false;
 		}
-        if( !scaleDone ) {
-        	Noti.showAlert("Missing Field", "All values in Scale field are required! Input value for first level and calculate it.");
-            return false;
-        }
+		if (!scaleDone) {
+			Noti.showAlert("Missing Field",
+					"All values in Scale field are required! Input value for first level and calculate it.");
+			return false;
+		}
 		return true;
 	}
 
@@ -159,7 +149,6 @@ public class PyramidController {
 
 	@FXML
 	public void calcScales() {
-
 		int multiple = Integer.parseInt(tfMultipleNum.getText().trim());
 		double scale = model.getListTileScale().get(0).getScale();
 		int level = model.getListTileScale().size();

@@ -96,33 +96,33 @@ public class TMConfiguration {
 
 		try {
 
-			mNumberOfLevels         = model.getListTileScale().size();		
+			mNumberOfLevels = model.getListTileScale().size();
 			ObservableList<TileScale> levels = model.getListTileScale();
 			List<LevelSpec> levelSpecList = new ArrayList<LevelSpec>();
-			
+
 			for (int i = 0; i < mNumberOfLevels; i++) {
-				
-				int level     = levels.get(i).getLevel();
-				double scale  = levels.get(i).getScale();
-				boolean isOn  = levels.get(i).isActive();				
-				
+
+				int level = levels.get(i).getLevel();
+				double scale = levels.get(i).getScale();
+				boolean isOn = levels.get(i).isActive();
+
 				levelSpecList.add(new LevelSpec(level, scale, isOn));
-			}			
+			}
 			mLevelSpecs = levelSpecList.toArray(new TMConfiguration.LevelSpec[levelSpecList.size()]);
-		
-			mLevelOrder             = model.getOrderLevel();
-			mImproveLabelQuality    = model.isImproveLabelQuality();
+
+			mLevelOrder = model.getOrderLevel();
+			mImproveLabelQuality = model.isImproveLabelQuality();
 			mEliminateLabelOverlaps = model.isEliminateLabelQuality();
-			mAntialiasing 			= model.isAntialiasing();
-			mTransparentBackground  = model.isTransparentBackground();
-			mBackground				= model.getColorBackground();
-			mOrigin                 = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
-			mTileMapType            = model.getTileMapType();
-			mAllowOverwrite         = model.isOverWriteAllowed();
-			mAllowEmptyTile         = model.isGenerateEmptyTile();
-			mTileFormat             = model.getTileFormat();
-			mTileWidth              = model.getTileWidth();;
-			mTileHeight             = model.getTileHeight();
+			mAntialiasing = model.isAntialiasing();
+			mTransparentBackground = model.isTransparentBackground();
+			mBackground = model.getColorBackground();
+			mOrigin = new Point2D(Double.parseDouble(model.getOriginX()), Double.parseDouble(model.getOriginY()));
+			mTileMapType = model.getTileMapType();
+			mAllowOverwrite = model.isOverWriteAllowed();
+			mAllowEmptyTile = model.isGenerateEmptyTile();
+			mTileFormat = model.getTileFormat();
+			mTileWidth = model.getTileWidth();
+			mTileHeight = model.getTileHeight();
 		} catch (Throwable t) {
 			System.out.println(t);
 		}
@@ -132,7 +132,7 @@ public class TMConfiguration {
 				mTargetEnvelope = ev;
 			}
 		} catch (Throwable t) {
-		}	
+		}
 		try {
 			String expr = model.getPathExpression();
 			if (expr != null) {
@@ -140,14 +140,14 @@ public class TMConfiguration {
 			}
 		} catch (Throwable t) {
 		}
-		
+
 		try {
 			String expr = model.getTileName();
 			if (expr != null) {
 				mTileMapName = expr;
 			}
 		} catch (Throwable t) {
-		}		
+		}
 	}
 
 	public int getNumberOfWorkerThreads() {
@@ -285,7 +285,6 @@ public class TMConfiguration {
 	public void setTransparentBackground(boolean transparentBackground) {
 		mTransparentBackground = transparentBackground;
 	}
-
 
 	public Color geColorBackground() {
 		return mBackground;

@@ -18,62 +18,96 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 public class WizardData {
+	// Input
+	private GDX GDX;
+	private Envelope targetEnvelope = new Envelope();
+	private StringProperty leftExtent = new SimpleStringProperty();
+	private StringProperty rightExtent = new SimpleStringProperty();
+	private StringProperty topExtent = new SimpleStringProperty();
+	private StringProperty bottomExtent = new SimpleStringProperty();
 
-	private final StringProperty leftExtent = new SimpleStringProperty();
-	private final StringProperty rightExtent = new SimpleStringProperty();
-	private final StringProperty topExtent = new SimpleStringProperty();
-	private final StringProperty bottomExtent = new SimpleStringProperty();
-
-	private final StringProperty originX = new SimpleStringProperty();
-	private final StringProperty originY = new SimpleStringProperty();
-
-	private final StringProperty destinationFolder = new SimpleStringProperty(
+	// Output
+	private StringProperty tileName = new SimpleStringProperty();
+	private IntegerProperty tileFormat = new SimpleIntegerProperty(0);
+	private IntegerProperty tileMapType = new SimpleIntegerProperty(0); // File Tile or GSS?
+	private StringProperty destinationFolder = new SimpleStringProperty(
 			new File(System.getProperty("user.home")).getPath());
-	private final StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
+	private StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
 
-	private final StringProperty tileName = new SimpleStringProperty();
-	private IntegerProperty tileMapType = new SimpleIntegerProperty(0);
-
-	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
-	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true);
-	private BooleanProperty antialiasing = new SimpleBooleanProperty(false);
-	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
+	// Drawing
 	private ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
+	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
+	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true); // Antialiasing for text if need
+	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
+	private BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Antialiasing for shape in general
 
+	// Tile
+	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
+	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
+	private StringProperty originX = new SimpleStringProperty();
+	private StringProperty originY = new SimpleStringProperty();
 	private BooleanProperty overWriteAllowed = new SimpleBooleanProperty(false);
 	private BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
 
+	// Pyramid
 	private IntegerProperty orderLevel = new SimpleIntegerProperty(0);
-	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
-	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
-	private IntegerProperty tileFormat = new SimpleIntegerProperty(0);
+	private ObservableList<TileScale> listTileScale = FXCollections.observableArrayList(new TileScale(true, 0, 0));
 
-	private Envelope targetEnvelope = new Envelope();
-
+	// Worker Thread
 	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
 
-	private GDX GDX;
-
-	private final ObservableList<TileScale> listTileScale = FXCollections
-			.observableArrayList(new TileScale(true, 0, 0));
-
-	public ObservableList<TileScale> getListTileScale() {
-		return listTileScale;
-	}
-
 	public void reset() {
+
+		// 1. Input Configuration
 		leftExtent.set("");
 		rightExtent.set("");
 		topExtent.set("");
 		bottomExtent.set("");
-		threadNum.set(1);
-		originX.set("");
-		originY.set("");
+
+		// 2. Output Configuration
 		tileName.set("");
+		tileFormat.set(0);
 		destinationFolder.set(new File(System.getProperty("user.home")).getPath());
 		pathExpression.set("/{$L}/Y{$Y}/X{$X}");
+
+		// 3. Drawing Configuration
+		colorBackground.set(Color.WHITE);
+		transparentBackground.set(false);
+		improveLabelQuality.set(true);
+		eliminateLabelQuality.set(true);
+		antialiasing.set(false);
+
+		// 4. Tile Configuration
+		tileWidth.set(512);
+		tileHeight.set(512);
+		originX.set("");
+		originY.set("");
+		generateEmptyTile.set(false);
+		overWriteAllowed.set(false);
+
+		// 5. Pyramid Configuration
+		orderLevel.set(0);
 		listTileScale.clear();
 		listTileScale.add(new TileScale(true, 0, 0));
+
+		// 6. Worker Thread Configuration
+		threadNum.set(1);
+	}
+
+	public GDX getGDX() {
+		return GDX;
+	}
+
+	public void setGDX(GDX gDX) {
+		GDX = gDX;
+	}
+
+	public Envelope getTargetEnvelope() {
+		return targetEnvelope;
+	}
+
+	public void setTargetEnvelope(Envelope targetEnvelope) {
+		this.targetEnvelope = targetEnvelope;
 	}
 
 	public StringProperty leftExtentProperty() {
@@ -122,34 +156,6 @@ public class WizardData {
 
 	public void setBottomExtent(final String bottomExtent) {
 		this.bottomExtentProperty().set(bottomExtent);
-	}
-
-	public Envelope getTargetEnvelope() {
-		return targetEnvelope;
-	}
-
-	public void setTargetEnvelope(Envelope targetEnvelope) {
-		this.targetEnvelope = targetEnvelope;
-	}
-
-	public GDX getGDX() {
-		return GDX;
-	}
-
-	public void setGDX(GDX gDX) {
-		GDX = gDX;
-	}
-
-	public IntegerProperty threadNumProperty() {
-		return this.threadNum;
-	}
-
-	public int getThreadNum() {
-		return this.threadNumProperty().get();
-	}
-
-	public void setThreadNum(int threadNum) {
-		this.threadNumProperty().set(threadNum);
 	}
 
 	public StringProperty originXProperty() {
@@ -356,4 +362,18 @@ public class WizardData {
 		this.antialiasingProperty().set(antialiasing);
 	}
 
+	public ObservableList<TileScale> getListTileScale() {
+		return listTileScale;
+	}
+	public IntegerProperty threadNumProperty() {
+		return this.threadNum;
+	}
+
+	public int getThreadNum() {
+		return this.threadNumProperty().get();
+	}
+
+	public void setThreadNum(int threadNum) {
+		this.threadNumProperty().set(threadNum);
+	}	
 }
