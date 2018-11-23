@@ -83,8 +83,8 @@ public class InputController {
 			double opacity = a / 255.0;
 			Color colorbackground = Color.rgb(r, g, b, opacity);
 			model.setColorBackground(colorbackground);
-			System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-					+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
+//			System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+//					+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
 			setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
 		}
 
@@ -200,22 +200,24 @@ public class InputController {
 
 	@Validate
 	public boolean validate() throws Exception {
+		
+		String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?";  // -? as no or one - ; \d+ as one or many number; E is for exponent present, E9 = 110^9?  
 
-		if (tfLeft.getText() == null || tfLeft.getText().isEmpty()) {
+		if (tfLeft.getText() == null || tfLeft.getText().isEmpty() || !tfLeft.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Left Extent field is required.");
 			return false;
 		}
 
-		if (tfTop.getText() == null || tfTop.getText().isEmpty()) {
+		if (tfTop.getText() == null || tfTop.getText().isEmpty() || !tfTop.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Top Extent field is required.");
 			return false;
 		}
 
-		if (tfBottom.getText() == null || tfBottom.getText().isEmpty()) {
+		if (tfBottom.getText() == null || tfBottom.getText().isEmpty() || !tfBottom.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Bottom Extent field is required.");
 			return false;
 		}
-		if (tfRight.getText() == null || tfRight.getText().isEmpty()) {
+		if (tfRight.getText() == null || tfRight.getText().isEmpty() || !tfRight.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Right Extent field is required.");
 			return false;
 		}
@@ -249,8 +251,8 @@ public class InputController {
 				double opacity = a / 255.0;
 				Color colorbackground = Color.rgb(r, g, b, opacity);
 				model.setColorBackground(colorbackground);
-				System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-						+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
+//				System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
+//						+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
 
 				if (rbFullExtent.isSelected()) {
 					setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));

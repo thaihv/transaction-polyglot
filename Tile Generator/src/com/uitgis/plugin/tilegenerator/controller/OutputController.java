@@ -33,22 +33,16 @@ public class OutputController {
 
 	@FXML
 	TextField tfLocation, tfMapName, tfExpression;
-	
 	@FXML
 	Label lblOutputTitle;
-	
 	@FXML
 	ToggleGroup tglGroupOutput;
-
 	@FXML
 	RadioButton rbTileFile, rbTileGSS;
-
 	@FXML
 	Button btnBuildAsFile;
-
 	@FXML
 	ComboBox<String> cmbTileFormat;
-	
 	@FXML
 	HBox hbxTileGSS, hbxLocation, hbxExpression;
 
@@ -103,7 +97,7 @@ public class OutputController {
 
 	@Validate
 	public boolean validate() throws Exception {
-
+		
 		if (tfMapName.getText() == null || tfMapName.getText().isEmpty()) {
 			Noti.showAlert("Missing Field", "Tile Map Name field is required.");
 			return false;

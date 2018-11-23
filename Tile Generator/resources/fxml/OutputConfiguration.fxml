@@ -80,7 +80,7 @@
                   <HBox fx:id="hbxExpression" alignment="CENTER_LEFT" prefWidth="200.0">
                      <children>
                         <Label prefWidth="120.0" text="Subpath Expression" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="tfExpression" prefHeight="25.0" prefWidth="106.0" text="/{$L}/Y{$Y}/X{$X}" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tfExpression" editable="false" prefHeight="25.0" prefWidth="106.0" text="/{$L}/Y{$Y}/X{$X}" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
