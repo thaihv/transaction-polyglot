@@ -59,12 +59,15 @@ public class TileController {
 
     @Validate
     public boolean validate() throws Exception {
-        if( tfOriginX.getText() == null || tfOriginX.getText().isEmpty() ) {
+    	
+    	String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?";  // -? as no or one - ; \d+ as one or many number; E is for exponent present, E9 = 10^9?  
+    	
+        if( tfOriginX.getText() == null || tfOriginX.getText().isEmpty() || !tfOriginX.getText().matches(numbericPattern)) {
         	Noti.showAlert("Missing Field", "X Coordinate Origin field is required.");
             return false;
         }
 
-        if( tfOriginY.getText() == null || tfOriginY.getText().isEmpty() ) {
+        if( tfOriginY.getText() == null || tfOriginY.getText().isEmpty() || !tfOriginY.getText().matches(numbericPattern) ) {
         	Noti.showAlert("Missing Field", "Y Coordinate Origin field is required.");
             return false;
         }

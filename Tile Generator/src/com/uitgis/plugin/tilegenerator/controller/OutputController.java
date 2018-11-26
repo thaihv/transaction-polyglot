@@ -10,19 +10,13 @@ import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import framework.i18n.I18N;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
@@ -36,15 +30,9 @@ public class OutputController {
 	@FXML
 	Label lblOutputTitle;
 	@FXML
-	ToggleGroup tglGroupOutput;
-	@FXML
-	RadioButton rbTileFile, rbTileGSS;
-	@FXML
 	Button btnBuildAsFile;
 	@FXML
 	ComboBox<String> cmbTileFormat;
-	@FXML
-	HBox hbxTileGSS, hbxLocation, hbxExpression;
 
 	@Inject
 	WizardData model;
@@ -53,14 +41,10 @@ public class OutputController {
 
 	@FXML
 	public void initialize() {
-		
-		
-		lblOutputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
-		
-		hbxExpression.disableProperty().bind(rbTileGSS.selectedProperty());
-		hbxLocation.disableProperty().bind(rbTileGSS.selectedProperty());
-		hbxTileGSS.disableProperty().bind(rbTileFile.selectedProperty());
 
+		lblOutputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
+
+		model.setTileMapType(0); // Fixed to File Tile Map as GSS Tile is not in use.
 		cmbTileFormat.getItems().addAll(choiceTileFormats);
 		cmbTileFormat.getSelectionModel().selectFirst();
 
@@ -78,15 +62,6 @@ public class OutputController {
 			}
 		});
 
-		tglGroupOutput.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
-
-				int selected = tglGroupOutput.getToggles().indexOf(tglGroupOutput.getSelectedToggle());
-				model.setTileMapType(selected);
-
-			}
-		});
-
 		cmbTileFormat.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal.equals("PNG"))
 				model.setTileFormat(0);
@@ -97,7 +72,7 @@ public class OutputController {
 
 	@Validate
 	public boolean validate() throws Exception {
-		
+
 		if (tfMapName.getText() == null || tfMapName.getText().isEmpty()) {
 			Noti.showAlert("Missing Field", "Tile Map Name field is required.");
 			return false;

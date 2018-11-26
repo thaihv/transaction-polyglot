@@ -7,7 +7,6 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -30,11 +29,8 @@
          <VBox.margin>
             <Insets />
          </VBox.margin>
-         <padding>
-            <Insets bottom="61.0" />
-         </padding>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="123.0" prefWidth="396.0">
+      <VBox prefHeight="123.0" prefWidth="396.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0" spacing="10.0">
                <children>
@@ -56,7 +52,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="437.0" spacing="10.0">
                <children>
@@ -64,39 +60,31 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" VBox.vgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" prefWidth="100.0" spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <RadioButton fx:id="rbTileFile" mnemonicParsing="false" selected="true" text="File Tile Map" VBox.vgrow="ALWAYS">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="tglGroupOutput" />
-                     </toggleGroup></RadioButton>
-                  <HBox fx:id="hbxLocation" alignment="CENTER_LEFT" prefWidth="200.0">
+                  <RadioButton mnemonicParsing="false" selected="true" text="File Tile Map" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="123.0" text="Location" />
                         <TextField fx:id="tfLocation" prefWidth="286.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnBuildAsFile" mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="..." />
                      </children>
                   </HBox>
-                  <HBox fx:id="hbxExpression" alignment="CENTER_LEFT" prefWidth="200.0">
+                  <HBox alignment="CENTER_LEFT" prefWidth="200.0">
                      <children>
                         <Label prefWidth="120.0" text="Subpath Expression" HBox.hgrow="ALWAYS" />
                         <TextField fx:id="tfExpression" editable="false" prefHeight="25.0" prefWidth="106.0" text="/{$L}/Y{$Y}/X{$X}" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
+               <padding>
+                  <Insets bottom="60.0" top="5.0" />
+               </padding>
             </VBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="117.0" prefWidth="394.0">
-               <children>
-                  <RadioButton fx:id="rbTileGSS" mnemonicParsing="false" text="GSS Tile Map" toggleGroup="$tglGroupOutput" />
-               </children>
-            </VBox>
-            <HBox fx:id="hbxTileGSS" alignment="CENTER_LEFT">
-               <children>
-                  <Label prefWidth="120.0" text="GSS" HBox.hgrow="ALWAYS" />
-                  <ComboBox prefHeight="25.0" prefWidth="321.0" promptText="Select a source" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
          </children>
+         <padding>
+            <Insets bottom="57.0" top="30.0" />
+         </padding>
       </VBox>
    </children>
    <padding>

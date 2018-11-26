@@ -150,13 +150,20 @@ public class PyramidController {
 	@FXML
 	public void calcScales() {
 		int multiple = Integer.parseInt(tfMultipleNum.getText().trim());
-		double scale = model.getListTileScale().get(0).getScale();
-		int level = model.getListTileScale().size();
-		for (int i = 1; i < level; i++) {
-			scale = scale / multiple;
-			model.getListTileScale().get(i).setScale(scale);
+		if (multiple > 0) {
+			double scale = model.getListTileScale().get(0).getScale();
+			int level = model.getListTileScale().size();
+			for (int i = 1; i < level; i++) {
+				scale = scale / multiple;
+				model.getListTileScale().get(i).setScale(scale);
+			}
 		}
-
+		else {
+			Noti.showAlert("Wrong value input",
+					"The multiple number must is a positive interger.");
+		}
+		
+			
 	}
 
 }

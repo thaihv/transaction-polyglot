@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-core-4.0.13-alpha.jar"/>
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-junit-4.0.13-alpha.jar"/>
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-junit5-4.0.13-alpha.jar"/>
+	<classpathentry kind="lib" path="C:/OpenJDK/OpenJFX-8.0.172/sdk/rt/lib/ext/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

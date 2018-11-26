@@ -30,7 +30,7 @@
             </Label>
          </children>
          <VBox.margin>
-            <Insets bottom="30.0" />
+            <Insets />
          </VBox.margin>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
@@ -96,6 +96,9 @@
          <VBox.margin>
             <Insets bottom="27.0" />
          </VBox.margin>
+         <padding>
+            <Insets bottom="30.0" />
+         </padding>
       </VBox>
    </children>
 </VBox>

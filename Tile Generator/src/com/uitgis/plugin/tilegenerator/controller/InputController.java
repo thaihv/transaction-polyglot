@@ -201,7 +201,7 @@ public class InputController {
 	@Validate
 	public boolean validate() throws Exception {
 		
-		String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?";  // -? as no or one - ; \d+ as one or many number; E is for exponent present, E9 = 110^9?  
+		String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?";  // -? as no or one - ; \d+ as one or many number; E is for exponent present, E9 = 10^9?  
 
 		if (tfLeft.getText() == null || tfLeft.getText().isEmpty() || !tfLeft.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Left Extent field is required.");

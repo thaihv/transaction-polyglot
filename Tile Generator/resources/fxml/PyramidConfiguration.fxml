@@ -32,11 +32,8 @@
                </padding>
             </Label>
          </children>
-         <padding>
-            <Insets bottom="30.0" />
-         </padding>
       </VBox>
-		<VBox alignment="CENTER_LEFT" prefHeight="83.0" prefWidth="368.0">
+		<VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="5.0">
 			<children>
 				<HBox alignment="CENTER_LEFT" prefHeight="25.0" spacing="10.0">
 					<children>
@@ -44,7 +41,7 @@
 						<Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
 					</children>
 				</HBox>
-				<HBox alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="368.0" spacing="10.0">
+				<HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
 					<children>
 						<RadioButton fx:id="rbAsc" mnemonicParsing="false" selected="true" text="Ascending">
 							<toggleGroup>
@@ -55,17 +52,17 @@
 					</children>
 				</HBox>
 			</children>
-         <padding>
-            <Insets bottom="2.0" />
-         </padding>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
 		</VBox>
-		<HBox prefHeight="62.0" prefWidth="441.0" spacing="10.0">
+		<HBox prefWidth="441.0" spacing="10.0">
 			<children>
 				<Label text="Number of levels" />
 				<Spinner fx:id="spinNumLevels" editable="true" />
 			</children>
          <padding>
-            <Insets bottom="2.0" top="2.0" />
+            <Insets bottom="6.0" top="5.0" />
          </padding>
 		</HBox>
 		<VBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">
@@ -75,8 +72,11 @@
 						<Label id="section-label" text="Scales of Each Level" HBox.hgrow="ALWAYS" />
 						<Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
 					</children>
+               <padding>
+                  <Insets bottom="4.0" />
+               </padding>
 				</HBox>
-				<VBox prefHeight="150.0" prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
+				<VBox prefWidth="437.0" spacing="10.0" VBox.vgrow="ALWAYS">
 					<children>
 						<TableView fx:id="tblScale" editable="true" fixedCellSize="25.0" prefHeight="200.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
 							<columns>
@@ -96,7 +96,7 @@
 				</VBox>
 			</children>
          <padding>
-            <Insets bottom="22.0" />
+            <Insets bottom="20.0" />
          </padding>
 		</VBox>
 	</children>

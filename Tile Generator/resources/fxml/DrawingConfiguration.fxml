@@ -27,9 +27,6 @@
                </padding>
             </Label>
          </children>
-         <padding>
-            <Insets bottom="36.0" />
-         </padding>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="107.0" prefWidth="501.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
@@ -39,7 +36,7 @@
                   <Separator id="section-separator" maxHeight="1.0" minHeight="1.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefWidth="437.0" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="437.0" spacing="5.0">
                <children>
                   <Label text="Background Color" />
                   <ColorPicker fx:id="colorpkBackground" prefHeight="40.0" prefWidth="93.0" HBox.hgrow="ALWAYS" />
@@ -63,7 +60,7 @@
             <CheckBox fx:id="ckbElimiateLblOverlaps" mnemonicParsing="false" selected="true" text="Eliminate Label Overlaps" />
          </children>
          <padding>
-            <Insets bottom="120.0" top="50.0" />
+            <Insets bottom="156.0" top="50.0" />
          </padding>
       </VBox>
    </children>
