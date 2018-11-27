@@ -31,30 +31,42 @@ import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
 
 public class PyramidController {
+
 	@FXML
 	TextField tfMultipleNum;
+
 	@FXML
 	Label lblPyramidTitle;
+
 	@FXML
 	Button btnCalcScale;
+
 	@FXML
 	ToggleGroup tglLevelOrder;
+
 	@FXML
 	Spinner<Integer> spinNumLevels;
+
 	@FXML
 	RadioButton rbAsc, rbDesc;
+
 	@FXML
 	TableView<TileScale> tblScale;
+
 	@FXML
 	TableColumn<TileScale, Boolean> colActive;
+
 	@FXML
 	TableColumn<TileScale, Number> colLevel;
+
 	@FXML
 	TableColumn<TileScale, Double> colScale;
+
 	@Inject
 	WizardData model;
+
 	private Logger log = LoggerFactory.getLogger(PyramidController.class);
-	
+
 	@FXML
 	public void initialize() {
 		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
@@ -157,13 +169,10 @@ public class PyramidController {
 				scale = scale / multiple;
 				model.getListTileScale().get(i).setScale(scale);
 			}
+		} else {
+			Noti.showAlert("Wrong value input", "The multiple number must is a positive interger.");
 		}
-		else {
-			Noti.showAlert("Wrong value input",
-					"The multiple number must is a positive interger.");
-		}
-		
-			
+
 	}
 
 }

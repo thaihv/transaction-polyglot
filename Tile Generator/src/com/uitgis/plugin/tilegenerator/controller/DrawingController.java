@@ -19,12 +19,16 @@ public class DrawingController {
 
 	@FXML
 	CheckBox ckbTransparent, ckbImprvLblQuality, ckbElimiateLblOverlaps;
+
 	@FXML
 	ColorPicker colorpkBackground;
+
 	@FXML
 	Label lblGraphicTitle;
+
 	@Inject
 	WizardData model;
+
 	@FXML
 	public void initialize() {
 

@@ -44,21 +44,28 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 
 public class InputController {
+
 	@FXML
 	TextField tfGdxFile, tfLeft, tfTop, tfBottom, tfRight;
+
 	@FXML
 	Label lblInputTitle;
+
 	@FXML
 	Button btnGdxBrowse;
+
 	@FXML
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
+
 	@FXML
 	ToggleGroup tglGroupExtent, tglGroupMap;
+
 	@FXML
 	ComboBox<String> cmbMap;
+
 	@Inject
 	WizardData model;
-	
+
 	private Logger log = LoggerFactory.getLogger(InputController.class);
 	public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
 	private MapTabPane mapTab = (MapTabPane) FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
@@ -109,7 +116,8 @@ public class InputController {
 		btnGdxBrowse.setOnAction(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open GDX file");
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Geography Markup Language", "*.xml"));
+			fileChooser.getExtensionFilters()
+					.add(new FileChooser.ExtensionFilter("Geography Markup Language", "*.xml"));
 			File file = fileChooser.showOpenDialog(btnGdxBrowse.getScene().getWindow());
 			if (file != null) {
 				tfGdxFile.setText(file.getPath());
@@ -164,11 +172,10 @@ public class InputController {
 		tglGroupMap.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 				int selected = tglGroupMap.getToggles().indexOf(tglGroupMap.getSelectedToggle());
-				
-				if (selected == 0) { // From monitor
-					
 
-				} else { //from GDX file
+				if (selected == 0) { // From monitor
+
+				} else { // from GDX file
 
 				}
 
@@ -200,8 +207,9 @@ public class InputController {
 
 	@Validate
 	public boolean validate() throws Exception {
-		
-		String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?";  // -? as no or one - ; \d+ as one or many number; E is for exponent present, E9 = 10^9?  
+
+		String numbericPattern = "-?\\d+(\\.\\d+E?\\d*)?"; // -? as no or one - ; \d+ as one or many number; E is for
+															// exponent present, E9 = 10^9?
 
 		if (tfLeft.getText() == null || tfLeft.getText().isEmpty() || !tfLeft.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Left Extent field is required.");
@@ -213,7 +221,8 @@ public class InputController {
 			return false;
 		}
 
-		if (tfBottom.getText() == null || tfBottom.getText().isEmpty() || !tfBottom.getText().matches(numbericPattern)) {
+		if (tfBottom.getText() == null || tfBottom.getText().isEmpty()
+				|| !tfBottom.getText().matches(numbericPattern)) {
 			Noti.showAlert("Missing Field", "Bottom Extent field is required.");
 			return false;
 		}

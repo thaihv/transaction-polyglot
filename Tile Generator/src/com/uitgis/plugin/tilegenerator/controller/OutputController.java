@@ -27,10 +27,13 @@ public class OutputController {
 
 	@FXML
 	TextField tfLocation, tfMapName, tfExpression;
+
 	@FXML
 	Label lblOutputTitle;
+
 	@FXML
 	Button btnBuildAsFile;
+
 	@FXML
 	ComboBox<String> cmbTileFormat;
 
