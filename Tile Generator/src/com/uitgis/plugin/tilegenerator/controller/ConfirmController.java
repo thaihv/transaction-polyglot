@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import javafx.fxml.FXML;
@@ -19,7 +20,7 @@ public class ConfirmController {
 
 	@FXML
 	TextField tfThreadNum;
-	
+
 	@FXML
 	Label lblRunnerTitle;
 
@@ -30,6 +31,20 @@ public class ConfirmController {
 	public void initialize() {
 		lblRunnerTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 		tfThreadNum.textProperty().bindBidirectional(model.threadNumProperty(), new NumberStringConverter());
+	}
+
+	@Validate
+	public boolean validate() throws Exception {
+
+		String numbericPattern = "^[1-9]\\d*$";
+
+		if (tfThreadNum.getText() == null || tfThreadNum.getText().isEmpty()
+				|| !tfThreadNum.getText().matches(numbericPattern)) {
+			Noti.showAlert("Wrong value input", "The number of threads must is a positive interger.");
+			return false;
+		}
+
+		return true;
 	}
 
 	@Submit

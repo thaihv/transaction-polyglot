@@ -194,6 +194,22 @@ public class WizardController {
 	@FXML
 	public void finish() {
 
+		// Validation for last step
+		Parent p = steps.get(currentStep.get());
+		Object controller = p.getProperties().get(CONTROLLER_KEY);
+		Method v = getMethod(Validate.class, controller);
+		if (v != null) {
+			try {
+				Object retval = v.invoke(controller);
+				if (retval != null && ((Boolean) retval) == false) {
+					return;
+				}
+
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		// Going to execute
 		Stage stage = (Stage) btnFinish.getScene().getWindow();
 		stage.close();
 

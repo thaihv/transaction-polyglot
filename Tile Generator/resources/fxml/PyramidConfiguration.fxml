@@ -89,7 +89,7 @@
 							<children>
 								<Button fx:id="btnCalcScale" mnemonicParsing="false" onAction="#calcScales" text="Calculate scales" />
 								<Label text="Using multiple number" />
-								<TextField fx:id="tfMultipleNum" text="2" HBox.hgrow="ALWAYS" />
+								<TextField fx:id="tfMultipleNum" promptText="A positive integer" text="2" HBox.hgrow="ALWAYS" />
 							</children>
 						</HBox>
 					</children>

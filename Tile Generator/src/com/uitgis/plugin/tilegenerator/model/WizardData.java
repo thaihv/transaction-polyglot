@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 public class WizardData {
+	
 	// Input
 	private GDX GDX;
 	private Envelope targetEnvelope = new Envelope();

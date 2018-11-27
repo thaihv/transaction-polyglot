@@ -35,7 +35,7 @@
       <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
             <Label prefHeight="17.0" prefWidth="283.0" text="Number of Worker Threads" HBox.hgrow="ALWAYS" />
-            <TextField fx:id="tfThreadNum" text="1" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="tfThreadNum" promptText="A positive integer" text="1" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="200.0" />
