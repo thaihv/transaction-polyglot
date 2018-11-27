@@ -71,9 +71,11 @@ public class PyramidController {
 	public void initialize() {
 		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
-		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
+//		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
 		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
+			System.out.println("Data will be reset..." + model.getListTileScale());
+			btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 			int numLevels = spinNumLevels.getValue();
 			int currentNum = model.getListTileScale().size();
 			if (currentNum < numLevels) {

@@ -58,7 +58,7 @@ public class InputController {
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
 
 	@FXML
-	ToggleGroup tglGroupExtent, tglGroupMap;
+	ToggleGroup tglGroupExtent;
 
 	@FXML
 	ComboBox<String> cmbMap;
@@ -77,24 +77,6 @@ public class InputController {
 
 		lblInputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
-		// For the first initiation of Display using a GDX from MapControl
-		if (!mc.gdxEmpty()) {
-			model.setGDX(mc.getGDX());
-			model.setEliminateLabelQuality(model.getGDX().isHideLabelOverlaps());
-			model.setImproveLabelQuality(model.getGDX().isLabelAntiAlasing());
-			model.setAntialiasing(model.getGDX().isAntiAliasing());
-			int r = model.getGDX().getBackgroundColor().getRed();
-			int g = model.getGDX().getBackgroundColor().getGreen();
-			int b = model.getGDX().getBackgroundColor().getBlue();
-			int a = model.getGDX().getBackgroundColor().getAlpha();
-			double opacity = a / 255.0;
-			Color colorbackground = Color.rgb(r, g, b, opacity);
-			model.setColorBackground(colorbackground);
-//			System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-//					+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
-			setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-		}
-
 		choiceMapItems.addAll(maps.stream().map(c -> c.getMapTitle()).collect(Collectors.toList()));
 		tfLeft.textProperty().bindBidirectional(model.leftExtentProperty());
 		tfTop.textProperty().bindBidirectional(model.topExtentProperty());
@@ -106,13 +88,16 @@ public class InputController {
 		tfBottom.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
 		tfRight.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
 
+		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
+		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
 		cmbMap.disableProperty().bind(rbSelectGDX.selectedProperty());
+
 		cmbMap.getItems().addAll(choiceMapItems);
 		cmbMap.getSelectionModel().select(mc.getMapTitle());
 
+		// For the first initiation of Display using a GDX from MapControl
+		populateModelWithMapControlGDX(mc);
 		// If using GDX file instead of MapControl by select
-		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
-		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
 		btnGdxBrowse.setOnAction(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open GDX file");
@@ -153,8 +138,6 @@ public class InputController {
 						// Anti aliasing for shape
 						value = (String) properties.get("ANTIALIASING");
 						model.setAntialiasing(value != null && value.equalsIgnoreCase("TRUE"));
-//						System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-//								+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
 						if (rbFullExtent.isSelected()) {
 							setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
 						} else {
@@ -164,21 +147,8 @@ public class InputController {
 					}
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-		});
-		tglGroupMap.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
-				int selected = tglGroupMap.getToggles().indexOf(tglGroupMap.getSelectedToggle());
-
-				if (selected == 0) { // From monitor
-
-				} else { // from GDX file
-
-				}
-
 			}
 		});
 		tglGroupExtent.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -203,6 +173,15 @@ public class InputController {
 			}
 		});
 
+	}
+
+	@Reset
+	public void reset() {
+
+		System.out.println("Data will be reset..." + model.getListTileScale());
+		rbSelectMap.setSelected(true);
+		rbFullExtent.setSelected(true);
+		populateModelWithMapControlGDX(mc);
 	}
 
 	@Validate
@@ -248,33 +227,39 @@ public class InputController {
 
 		if (mc.isPresent()) {
 			if (!mc.get().gdxEmpty()) {
-				model.setGDX(mc.get().getGDX());
+				MapControl mapCtl = mc.get();
+				populateModelWithMapControlGDX(mapCtl);
+			}
+		}
 
-				model.setEliminateLabelQuality(model.getGDX().isHideLabelOverlaps());
-				model.setImproveLabelQuality(model.getGDX().isLabelAntiAlasing());
-				model.setAntialiasing(model.getGDX().isAntiAliasing());
-				int r = model.getGDX().getBackgroundColor().getRed();
-				int g = model.getGDX().getBackgroundColor().getGreen();
-				int b = model.getGDX().getBackgroundColor().getBlue();
-				int a = model.getGDX().getBackgroundColor().getAlpha();
-				double opacity = a / 255.0;
-				Color colorbackground = Color.rgb(r, g, b, opacity);
-				model.setColorBackground(colorbackground);
-//				System.out.println("BColor: " + model.getColorBackground() + "->EliminateLabelQuality: " + model.isEliminateLabelQuality() + "->ImproveLabelQuality: "
-//						+ model.isImproveLabelQuality() + "->Antialiasing: " + model.isAntialiasing());
+	}
 
-				if (rbFullExtent.isSelected()) {
-					setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
-				} else {
-					if (rbCurrExtent.isSelected())
-						setTileEnvelope(model.getGDX().getEnvelope());
-				}
+	private void populateModelWithMapControlGDX(MapControl mc) {
+
+		if (!mc.gdxEmpty()) {
+			model.setGDX(mc.getGDX());
+			model.setEliminateLabelQuality(model.getGDX().isHideLabelOverlaps());
+			model.setImproveLabelQuality(model.getGDX().isLabelAntiAlasing());
+			model.setAntialiasing(model.getGDX().isAntiAliasing());
+			int r = model.getGDX().getBackgroundColor().getRed();
+			int g = model.getGDX().getBackgroundColor().getGreen();
+			int b = model.getGDX().getBackgroundColor().getBlue();
+			int a = model.getGDX().getBackgroundColor().getAlpha();
+			double opacity = a / 255.0;
+			Color colorbackground = Color.rgb(r, g, b, opacity);
+			model.setColorBackground(colorbackground);
+			if (rbFullExtent.isSelected()) {
+				setTileEnvelope(calcfullExtentFromGDX(model.getGDX()));
+			} else {
+				if (rbCurrExtent.isSelected())
+					setTileEnvelope(model.getGDX().getEnvelope());
 			}
 		}
 
 	}
 
 	private void setTileEnvelope(Envelope ev) {
+		
 		if (ev != null) {
 			this.model.leftExtentProperty().set(Double.toString(ev.getMinX()));
 			this.model.rightExtentProperty().set(Double.toString(ev.getMaxX()));

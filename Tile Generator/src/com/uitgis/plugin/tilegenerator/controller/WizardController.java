@@ -234,6 +234,21 @@ public class WizardController {
 		currentStep.set(0);
 		contentPanel.getChildren().add(steps.get(currentStep.get()));
 		model.reset();
+		
+		Parent p = steps.get(currentStep.get());
+		Object controller = p.getProperties().get(CONTROLLER_KEY);
+
+		// validate
+		Method v = getMethod(Reset.class, controller);
+		if (v != null) {
+			try {
+				v.invoke(controller);
+
+			} catch (IllegalAccessException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
 
 	}
 
