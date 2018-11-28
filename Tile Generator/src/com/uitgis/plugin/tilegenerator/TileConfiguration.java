@@ -110,7 +110,7 @@ public class TileConfiguration {
 			}
 			mLevelSpecs = levelSpecList.toArray(new TileConfiguration.LevelSpec[levelSpecList.size()]);
 
-			mLevelOrder = model.getOrderLevel();
+			mLevelOrder = model.isOrderLevelAscIsUsed() ? 0 : 1;
 			mImproveLabelQuality = model.isImproveLabelQuality();
 			mEliminateLabelOverlaps = model.isEliminateLabelQuality();
 			mAntialiasing = model.isAntialiasing();

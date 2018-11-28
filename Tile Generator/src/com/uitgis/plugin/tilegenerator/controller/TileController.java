@@ -58,6 +58,8 @@ public class TileController {
 		tfOriginX.disableProperty().bind(rbExtentPoint.selectedProperty());
 		tfOriginY.disableProperty().bind(rbExtentPoint.selectedProperty());
 
+		rbExtentPoint.selectedProperty().bindBidirectional(model.pointOfExtentIsUsedProperty());
+
 	}
 
 	@Validate

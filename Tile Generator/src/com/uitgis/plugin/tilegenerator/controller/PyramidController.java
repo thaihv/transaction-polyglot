@@ -29,6 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Callback;
 import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 public class PyramidController {
 
@@ -74,9 +75,9 @@ public class PyramidController {
 
 //		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
-
+		
 		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
-			System.out.println("Data will be reset..." + model.getListTileScale());
+			System.out.println("Data grid has changed..." + model.getListTileScale());
 			btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 			int numLevels = spinNumLevels.getValue();
 			int currentNum = model.getListTileScale().size();
@@ -121,18 +122,22 @@ public class PyramidController {
 				return cell;
 			}
 		});
+
+		rbAsc.selectedProperty().bindBidirectional(model.orderLevelAscIsUsedProperty());
 		tglLevelOrder.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
 				int selected = tglLevelOrder.getToggles().indexOf(tglLevelOrder.getSelectedToggle());
-				model.setOrderLevel(selected);
+
 				if (selected == 0) {
+					model.setOrderLevelAscIsUsed(true);
 					for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
 
 						model.getListTileScale().get(i).setLevel(i);
 					}
 
 				} else {
+					model.setOrderLevelAscIsUsed(false);
 					for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
 						model.getListTileScale().get(i).setLevel(size - i - 1);
 					}
@@ -141,6 +146,7 @@ public class PyramidController {
 
 			}
 		});
+		tfMultipleNum.textProperty().bindBidirectional(model.numberOfLevelMultipleProperty(), new NumberStringConverter());
 	}
 
 	@Validate

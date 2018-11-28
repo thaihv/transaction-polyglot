@@ -18,7 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 public class WizardData {
-	
+
 	// Input
 	private GDX GDX;
 	private Envelope targetEnvelope = new Envelope();
@@ -43,6 +43,7 @@ public class WizardData {
 	private BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Anti-aliasing for shape in general
 
 	// Tile
+	private BooleanProperty pointOfExtentIsUsed = new SimpleBooleanProperty(true);
 	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
 	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
 	private StringProperty originX = new SimpleStringProperty();
@@ -51,8 +52,10 @@ public class WizardData {
 	private BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
 
 	// Pyramid
-	private IntegerProperty orderLevel = new SimpleIntegerProperty(0);
+	private BooleanProperty orderLevelAscIsUsed = new SimpleBooleanProperty(true);
 	private ObservableList<TileScale> listTileScale = FXCollections.observableArrayList(new TileScale(true, 0, 0));
+	private IntegerProperty numberOfLevels = new SimpleIntegerProperty(1);
+	private IntegerProperty numberOfLevelMultiple = new SimpleIntegerProperty(2);
 
 	// Worker Thread
 	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
@@ -82,16 +85,18 @@ public class WizardData {
 		// 4. Tile Configuration
 		tileWidth.set(512);
 		tileHeight.set(512);
+		pointOfExtentIsUsed.set(true);
 		originX.set("");
 		originY.set("");
 		generateEmptyTile.set(false);
 		overWriteAllowed.set(false);
 
 		// 5. Pyramid Configuration
-		orderLevel.set(0);
+		orderLevelAscIsUsed.set(true);
 		listTileScale.clear();
 		listTileScale.add(new TileScale(true, 0, 0));
-
+		numberOfLevels.set(1);
+		numberOfLevelMultiple.set(2);
 		// 6. Worker Thread Configuration
 		threadNum.set(1);
 	}
@@ -196,16 +201,40 @@ public class WizardData {
 		this.destinationFolderProperty().set(destinationFolder);
 	}
 
-	public IntegerProperty orderLevelProperty() {
-		return this.orderLevel;
+	public BooleanProperty orderLevelAscIsUsedProperty() {
+		return this.orderLevelAscIsUsed;
 	}
 
-	public int getOrderLevel() {
-		return this.orderLevelProperty().get();
+	public boolean isOrderLevelAscIsUsed() {
+		return this.orderLevelAscIsUsedProperty().get();
 	}
 
-	public void setOrderLevel(final int orderLevel) {
-		this.orderLevelProperty().set(orderLevel);
+	public void setOrderLevelAscIsUsed(final boolean orderLevelAscIsUsed) {
+		this.orderLevelAscIsUsedProperty().set(orderLevelAscIsUsed);
+	}
+
+	public IntegerProperty numberOfLevelsProperty() {
+		return this.numberOfLevels;
+	}
+
+	public int getNumberOfLevels() {
+		return this.numberOfLevelsProperty().get();
+	}
+
+	public void setNumberOfLevels(final int numberOfLevels) {
+		this.numberOfLevelsProperty().set(numberOfLevels);
+	}
+
+	public IntegerProperty numberOfLevelMultipleProperty() {
+		return this.numberOfLevelMultiple;
+	}
+
+	public int getNumberOfLevelMultiple() {
+		return this.numberOfLevelMultipleProperty().get();
+	}
+
+	public void setNumberOfLevelMultiple(final int numberOfLevelMultiple) {
+		this.numberOfLevelMultipleProperty().set(numberOfLevelMultiple);
 	}
 
 	public IntegerProperty tileWidthProperty() {
@@ -340,6 +369,18 @@ public class WizardData {
 		this.tileFormatProperty().set(tileFormat);
 	}
 
+	public BooleanProperty pointOfExtentIsUsedProperty() {
+		return this.pointOfExtentIsUsed;
+	}
+
+	public boolean isPointOfExtentIsUsed() {
+		return this.pointOfExtentIsUsedProperty().get();
+	}
+
+	public void setPointOfExtentIsUsed(final boolean pointOfExtentIsUsed) {
+		this.pointOfExtentIsUsedProperty().set(pointOfExtentIsUsed);
+	}
+
 	public ObjectProperty<Color> colorBackgroundProperty() {
 		return this.colorBackground;
 	}
@@ -367,6 +408,7 @@ public class WizardData {
 	public ObservableList<TileScale> getListTileScale() {
 		return listTileScale;
 	}
+
 	public IntegerProperty threadNumProperty() {
 		return this.threadNum;
 	}
@@ -377,5 +419,6 @@ public class WizardData {
 
 	public void setThreadNum(int threadNum) {
 		this.threadNumProperty().set(threadNum);
-	}	
+	}
+
 }
