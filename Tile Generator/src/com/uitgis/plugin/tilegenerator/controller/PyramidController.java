@@ -69,10 +69,12 @@ public class PyramidController {
 
 	@FXML
 	public void initialize() {
+
 		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
 //		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
+
 		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
 			System.out.println("Data will be reset..." + model.getListTileScale());
 			btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
@@ -102,10 +104,12 @@ public class PyramidController {
 			}
 
 		});
+
 		tblScale.setItems(model.getListTileScale());
 		colLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
 		colScale.setCellValueFactory(cd -> cd.getValue().scaleProperty().asObject());
 		colScale.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
 		colActive.setCellValueFactory(cd -> cd.getValue().activeProperty());
 		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell
 				.forTableColumn(colActive);
@@ -141,6 +145,7 @@ public class PyramidController {
 
 	@Validate
 	public boolean validate() throws Exception {
+
 		boolean scaleDone = true;
 		for (int i = 0, size = model.getListTileScale().size(); i < size; i++) {
 			if (model.getListTileScale().get(i).scaleProperty().lessThanOrEqualTo(0).getValue())
@@ -156,6 +161,7 @@ public class PyramidController {
 
 	@Submit
 	public void submit() throws Exception {
+
 		if (log.isDebugEnabled()) {
 			log.debug("[SUBMIT] the user has completed step Pyramid Configuration");
 		}
@@ -163,6 +169,7 @@ public class PyramidController {
 
 	@FXML
 	public void calcScales() {
+
 		int multiple = Integer.parseInt(tfMultipleNum.getText().trim());
 		if (multiple > 0) {
 			double scale = model.getListTileScale().get(0).getScale();

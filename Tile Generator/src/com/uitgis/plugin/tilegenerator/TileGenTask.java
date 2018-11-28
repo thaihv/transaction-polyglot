@@ -159,7 +159,8 @@ public class TileGenTask extends Task<Void> {
 				continue;
 			}
 
-			int level = tileConfiguration.getLevelOrder() == TileConfiguration.ORDER_DESCENDING ? levels.length - i - 1 : i;
+			int level = tileConfiguration.getLevelOrder() == TileConfiguration.ORDER_DESCENDING ? levels.length - i - 1
+					: i;
 			double hdistance = model.getTileWidth() * levels[i].scale * factor;
 			double vdistance = model.getTileHeight() * levels[i].scale * factor;
 			int hStart = getGridCellNo(envelope.getMinX() - origin.getX(), hdistance, false);
@@ -224,10 +225,13 @@ public class TileGenTask extends Task<Void> {
 					// Semaphore acquired to control access resources to limit 100 concurrencies
 					lock.acquire();
 
-					// If Google tile map indexes setting, reserve vindex by doing assign it to: vEnd - vindex - 1
-					// TileGenCallable callable =  new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vEnd - vindex - 1)
-					
-					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(), hindex, vindex); // Use Default TMS indexed
+					// If Google tile map indexes setting, reserve vindex by doing assign it to:
+					// vEnd - vindex - 1
+					// TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi,
+					// levelDefs[i].getLevel(), hindex, vEnd - vindex - 1)
+
+					TileGenCallable callable = new TileGenCallable(ctx, bbox, layers, bi, levelDefs[i].getLevel(),
+							hindex, vindex); // Use Default TMS indexed
 
 					Future<?> task = executor.submit(callable);
 					tasks.add(task);
@@ -402,10 +406,6 @@ public class TileGenTask extends Task<Void> {
 							: RenderingHints.VALUE_ANTIALIAS_OFF);
 			// Hide overlapped for label.
 			context.setHideLabelOverlaps(tileConfiguration.isEliminateLabelOverlaps());
-
-//			System.out.println("Improve Label Quality: " + tmConfiguration.isImproveLabelQuality() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING));
-//			System.out.println("Antialiasing: " + tmConfiguration.getAntialiasing() + " RenderingHints : " + context.getGraphics().getRenderingHint(RenderingHints.KEY_ANTIALIASING));
-//			System.out.println("Hide Overlap Label  " + context.getHideLabelOverlaps());
 
 			if (layers == null || layers.size() == 0) {
 				for (int i = model.getGDX().getLayerCount() - 1; i >= 0; i--) {
@@ -654,16 +654,30 @@ public class TileGenTask extends Task<Void> {
 				MapTransform transform = new MapTransform(context.getEnvelope(), context.getWidth(),
 						context.getHeight(), context.getMapCRS());
 				context.setMapToScreenTransform(transform);
-
 				context.setX(xTileIndex);
 				context.setY(yTileIndex);
-//				System.out.println(context.getWidth() + ":" + context.getHeight() + " Scale: " + context.getScale() + " BBOX: " + context.getEnvelope());
 
 				boolean hasDrawn = getMapImage(context, Ilayers);
 
 				if (hasDrawn || tileConfiguration.emptyTileAllowed()) {
 					File tileFile = getTileFile(tileConfiguration, level, xTileIndex, yTileIndex);
-					save(bi, tileFile, tileConfiguration.getOutputTypeAsString());
+
+					if (tileConfiguration.getTileFormat() == TileConfiguration.OUTPUT_JPEG
+							&& tileConfiguration.isTransparentBackground()) { // OpenJDK has not support transparent
+																				// channel for JPEG in native encoder, this
+																				// conversation is a work around
+						BufferedImage convertedImg = new BufferedImage(bi.getWidth(), bi.getHeight(),
+								BufferedImage.TYPE_3BYTE_BGR);
+						convertedImg.getGraphics().drawImage(bi, 0, 0, null);
+						convertedImg.getGraphics().dispose();
+						save(convertedImg, tileFile, tileConfiguration.getOutputTypeAsString());
+
+						// Using external library to create Jpeg
+//						System.out.println(tileFile.getName() + " Encode to : " +  tileConfiguration.getOutputTypeAsString());
+//						JAI.create("filestore", convertedImg, "C:\\data\\Tiles\\DDD\\" + tileFile.getName(), "JPEG");
+
+					} else
+						save(bi, tileFile, tileConfiguration.getOutputTypeAsString());
 				}
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);

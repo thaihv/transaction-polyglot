@@ -52,22 +52,22 @@ public class InputController {
 	Label lblInputTitle;
 
 	@FXML
-	Button btnGdxBrowse;
+	Button btnGdxBrowser;
 
 	@FXML
 	RadioButton rbSelectMap, rbSelectGDX, rbFullExtent, rbCurrExtent, rbUsrDefineExtent;
 
 	@FXML
-	ToggleGroup tglGroupExtent;
+	ToggleGroup tglGroupExtent, tglGroupMapControl;
 
 	@FXML
-	ComboBox<String> cmbMap;
+	ComboBox<String> cmbMapControls;
 
 	@Inject
 	WizardData model;
 
 	private Logger log = LoggerFactory.getLogger(InputController.class);
-	public ObservableList<String> choiceMapItems = FXCollections.observableArrayList();
+	public ObservableList<String> mapControlList = FXCollections.observableArrayList();
 	private MapTabPane mapTab = (MapTabPane) FrameworkManager.getUserContent(ContentID.MAP_TAB_KEY);
 	private ArrayList<MapControl> maps = mapTab.getAllMapControls();
 	private MapControl mc = ToolboxHelper.getCurrentMapControl();
@@ -77,7 +77,7 @@ public class InputController {
 
 		lblInputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
-		choiceMapItems.addAll(maps.stream().map(c -> c.getMapTitle()).collect(Collectors.toList()));
+		mapControlList.addAll(maps.stream().map(c -> c.getMapTitle()).collect(Collectors.toList()));
 		tfLeft.textProperty().bindBidirectional(model.leftExtentProperty());
 		tfTop.textProperty().bindBidirectional(model.topExtentProperty());
 		tfBottom.textProperty().bindBidirectional(model.bottomExtentProperty());
@@ -89,21 +89,28 @@ public class InputController {
 		tfRight.disableProperty().bind(Bindings.or(rbFullExtent.selectedProperty(), rbCurrExtent.selectedProperty()));
 
 		tfGdxFile.disableProperty().bind(rbSelectMap.selectedProperty());
-		btnGdxBrowse.disableProperty().bind(rbSelectMap.selectedProperty());
-		cmbMap.disableProperty().bind(rbSelectGDX.selectedProperty());
+		btnGdxBrowser.disableProperty().bind(rbSelectMap.selectedProperty());
+		cmbMapControls.disableProperty().bind(rbSelectGDX.selectedProperty());
 
-		cmbMap.getItems().addAll(choiceMapItems);
-		cmbMap.getSelectionModel().select(mc.getMapTitle());
+		cmbMapControls.getItems().addAll(mapControlList);
+		cmbMapControls.getSelectionModel().select(mc.getMapTitle());
 
 		// For the first initiation of Display using a GDX from MapControl
 		populateModelWithMapControlGDX(mc);
+		rbSelectMap.setOnAction(event -> {
+			if (!tfGdxFile.getText().isEmpty())
+				tfGdxFile.clear();
+			Optional<MapControl> mc = maps.stream().filter(p -> p.getMapTitle().equals(cmbMapControls.getValue()))
+					.findFirst();
+			populateModelWithMapControlGDX(mc.get());
+		});
 		// If using GDX file instead of MapControl by select
-		btnGdxBrowse.setOnAction(event -> {
+		btnGdxBrowser.setOnAction(event -> {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open GDX file");
 			fileChooser.getExtensionFilters()
 					.add(new FileChooser.ExtensionFilter("Geography Markup Language", "*.xml"));
-			File file = fileChooser.showOpenDialog(btnGdxBrowse.getScene().getWindow());
+			File file = fileChooser.showOpenDialog(btnGdxBrowser.getScene().getWindow());
 			if (file != null) {
 				tfGdxFile.setText(file.getPath());
 				try {
@@ -151,6 +158,7 @@ public class InputController {
 				}
 			}
 		});
+
 		tglGroupExtent.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 			public void changed(ObservableValue<? extends Toggle> ov, Toggle oldVal, Toggle newVal) {
 
@@ -178,10 +186,16 @@ public class InputController {
 	@Reset
 	public void reset() {
 
-		System.out.println("Data will be reset..." + model.getListTileScale());
+		// Select GDX from Map Control
 		rbSelectMap.setSelected(true);
+		// Set current map for combo box
+		cmbMapControls.getSelectionModel().select(mc.getMapTitle());
+		tfGdxFile.clear();
+		// Set extent in full mode
 		rbFullExtent.setSelected(true);
+		// Set data model for full extent from Map Control
 		populateModelWithMapControlGDX(mc);
+
 	}
 
 	@Validate
@@ -223,7 +237,8 @@ public class InputController {
 	@FXML
 	public void selectMapAction(ActionEvent event) {
 
-		Optional<MapControl> mc = maps.stream().filter(p -> p.getMapTitle().equals(cmbMap.getValue())).findFirst();
+		Optional<MapControl> mc = maps.stream().filter(p -> p.getMapTitle().equals(cmbMapControls.getValue()))
+				.findFirst();
 
 		if (mc.isPresent()) {
 			if (!mc.get().gdxEmpty()) {
@@ -254,12 +269,13 @@ public class InputController {
 				if (rbCurrExtent.isSelected())
 					setTileEnvelope(model.getGDX().getEnvelope());
 			}
-		}
+		} else
+			model.reset();
 
 	}
 
 	private void setTileEnvelope(Envelope ev) {
-		
+
 		if (ev != null) {
 			this.model.leftExtentProperty().set(Double.toString(ev.getMinX()));
 			this.model.rightExtentProperty().set(Double.toString(ev.getMaxX()));

@@ -38,9 +38,9 @@ public class WizardData {
 	// Drawing
 	private ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
 	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
-	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true); // Antialiasing for text if need
+	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true); // Anti-aliasing for text if need
 	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
-	private BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Antialiasing for shape in general
+	private BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Anti-aliasing for shape in general
 
 	// Tile
 	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
@@ -60,6 +60,7 @@ public class WizardData {
 	public void reset() {
 
 		// 1. Input Configuration
+		setGDX(null);
 		leftExtent.set("");
 		rightExtent.set("");
 		topExtent.set("");

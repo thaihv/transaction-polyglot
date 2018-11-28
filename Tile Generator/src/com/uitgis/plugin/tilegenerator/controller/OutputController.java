@@ -10,6 +10,7 @@ import com.uitgis.maple.common.util.Noti;
 import com.uitgis.plugin.tilegenerator.model.WizardData;
 
 import framework.i18n.I18N;
+import javafx.beans.binding.When;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,7 +41,7 @@ public class OutputController {
 	@Inject
 	WizardData model;
 
-	public ObservableList<String> choiceTileFormats = FXCollections.observableArrayList("PNG", "JPEG");
+	public ObservableList<String> tileFormatTypes = FXCollections.observableArrayList("PNG", "JPEG");
 
 	@FXML
 	public void initialize() {
@@ -48,8 +49,9 @@ public class OutputController {
 		lblOutputTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
 		model.setTileMapType(0); // Fixed to File Tile Map as GSS Tile is not in use.
-		cmbTileFormat.getItems().addAll(choiceTileFormats);
-		cmbTileFormat.getSelectionModel().selectFirst();
+		cmbTileFormat.setItems(tileFormatTypes);
+		cmbTileFormat.valueProperty().bind(new When(model.tileFormatProperty().isEqualTo(0))
+				.then(tileFormatTypes.get(0)).otherwise(tileFormatTypes.get(1)));
 
 		tfMapName.textProperty().bindBidirectional(model.tileNameProperty());
 		tfLocation.textProperty().bindBidirectional(model.destinationFolderProperty());

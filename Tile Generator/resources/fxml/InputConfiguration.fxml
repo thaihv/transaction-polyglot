@@ -51,12 +51,12 @@
                <children>
                   <RadioButton fx:id="rbSelectMap" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" selected="true" text="Select Map">
                      <toggleGroup>
-                        <ToggleGroup fx:id="tglGroupMap" />
+                        <ToggleGroup fx:id="tglGroupMapControl" />
                      </toggleGroup></RadioButton>
-                  <RadioButton fx:id="rbSelectGDX" mnemonicParsing="false" text="Select GDX" toggleGroup="$tglGroupMap" GridPane.rowIndex="1" />
+                  <RadioButton fx:id="rbSelectGDX" mnemonicParsing="false" text="Select GDX" toggleGroup="$tglGroupMapControl" GridPane.rowIndex="1" />
                   <TextField fx:id="tfGdxFile" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Button fx:id="btnGdxBrowse" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cmbMap" onAction="#selectMapAction" prefHeight="25.0" prefWidth="285.0" GridPane.columnIndex="1" />
+                  <Button fx:id="btnGdxBrowser" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cmbMapControls" onAction="#selectMapAction" prefHeight="25.0" prefWidth="285.0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>
