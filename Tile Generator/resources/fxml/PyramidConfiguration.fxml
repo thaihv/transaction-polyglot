@@ -80,9 +80,9 @@
 					<children>
 						<TableView fx:id="tblScale" editable="true" fixedCellSize="25.0" prefHeight="200.0" prefWidth="437.0" VBox.vgrow="ALWAYS">
 							<columns>
-								<TableColumn fx:id="colActive" prefWidth="86.0" text="!" />
-								<TableColumn fx:id="colLevel" editable="false" prefWidth="97.0" text="Level" />
-								<TableColumn fx:id="colScale" prefWidth="230.0" text="Scale (m/pixel)" />
+								<TableColumn fx:id="clnActive" prefWidth="86.0" text="!" />
+								<TableColumn fx:id="clnLevel" editable="false" prefWidth="97.0" text="Level" />
+								<TableColumn fx:id="clnScale" prefWidth="230.0" text="Scale (m/pixel)" />
 							</columns>
 						</TableView>
 						<HBox alignment="CENTER_LEFT" prefWidth="368.0" spacing="10.0">

@@ -55,13 +55,13 @@ public class PyramidController {
 	TableView<TileScale> tblScale;
 
 	@FXML
-	TableColumn<TileScale, Boolean> colActive;
+	TableColumn<TileScale, Boolean> clnActive;
 
 	@FXML
-	TableColumn<TileScale, Number> colLevel;
+	TableColumn<TileScale, Number> clnLevel;
 
 	@FXML
-	TableColumn<TileScale, Double> colScale;
+	TableColumn<TileScale, Double> clnScale;
 
 	@Inject
 	WizardData model;
@@ -77,9 +77,7 @@ public class PyramidController {
 		spnNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
 
 		spnNumLevels.getValueFactory().valueProperty().bindBidirectional(model.numberOfLevelsProperty().asObject());
-
 		spnNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
-			System.out.println("Data grid has changed..." + model.getListTileScale());
 			btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
 			int numLevels = spnNumLevels.getValue();
 			int currentNum = model.getListTileScale().size();
@@ -109,14 +107,14 @@ public class PyramidController {
 		});
 
 		tblScale.setItems(model.getListTileScale());
-		colLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
-		colScale.setCellValueFactory(cd -> cd.getValue().scaleProperty().asObject());
-		colScale.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+		clnLevel.setCellValueFactory(cd -> cd.getValue().levelProperty());
+		clnScale.setCellValueFactory(cd -> cd.getValue().scaleProperty().asObject());
+		clnScale.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
-		colActive.setCellValueFactory(cd -> cd.getValue().activeProperty());
+		clnActive.setCellValueFactory(cd -> cd.getValue().activeProperty());
 		final Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>> cellFactory = CheckBoxTableCell
-				.forTableColumn(colActive);
-		colActive.setCellFactory(new Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>>() {
+				.forTableColumn(clnActive);
+		clnActive.setCellFactory(new Callback<TableColumn<TileScale, Boolean>, TableCell<TileScale, Boolean>>() {
 			@Override
 			public TableCell<TileScale, Boolean> call(TableColumn<TileScale, Boolean> column) {
 				TableCell<TileScale, Boolean> cell = cellFactory.call(column);
@@ -148,7 +146,8 @@ public class PyramidController {
 
 			}
 		});
-		tfMultipleNum.textProperty().bindBidirectional(model.numberOfLevelMultipleProperty(), new NumberStringConverter());
+		tfMultipleNum.textProperty().bindBidirectional(model.numberOfLevelMultipleProperty(),
+				new NumberStringConverter());
 	}
 
 	@Validate
