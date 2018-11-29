@@ -230,15 +230,17 @@ public class WizardController {
 	@FXML
 	public void reset() {
 
+		// Remove current step and display first step
 		contentPanel.getChildren().remove(steps.get(currentStep.get()));
 		currentStep.set(0);
 		contentPanel.getChildren().add(steps.get(currentStep.get()));
+		// Set initialized for data model.
 		model.reset();
-		
+
+		// Setup options for displaying of first step by calling to Reset method from
+		// step controller
 		Parent p = steps.get(currentStep.get());
 		Object controller = p.getProperties().get(CONTROLLER_KEY);
-
-		// validate
 		Method v = getMethod(Reset.class, controller);
 		if (v != null) {
 			try {
@@ -248,7 +250,6 @@ public class WizardController {
 				e.printStackTrace();
 			}
 		}
-		
 
 	}
 
