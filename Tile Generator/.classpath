@@ -31,9 +31,5 @@
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-core-4.0.13-alpha.jar"/>
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-junit-4.0.13-alpha.jar"/>
 	<classpathentry kind="lib" path="C:/ProjDevs/GeoDevJD/Tile Generator/lib/testfx-junit5-4.0.13-alpha.jar"/>
-	<classpathentry kind="lib" path="C:/OpenJDK/openjfx-8.0.172/sdk/rt/lib/ext/jfxrt.jar"/>
-	<classpathentry kind="lib" path="/SDK 1.1/lib/jai_codec.jar"/>
-	<classpathentry kind="lib" path="/SDK 1.1/lib/jai_core.jar"/>
-	<classpathentry kind="lib" path="/SDK 1.1/lib/jai_imageio-1.1.x.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
