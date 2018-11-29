@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-public class FindAllClassesFromNestedJars {
+public class ClassesInJarsTest {
 
 	private static byte[] copyStream(InputStream in, JarEntry entry) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
