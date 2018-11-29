@@ -59,7 +59,7 @@
 		<HBox prefWidth="441.0" spacing="10.0">
 			<children>
 				<Label text="Number of levels" />
-				<Spinner fx:id="spinNumLevels" editable="true" />
+				<Spinner fx:id="spnNumLevels" editable="true" />
 			</children>
          <padding>
             <Insets bottom="6.0" top="5.0" />

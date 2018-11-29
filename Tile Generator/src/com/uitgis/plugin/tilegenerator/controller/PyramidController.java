@@ -46,7 +46,7 @@ public class PyramidController {
 	ToggleGroup tglLevelOrder;
 
 	@FXML
-	Spinner<Integer> spinNumLevels;
+	Spinner<Integer> spnNumLevels;
 
 	@FXML
 	RadioButton rbAsc, rbDesc;
@@ -74,12 +74,14 @@ public class PyramidController {
 		lblPyramidTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
 
 //		btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
-		spinNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
-		
-		spinNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
+		spnNumLevels.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99));
+
+		spnNumLevels.getValueFactory().valueProperty().bindBidirectional(model.numberOfLevelsProperty().asObject());
+
+		spnNumLevels.valueProperty().addListener((obs, oldValue, newValue) -> {
 			System.out.println("Data grid has changed..." + model.getListTileScale());
 			btnCalcScale.disableProperty().bind(model.getListTileScale().get(0).scaleProperty().lessThanOrEqualTo(0));
-			int numLevels = spinNumLevels.getValue();
+			int numLevels = spnNumLevels.getValue();
 			int currentNum = model.getListTileScale().size();
 			if (currentNum < numLevels) {
 				int gap = numLevels - currentNum;

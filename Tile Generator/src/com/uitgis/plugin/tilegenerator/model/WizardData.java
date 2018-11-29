@@ -22,43 +22,42 @@ public class WizardData {
 	// Input
 	private GDX GDX;
 	private Envelope targetEnvelope = new Envelope();
-	private StringProperty leftExtent = new SimpleStringProperty();
-	private StringProperty rightExtent = new SimpleStringProperty();
-	private StringProperty topExtent = new SimpleStringProperty();
-	private StringProperty bottomExtent = new SimpleStringProperty();
+	private final StringProperty leftExtent = new SimpleStringProperty();
+	private final StringProperty rightExtent = new SimpleStringProperty();
+	private final StringProperty topExtent = new SimpleStringProperty();
+	private final StringProperty bottomExtent = new SimpleStringProperty();
 
 	// Output
-	private StringProperty tileName = new SimpleStringProperty();
-	private IntegerProperty tileFormat = new SimpleIntegerProperty(0);
-	private IntegerProperty tileMapType = new SimpleIntegerProperty(0); // File Tile or GSS?
-	private StringProperty destinationFolder = new SimpleStringProperty(
-			new File(System.getProperty("user.home")).getPath());
-	private StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
+	private final StringProperty tileName = new SimpleStringProperty();
+	private final IntegerProperty tileFormat = new SimpleIntegerProperty(0);
+	private final IntegerProperty tileMapType = new SimpleIntegerProperty(0); // File Tile or GSS?
+	private final StringProperty destinationFolder = new SimpleStringProperty(new File(System.getProperty("user.home")).getPath());
+	private final StringProperty pathExpression = new SimpleStringProperty("/{$L}/Y{$Y}/X{$X}");
 
 	// Drawing
-	private ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
-	private BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
-	private BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true); // Anti-aliasing for text if need
-	private BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
-	private BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Anti-aliasing for shape in general
+	private final ObjectProperty<Color> colorBackground = new SimpleObjectProperty<>(Color.WHITE);
+	private final BooleanProperty transparentBackground = new SimpleBooleanProperty(false);
+	private final BooleanProperty improveLabelQuality = new SimpleBooleanProperty(true); // Anti-aliasing for text if need
+	private final BooleanProperty eliminateLabelQuality = new SimpleBooleanProperty(true);
+	private final BooleanProperty antialiasing = new SimpleBooleanProperty(false); // Anti-aliasing for shape in general
 
 	// Tile
-	private BooleanProperty pointOfExtentIsUsed = new SimpleBooleanProperty(true);
-	private IntegerProperty tileWidth = new SimpleIntegerProperty(512);
-	private IntegerProperty tileHeight = new SimpleIntegerProperty(512);
-	private StringProperty originX = new SimpleStringProperty();
-	private StringProperty originY = new SimpleStringProperty();
-	private BooleanProperty overWriteAllowed = new SimpleBooleanProperty(false);
-	private BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
+	private final BooleanProperty pointOfExtentIsUsed = new SimpleBooleanProperty(true);
+	private final IntegerProperty tileWidth = new SimpleIntegerProperty(512);
+	private final IntegerProperty tileHeight = new SimpleIntegerProperty(512);
+	private final StringProperty originX = new SimpleStringProperty();
+	private final StringProperty originY = new SimpleStringProperty();
+	private final BooleanProperty overWriteAllowed = new SimpleBooleanProperty(false);
+	private final BooleanProperty generateEmptyTile = new SimpleBooleanProperty(false);
 
 	// Pyramid
-	private BooleanProperty orderLevelAscIsUsed = new SimpleBooleanProperty(true);
-	private ObservableList<TileScale> listTileScale = FXCollections.observableArrayList(new TileScale(true, 0, 0));
-	private IntegerProperty numberOfLevels = new SimpleIntegerProperty(1);
-	private IntegerProperty numberOfLevelMultiple = new SimpleIntegerProperty(2);
+	private final BooleanProperty orderLevelAscIsUsed = new SimpleBooleanProperty(true);
+	private final ObservableList<TileScale> listTileScale = FXCollections.observableArrayList(new TileScale(true, 0, 0));
+	private final IntegerProperty numberOfLevels = new SimpleIntegerProperty(1);
+	private final IntegerProperty numberOfLevelMultiple = new SimpleIntegerProperty(2);
 
 	// Worker Thread
-	private IntegerProperty threadNum = new SimpleIntegerProperty(1);
+	private final IntegerProperty threadNum = new SimpleIntegerProperty(1);
 
 	public void reset() {
 
