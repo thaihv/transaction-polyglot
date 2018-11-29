@@ -241,10 +241,8 @@ public class InputController {
 				.findFirst();
 
 		if (mc.isPresent()) {
-			if (!mc.get().gdxEmpty()) {
-				MapControl mapCtl = mc.get();
-				populateModelWithMapControlGDX(mapCtl);
-			}
+			MapControl mapCtl = mc.get();
+			populateModelWithMapControlGDX(mapCtl);
 		}
 
 	}

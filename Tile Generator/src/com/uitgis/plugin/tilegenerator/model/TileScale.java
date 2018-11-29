@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class TileScale {
+public final class TileScale {
 
 	private IntegerProperty level;
 	private DoubleProperty scale;
