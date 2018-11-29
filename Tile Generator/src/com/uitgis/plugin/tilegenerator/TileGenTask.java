@@ -661,7 +661,7 @@ public class TileGenTask extends Task<Void> {
 
 				if (hasDrawn || tileConfiguration.emptyTileAllowed()) {
 					File tileFile = getTileFile(tileConfiguration, level, xTileIndex, yTileIndex);
-
+/*
 					if (tileConfiguration.getTileFormat() == TileConfiguration.OUTPUT_JPEG
 							&& tileConfiguration.isTransparentBackground()) { // OpenJDK has not support transparent
 																				// channel for JPEG in native encoder, this
@@ -676,8 +676,9 @@ public class TileGenTask extends Task<Void> {
 //						System.out.println(tileFile.getName() + " Encode to : " +  tileConfiguration.getOutputTypeAsString());
 //						JAI.create("filestore", convertedImg, "C:\\data\\Tiles\\DDD\\" + tileFile.getName(), "JPEG");
 
-					} else
-						save(bi, tileFile, tileConfiguration.getOutputTypeAsString());
+					} else */
+					
+					save(bi, tileFile, tileConfiguration.getOutputTypeAsString());
 				}
 				amountSync();
 				updateMessage(I18N.getText("Msg_GenTileProcess") + ": Completed " + count + " / " + totalWork);
